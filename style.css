@@ -1,0 +1,400 @@
+/* Global Resets and Dark Theme */
+body {
+    background-color: #121212; /* Darker background */
+    color: #e0e0e0;
+    font-family: 'Inter', Arial, sans-serif; /* Modern, readable font */
+    margin: 0;
+    padding: 0;
+    line-height: 1.7;
+    font-size: 16px;
+}
+
+/* Header Styling */
+header {
+    background: linear-gradient(to right, #1a1a1a, #0d0d0d); /* Subtle gradient */
+    color: #ffffff;
+    padding: 3rem 1rem;
+    text-align: center;
+    border-bottom: 4px solid #e53935; /* Vibrant red accent */
+    box-shadow: 0 2px 10px rgba(0,0,0,0.5);
+}
+
+header h1 {
+    margin: 0;
+    font-family: 'Orbitron', sans-serif; /* Techy/futuristic font for main title */
+    font-size: 3rem;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: #f44336;
+}
+
+header p {
+    font-size: 1.2rem;
+    opacity: 0.85;
+    margin-top: 0.5rem;
+}
+
+/* Main Content Styling */
+main {
+    padding: 2rem 1rem;
+    max-width: 1000px; /* Slightly wider */
+    margin: 30px auto;
+}
+
+.method-category h2 {
+    font-family: 'Orbitron', sans-serif;
+    color: #e53935;
+    border-bottom: 2px solid #444;
+    padding-bottom: 0.75rem;
+    margin-top: 2.5rem;
+    margin-bottom: 2rem;
+    font-size: 2rem;
+    text-align: center;
+}
+
+/* Method Card Styling */
+.method-card {
+    background-color: #1e1e1e; /* Slightly lighter than body for contrast */
+    border: 1px solid #333;
+    border-left: 6px solid #e53935;
+    border-radius: 10px;
+    padding: 1.5rem 2rem;
+    margin-bottom: 2.5rem;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.4);
+    transition: transform 0.3s ease-out, box-shadow 0.3s ease-out, border-left-color 0.3s ease-out;
+}
+
+.method-card:hover {
+    transform: translateY(-8px) scale(1.02); /* More pronounced hover effect */
+    box-shadow: 0 10px 25px rgba(229, 57, 53, 0.3); /* Red glow effect */
+    border-left-color: #ff7043; /* Lighter red on hover */
+}
+
+.method-card h3, .method-card h4, .featured-method-card h2, h1, h2, h3, h4 {
+    font-family: 'Space Grotesk', 'Inter', Arial, sans-serif;
+    font-weight: 700;
+    margin-top: 0;
+    color: #ef5350; /* Reddish titles for methods */
+    font-size: 1.6rem;
+    margin-bottom: 1rem;
+}
+
+header h1 {
+    font-family: 'Space Grotesk', 'Inter', Arial, sans-serif;
+    font-size: 3rem;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: #f44336;
+}
+
+.featured-method-card h2.method-title-trigger {
+    font-family: 'Orbitron', sans-serif;
+    color: #ffeb3b; /* Bright yellow for featured title */
+    text-align: center;
+    font-size: 2.2rem;
+    margin-bottom: 1.5rem;
+    cursor: pointer;
+    transition: color 0.3s ease;
+}
+
+.featured-method-card h2.method-title-trigger:hover {
+    color: #fff59d; /* Lighter yellow on hover */
+}
+
+.method-card h3.method-title-trigger {
+    cursor: pointer;
+    transition: color 0.3s ease;
+}
+
+.method-card h3.method-title-trigger:hover {
+    color: #ff7043; /* Lighter red on hover */
+}
+
+.method-card h4 {
+    font-size: 1.3rem;
+    color: #ff8a65; /* Lighter red for sub-headings */
+    margin-top: 1.5rem;
+}
+
+.method-card p, .method-card li {
+    font-size: 1rem;
+    margin-bottom: 0.8rem;
+    color: #cccccc; /* Lighter grey for text for better readability */
+}
+
+.method-card ul, .method-card ol {
+    padding-left: 20px;
+}
+
+.method-card code {
+    background-color: #101010; /* Very dark for code blocks */
+    color: #00e676; /* Greenish text for code, like a terminal */
+    padding: 0.75rem 1rem;
+    border-radius: 6px;
+    font-family: 'Courier New', Courier, monospace;
+    display: block;
+    white-space: pre-wrap;
+    border: 1px solid #4caf50; /* Green border for code */
+    margin-top: 0.5rem;
+    margin-bottom: 1rem;
+    font-size: 0.95rem;
+}
+
+/* Featured Method Card Styling */
+.featured-method-card {
+    background-color: #2a2a2a; /* Slightly different background */
+    border: 2px solid #f44336; /* Prominent red border */
+    border-left-width: 10px; /* Thicker left border */
+    box-shadow: 0 8px 25px rgba(244, 67, 54, 0.4); /* Stronger red glow */
+}
+
+.featured-method-card h2 {
+    font-family: 'Orbitron', sans-serif;
+    color: #ffeb3b; /* Bright yellow for featured title */
+    text-align: center;
+    font-size: 2.2rem;
+    margin-bottom: 1.5rem;
+}
+
+/* Search Bar Styling */
+.search-bar-outer {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 2.8rem;
+    z-index: 10;
+    position: relative;
+    width: 100%;
+}
+
+.search-bar-modern {
+    display: flex;
+    align-items: center;
+    background: rgba(24,24,32,0.82);
+    border-radius: 2.2rem;
+    box-shadow: 0 0 14px 2px #e53935cc, 0 0 22px 0 #e5393555 inset, 0 2px 14px 0 #0008;
+    border: 1.7px solid #e53935;
+    padding: 0.45rem 1.5rem 0.45rem 1.1rem;
+    backdrop-filter: blur(10px) saturate(1.5);
+    transition: box-shadow 0.22s, border-color 0.18s;
+    min-width: 240px;
+    max-width: 96vw;
+    position: relative;
+}
+
+.search-bar-modern:focus-within {
+    box-shadow: 0 0 32px 6px #e53935, 0 0 32px 0 #e53935cc inset;
+    border-color: #ff7961;
+}
+
+.search-bar-modern input {
+    background: transparent;
+    border: none;
+    outline: none;
+    color: #fff;
+    font-size: 1.45rem;
+    font-family: 'Inter', Arial, sans-serif;
+    padding: 0.82rem 1.1rem 0.82rem 1.35rem;
+    width: 320px;
+    min-width: 120px;
+    max-width: 370px;
+    transition: width 0.32s cubic-bezier(.4,1.4,.5,1), background 0.18s;
+    border-radius: 2.5rem;
+    letter-spacing: 0.6px;
+    font-weight: 700;
+    box-shadow: none;
+    text-align: left;
+}
+
+.search-bar-modern input:focus {
+    width: 400px;
+    background: rgba(255,255,255,0.06);
+}
+
+.search-icon-circle {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(120deg, #e53935 0%, #ff7961 100%);
+    border-radius: 50%;
+    width: 2.2rem;
+    height: 2.2rem;
+    margin-right: 0.7rem;
+    box-shadow: 0 0 7px 1px #e53935cc, 0 0 10px 0 #e5393555 inset;
+    filter: blur(0.1px);
+    flex-shrink: 0;
+    position: relative;
+}
+
+.search-icon-svg {
+    display: block;
+    filter: drop-shadow(0 0 4px #e53935) drop-shadow(0 0 2px #ff7961);
+}
+
+@media (max-width: 600px) {
+    .search-bar-modern input {
+        width: 140px;
+        font-size: 1.08rem;
+        padding: 0.5rem 0.7rem 0.5rem 0.8rem;
+    }
+    .search-bar-modern input:focus {
+        width: 210px;
+    }
+    .search-bar-modern {
+        min-width: 0;
+        padding: 0.3rem 0.7rem 0.3rem 0.7rem;
+    }
+    .search-icon-circle {
+        width: 2.1rem;
+        height: 2.1rem;
+        margin-right: 0.7rem;
+    }
+}
+
+/* Remove old search bar styles */
+.search-bar-container, .search-bar-glass, .search-bar-neon, .search-icon-glow, .search-icon {
+    display: none !important;
+    height: 0 !important;
+    width: 0 !important;
+    opacity: 0 !important;
+    pointer-events: none !important;
+}
+
+/* Download Button Styling */
+.download-button {
+    display: inline-block;
+    background-color: #e53935;
+    color: #ffffff;
+    padding: 12px 25px;
+    text-decoration: none;
+    border-radius: 5px;
+    font-weight: bold;
+    text-align: center;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+    margin-top: 1rem;
+    border: 2px solid #c62828;
+}
+
+.download-button:hover {
+    background-color: #c62828;
+    transform: scale(1.05);
+    color: #fff;
+}
+
+/* Discord Button Styling */
+.discord-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    margin-top: 1.2rem;
+    padding: 0.85rem 2.2rem;
+    font-size: 1.17rem;
+    font-family: 'Space Grotesk', 'Inter', Arial, sans-serif;
+    font-weight: 700;
+    color: #fff;
+    background: linear-gradient(90deg, #5865F2 30%, #3b3bff 100%);
+    border: none;
+    border-radius: 2.5rem;
+    box-shadow: 0 0 16px 2px #5865f2, 0 0 32px 0 #222 inset;
+    text-decoration: none;
+    letter-spacing: 1px;
+    transition: background 0.25s, box-shadow 0.25s, transform 0.12s;
+    position: relative;
+    overflow: hidden;
+}
+
+.discord-btn:hover, .discord-btn:focus {
+    background: linear-gradient(90deg, #7a86ff 10%, #5865F2 90%);
+    box-shadow: 0 0 32px 6px #5865f2, 0 0 48px 2px #5865f2 inset;
+    color: #fff;
+    transform: translateY(-2px) scale(1.04);
+    text-decoration: none;
+}
+
+.discord-btn:active {
+    transform: scale(0.98);
+}
+
+.discord-btn .discord-icon {
+    width: 1.7em;
+    height: 1.7em;
+    margin-right: 0.5em;
+    display: inline-block;
+    vertical-align: middle;
+    filter: drop-shadow(0 0 6px #5865f2);
+}
+
+/* Footer Styling */
+footer {
+    text-align: center;
+    padding: 2rem 1rem;
+    background: #0d0d0d;
+    color: #888;
+    font-size: 0.9rem;
+    border-top: 2px solid #333;
+    margin-top: 3rem;
+}
+
+/* Scrollbar Styling */
+::-webkit-scrollbar {
+    width: 12px;
+}
+
+::-webkit-scrollbar-track {
+    background: #1e1e1e;
+}
+
+::-webkit-scrollbar-thumb {
+    background: #e53935;
+    border-radius: 6px;
+    border: 2px solid #1e1e1e; /* Creates a 'floating' thumb effect */
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: #c62828;
+}
+
+/* Collapsible Content Styling */
+.method-content-collapsible {
+    max-height: 0;
+    overflow: hidden;
+    opacity: 0;
+    padding-top: 0;
+    padding-bottom: 0;
+    margin-top: 0;
+    transition: max-height 0.7s cubic-bezier(0.25, 0.46, 0.45, 0.94), 
+                opacity 0.5s ease-in-out 0.2s, 
+                padding-top 0.7s cubic-bezier(0.25, 0.46, 0.45, 0.94), 
+                padding-bottom 0.7s cubic-bezier(0.25, 0.46, 0.45, 0.94),
+                margin-top 0.7s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+.method-card.active .method-content-collapsible {
+    max-height: 2000px; /* Adjust if content is very long */
+    opacity: 1;
+    padding-top: 1.5rem; /* Restore padding when open */
+    padding-bottom: 1.5rem;
+    margin-top: 1rem; /* Add some space between title and content */
+}
+
+/* Active Card Styling with Neon Effect */
+.method-card.active {
+    border-color: #ff8a65; /* Brighter border for active state */
+    box-shadow: 
+        0 0 8px rgba(229, 57, 53, 0.7),
+        0 0 15px rgba(229, 57, 53, 0.5),
+        0 0 25px rgba(229, 57, 53, 0.3),
+        0 6px 20px rgba(0,0,0,0.6); /* Base shadow + Neon glow */
+    transform: translateY(-5px) scale(1.02); /* Keep consistent with hover or slightly more */
+}
+
+.featured-method-card.active {
+    border-color: #ffee58; /* Yellowish border for active featured card */
+    box-shadow: 
+        0 0 8px rgba(255, 235, 59, 0.7),
+        0 0 15px rgba(255, 235, 59, 0.5),
+        0 0 25px rgba(255, 235, 59, 0.3),
+        0 8px 25px rgba(244, 67, 54, 0.4); /* Keep original featured shadow + yellow neon */
+}
+
+/* Animations are now primarily handled by script.js for staggering effects */
