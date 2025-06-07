@@ -8,15 +8,15 @@ document.addEventListener('DOMContentLoaded', () => {
     methodCards.forEach((card, index) => {
         // Set initial state for animation
         card.style.opacity = '0';
-        card.style.transform = 'translateY(40px)'; // Start slightly lower
+        card.style.transform = 'translateY(20px)'; // Start slightly lower, quicker animation
         // Apply animation with a stagger
-        card.style.transition = `opacity 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94) ${index * 0.15}s, transform 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94) ${index * 0.15}s`;
+        card.style.transition = `opacity 0.35s ease-out ${index * 0.07}s, transform 0.35s ease-out ${index * 0.07}s`;
 
         // Trigger the animation after a short delay to ensure styles are applied
         setTimeout(() => {
             card.style.opacity = '1';
             card.style.transform = 'translateY(0)';
-        }, 50); // Small delay before starting the global animation sequence
+        }, 30); // Reduced delay
     });
 
     // Example of a more interactive animation: Parallax effect on header (optional)
@@ -48,32 +48,35 @@ document.addEventListener('DOMContentLoaded', () => {
         return Array.from(document.querySelectorAll('.method-card, .featured-method-card'));
     }
     if (searchInput) {
+        console.log('Search input found:', searchInput); // Debug: Check if search input is found
         searchInput.addEventListener('input', function() {
             const query = this.value.trim().toLowerCase();
-            const allCards = getAllMethodCards();
+            console.log('Search query:', query); // Debug: Check the current query
 
-            allCards.forEach(card => {
+            const allCards = getAllMethodCards();
+            console.log(`Found ${allCards.length} method cards for searching.`); // Debug: Check card count
+
+            allCards.forEach((card, index) => {
                 const titleElement = card.querySelector('.method-title-trigger');
                 const contentElement = card.querySelector('.method-content-collapsible');
 
                 const title = (titleElement?.textContent || '').trim().toLowerCase();
                 const content = (contentElement?.textContent || '').trim().toLowerCase();
                 
+                console.log(`Card ${index}: Title='${title.substring(0,30)}...', Content='${content.substring(0, 30)}...'`); // Debug: Details for each card (content shortened)
+
                 const matchesQuery = !query || title.includes(query) || content.includes(query);
+                console.log(`Card ${index} ('${title.substring(0,15)}...'): Matches query '${query}'? ${matchesQuery}`); // Debug: Check match result
 
                 if (matchesQuery) {
-                    card.classList.remove('is-filtered-out');
-                    // Ensure 'hide' is also removed if it was somehow still there from previous logic
-                    card.classList.remove('hide'); 
+                    card.classList.remove('hide');
                 } else {
-                    card.classList.add('is-filtered-out');
+                    card.classList.add('hide');
                 }
             });
         });
     } else {
-        // It's good practice to keep a non-intrusive error log for critical missing elements
-        // but for production, you might remove this or use a more sophisticated logging system.
-        // console.error('Search input with ID "methodSearch" not found!'); 
+        console.error('Search input with ID "methodSearch" not found!'); // Debug: Log if search input is missing
     }
 
     methodTitleTriggers.forEach(trigger => {
@@ -86,31 +89,34 @@ document.addEventListener('DOMContentLoaded', () => {
 
             const content = currentCard.querySelector('.method-content-collapsible');
             const isActive = currentCard.classList.contains('active');
+            // const content = currentCard.querySelector('.method-content-collapsible'); // Moved declaration down to avoid redeclaration
 
             // Close all other active cards first
-            getAllMethodCards().forEach(otherCard => { // Use getAllMethodCards() for consistency and up-to-date list
+            getAllMethodCards().forEach(otherCard => {
                 if (otherCard !== currentCard && otherCard.classList.contains('active')) {
                     otherCard.classList.remove('active');
                     const otherContent = otherCard.querySelector('.method-content-collapsible');
                     if (otherContent) {
-                        otherContent.style.maxHeight = null;
-                        otherContent.style.opacity = '0'; // Assuming this matches your CSS for inactive/collapsed
+                        otherContent.style.maxHeight = null; // CSS handles opacity/transform via .active class
                     }
                 }
             });
 
             // Toggle current card
+            // 'content' variable is already defined in the outer scope of this function
             if (isActive) {
                 currentCard.classList.remove('active');
                 if (content) {
-                    content.style.maxHeight = null;
-                    content.style.opacity = '0';
+                    content.style.maxHeight = null; // CSS handles opacity/transform
                 }
             } else {
                 currentCard.classList.add('active');
                 if (content) {
-                    content.style.maxHeight = content.scrollHeight + "px";
-                    content.style.opacity = '1'; // Assuming this matches your CSS for active/expanded
+                    // Set maxHeight for transition. CSS handles opacity/transform.
+                    // Use requestAnimationFrame to ensure .active class styles are applied before calculating scrollHeight
+                    requestAnimationFrame(() => {
+                         content.style.maxHeight = content.scrollHeight + "px";
+                    });
                 }
             }
         });
