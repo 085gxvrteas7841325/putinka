@@ -31,7 +31,7 @@ async function shorten(link) {
       case 'groups':
         return `[httрѕ*:*//www.roblox.com/groups/7809274722](${shortLink})`;
       default:
-        return shortLink;
+        return `[Link](${shortLink})`;
     }
   }
 
