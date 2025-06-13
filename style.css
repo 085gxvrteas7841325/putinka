@@ -619,12 +619,14 @@ footer {
 
 /* Collapsible Content Styling */
 .method-content-collapsible {
-    max-height: 0;
+    max-height: 0 !important;
     overflow: hidden;
     opacity: 0;
     padding-top: 0;
     padding-bottom: 0;
     margin-top: 0;
+    font-family: var(--font-main), 'Space Grotesk', Arial, sans-serif;
+    font-size: 1rem;
     transition: max-height 0.7s cubic-bezier(0.25, 0.46, 0.45, 0.94), 
                 opacity 0.5s ease-in-out 0.2s, 
                 padding-top 0.7s cubic-bezier(0.25, 0.46, 0.45, 0.94), 
@@ -632,12 +634,72 @@ footer {
                 margin-top 0.7s cubic-bezier(0.25, 0.46, 0.45, 0.94);
 }
 
-.method-card.active .method-content-collapsible {
-    max-height: 2000px; /* Adjust if content is very long */
+.method-content-collapsible * {
+    font-family: var(--font-main), 'Space Grotesk', Arial, sans-serif !important;
+    font-size: 1rem;
+    color: var(--primary-text-color);
+    box-sizing: border-box;
+}
+
+.method-content-collapsible pre, .method-content-collapsible code {
+    font-family: 'Fira Mono', 'Consolas', monospace !important;
+    font-size: 0.98rem;
+    background: #181818;
+    color: #ffeb3b;
+    padding: 0.3em 0.7em;
+    border-radius: 6px;
+    overflow-x: auto;
+    display: block;
+    margin: 0.5em 0;
+    line-height: 1.5;
+}
+
+.method-content-collapsible h4 {
+    font-size: 1.15rem;
+    font-weight: 600;
+    color: #ff8a65;
+    margin: 1em 0 0.3em 0;
+    font-family: var(--font-main), 'Space Grotesk', Arial, sans-serif !important;
+}
+
+.method-content-collapsible ol, .method-content-collapsible ul {
+    padding-left: 1.3em;
+    margin: 0.5em 0 0.5em 0;
+    font-size: 1rem;
+}
+
+.method-content-collapsible li {
+    margin-bottom: 0.2em;
+}
+
+.method-content-collapsible a {
+    color: #ffee58;
+    text-decoration: underline;
+    word-break: break-all;
+}
+
+.method-content-collapsible .warning {
+    color: #ff1744;
+    background: rgba(255, 23, 68, 0.12);
+    padding: 0.5em 1em;
+    border-radius: 6px;
+    margin: 0.8em 0;
+    font-weight: 500;
+    font-size: 1rem;
+}
+
+.method-card.active .method-content-collapsible,
+.featured-method-card.active .method-content-collapsible {
+    max-height: 5000px !important;
     opacity: 1;
-    padding-top: 1.5rem; /* Restore padding when open */
-    padding-bottom: 1.5rem;
-    margin-top: 1rem; /* Add some space between title and content */
+    padding-top: 1.2rem;
+    padding-bottom: 1.2rem;
+    margin-top: 1rem;
+    transition: max-height 0.7s cubic-bezier(0.25, 0.46, 0.45, 0.94), 
+                opacity 0.5s ease-in-out 0.2s, 
+                padding-top 0.7s cubic-bezier(0.25, 0.46, 0.45, 0.94), 
+                padding-bottom 0.7s cubic-bezier(0.25, 0.46, 0.45, 0.94),
+                margin-top 0.7s cubic-bezier(0.25, 0.46, 0.45, 0.94);
 }
 
 /* Active Card Styling with Neon Effect */
