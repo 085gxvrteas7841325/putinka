@@ -79,31 +79,18 @@ document.addEventListener('DOMContentLoaded', () => {
                 return;
             }
 
-            const content = currentCard.querySelector('.method-content-collapsible');
             const isActive = currentCard.classList.contains('active');
 
             getAllMethodCards().forEach(otherCard => {
                 if (otherCard !== currentCard && otherCard.classList.contains('active')) {
                     otherCard.classList.remove('active');
-                    const otherContent = otherCard.querySelector('.method-content-collapsible');
-                    if (otherContent) {
-                        otherContent.style.maxHeight = null;
-                    }
                 }
             });
 
             if (isActive) {
                 currentCard.classList.remove('active');
-                if (content) {
-                    content.style.maxHeight = null;
-                }
             } else {
                 currentCard.classList.add('active');
-                if (content) {
-                    requestAnimationFrame(() => {
-                         content.style.maxHeight = content.scrollHeight + "px";
-                    });
-                }
             }
         });
     });
