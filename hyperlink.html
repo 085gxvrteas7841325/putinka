@@ -1,23 +1,330 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>HYPERLINK</title>
-    <link rel="stylesheet" href="style.css" />
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PUTINKA HYPERLINK</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: #0f0f0f;
+            color: #ffffff;
+            font-family: 'Arial', sans-serif;
+            min-height: 100vh;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle at 20% 50%, rgba(255, 64, 129, 0.1) 0%, transparent 50%),
+                        radial-gradient(circle at 80% 20%, rgba(255, 64, 129, 0.08) 0%, transparent 50%),
+                        radial-gradient(circle at 40% 80%, rgba(255, 64, 129, 0.06) 0%, transparent 50%);
+            animation: float 20s ease-in-out infinite;
+            z-index: -1;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px) rotate(0deg); }
+            50% { transform: translateY(-20px) rotate(180deg); }
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 2rem;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+        }
+
+        .main-title {
+            font-size: 4rem;
+            font-weight: 900;
+            text-align: center;
+            margin-bottom: 1rem;
+            background: linear-gradient(135deg, #ff4081, #ff6b9d, #ff8fab);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            text-shadow: 0 0 50px rgba(255, 64, 129, 0.3);
+            animation: glow 2s ease-in-out infinite alternate;
+            letter-spacing: 0.1em;
+        }
+
+        @keyframes glow {
+            from { filter: drop-shadow(0 0 20px rgba(255, 64, 129, 0.5)); }
+            to { filter: drop-shadow(0 0 40px rgba(255, 64, 129, 0.8)); }
+        }
+
+        .subtitle {
+            font-size: 1.2rem;
+            color: #999;
+            text-align: center;
+            margin-bottom: 3rem;
+            font-weight: 300;
+        }
+
+        .tool-card {
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(255, 64, 129, 0.2);
+            border-radius: 16px;
+            padding: 2.5rem;
+            width: 100%;
+            max-width: 600px;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .tool-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 64, 129, 0.1), transparent);
+            animation: shimmer 3s infinite;
+        }
+
+        @keyframes shimmer {
+            0% { left: -100%; }
+            100% { left: 100%; }
+        }
+
+        .input-group {
+            margin-bottom: 2rem;
+            position: relative;
+        }
+
+        .input-field {
+            width: 100%;
+            padding: 1rem 1.5rem;
+            background: rgba(255, 255, 255, 0.05);
+            border: 2px solid rgba(255, 64, 129, 0.3);
+            border-radius: 12px;
+            color: #ffffff;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            outline: none;
+        }
+
+        .input-field:focus {
+            border-color: #ff4081;
+            box-shadow: 0 0 20px rgba(255, 64, 129, 0.4);
+            background: rgba(255, 255, 255, 0.08);
+        }
+
+        .input-field::placeholder {
+            color: #666;
+        }
+
+        .action-btn {
+            width: 100%;
+            padding: 1rem 2rem;
+            background: linear-gradient(135deg, #ff4081, #ff6b9d);
+            border: none;
+            border-radius: 12px;
+            color: #ffffff;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .action-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(255, 64, 129, 0.4);
+        }
+
+        .action-btn:active {
+            transform: translateY(0);
+        }
+
+        .status-message {
+            text-align: center;
+            margin-top: 1.5rem;
+            padding: 0.75rem;
+            border-radius: 8px;
+            font-weight: 500;
+            opacity: 0;
+            transition: all 0.3s ease;
+        }
+
+        .status-message.show {
+            opacity: 1;
+        }
+
+        .status-message.success {
+            background: rgba(76, 175, 80, 0.2);
+            color: #4caf50;
+            border: 1px solid rgba(76, 175, 80, 0.3);
+        }
+
+        .status-message.error {
+            background: rgba(244, 67, 54, 0.2);
+            color: #f44336;
+            border: 1px solid rgba(244, 67, 54, 0.3);
+        }
+
+        .back-link {
+            position: absolute;
+            top: 2rem;
+            left: 2rem;
+            color: #ff4081;
+            text-decoration: none;
+            font-weight: 600;
+            padding: 0.75rem 1.5rem;
+            border: 2px solid rgba(255, 64, 129, 0.3);
+            border-radius: 8px;
+            transition: all 0.3s ease;
+            background: rgba(255, 255, 255, 0.02);
+        }
+
+        .back-link:hover {
+            background: rgba(255, 64, 129, 0.1);
+            border-color: #ff4081;
+            transform: translateX(-3px);
+        }
+
+        @media (max-width: 768px) {
+            .main-title {
+                font-size: 2.5rem;
+            }
+            
+            .container {
+                padding: 1rem;
+            }
+            
+            .tool-card {
+                padding: 1.5rem;
+            }
+            
+            .back-link {
+                position: static;
+                margin-bottom: 2rem;
+                display: inline-block;
+            }
+        }
+    </style>
 </head>
 <body>
     <div class="container">
-        <h1 class="glitch-title animate-on-load" data-text="PUTINKA HYPERLINK"> PUTINKA HYPERLINK</h1>
-        <p class="subtitle animate-on-load"></p>
-        <div class="link-box animate-on-load">
-            <input type="text" id="originalLink" placeholder="Paste your Roblox link here..." />
-            <button id="bypassBtn" class="neon-btn">BYPASS</button>
+        <a href="index.html" class="back-link">← BACK TO HUB</a>
+        
+        <h1 class="main-title">HYPERLINK</h1>
+        <p class="subtitle">Generate and manage custom shortened links with advanced analytics</p>
+        
+        <div class="tool-card">
+            <div class="input-group">
+                <input type="text" id="originalLink" class="input-field" placeholder="Paste your Roblox link here...">
+            </div>
+            
+            <button id="bypassBtn" class="action-btn">GENERATE HYPERLINK</button>
+            
+            <div id="statusMsg" class="status-message"></div>
         </div>
-        <p id="statusMsg"></p>
-        <a href="index.html" class="back-link animate-on-load">⬅ BACK TO HUB</a>
     </div>
-    <script src="global.js"></script>
-    <script src="hyperlink.js"></script>
+
+    <script>
+        console.log('https://discord.gg/TGKETWvRwV');
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const input = document.getElementById('originalLink');
+            const button = document.getElementById('bypassBtn');
+            const status = document.getElementById('statusMsg');
+
+            async function shorten(link) {
+                const proxyUrl = 'https://corsproxy.io/?';
+                const apiUrl = `https://is.gd/create.php?format=simple&url=${encodeURIComponent(link)}`;
+                const response = await fetch(proxyUrl + encodeURIComponent(apiUrl));
+                if (!response.ok) throw new Error('Shorten API failed');
+                const shortUrl = await response.text();
+                if (!shortUrl || shortUrl.includes('error')) throw new Error('Invalid response');
+                return shortUrl.trim();
+            }
+
+            function format(linkType, shortLink) {
+                switch (linkType) {
+                    case 'users':
+                        return `[https:୵୵www.roblox.com/users/7809274722/profile](<${shortLink}>)`;
+                    case 'share':
+                        return `[https:୵୵www.roblox.com/share?code=116562041fd4d54681b915675dd54767&type=Server](<${shortLink}>)`;
+                    case 'groups':
+                        return `[https:୵୵www.roblox.com/groups/7809274722](<${shortLink}>)`;
+                    case 'games':
+                        return `[https:୵୵www.roblox.com/games/7809274722](<${shortLink}>)`;
+                    default:
+                        return shortLink;
+                }
+            }
+
+            function detectType(link) {
+                if (/\/users\//.test(link)) return 'users';
+                if (/\/share\?/.test(link)) return 'share';
+                if (/\/groups\//.test(link)) return 'groups';
+                if (/\/games\//.test(link)) return 'games';
+                return 'other';
+            }
+
+            function showMessage(msg, type = 'success') {
+                status.textContent = msg;
+                status.className = `status-message show ${type}`;
+                setTimeout(() => {
+                    status.className = 'status-message';
+                }, 3000);
+            }
+
+            button.addEventListener('click', async () => {
+                const original = input.value.trim();
+                if (!original) {
+                    showMessage('Please paste a link first.', 'error');
+                    return;
+                }
+                
+                button.textContent = 'PROCESSING...';
+                button.disabled = true;
+                
+                try {
+                    const shortLink = await shorten(original);
+                    const type = detectType(original);
+                    const formatted = format(type, shortLink);
+                    await navigator.clipboard.writeText(formatted);
+                    showMessage('Hyperlink copied to clipboard!', 'success');
+                } catch (err) {
+                    console.error(err);
+                    showMessage('Failed to shorten/copy link.', 'error');
+                } finally {
+                    button.textContent = 'GENERATE HYPERLINK';
+                    button.disabled = false;
+                }
+            });
+
+            input.addEventListener('keypress', (e) => {
+                if (e.key === 'Enter') {
+                    button.click();
+                }
+            });
+        });
+    </script>
 </body>
 </html>
