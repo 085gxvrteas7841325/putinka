@@ -377,7 +377,6 @@
         <!-- Header Section -->
         <div class="header-section">
             <h1 class="main-title">PUTINKA HUB</h1>
-            <p class="subtitle">Advanced Tools & Resources Platform</p>
         </div>
 
         <!-- Navigation Cards -->
@@ -449,6 +448,7 @@
                 card.style.animationDelay = `${0.1 * index + 0.5}s`;
             });
 
+            // Add subtle mouse parallax effect
             document.addEventListener('mousemove', (e) => {
                 const orbs = document.querySelectorAll('.orb');
                 const x = e.clientX / window.innerWidth;
@@ -463,6 +463,7 @@
                 });
             });
 
+            // Add click ripple effect
             const cards2 = document.querySelectorAll('.nav-card');
             cards2.forEach(card => {
                 card.addEventListener('click', function(e) {
@@ -495,6 +496,7 @@
             });
         });
 
+        // Add ripple animation
         const style = document.createElement('style');
         style.textContent = `
             @keyframes ripple {
