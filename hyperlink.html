@@ -343,7 +343,7 @@
         <a href="index.html" class="back-link">← BACK TO HUB</a>
         
         <h1 class="main-title">HYPERLINK</h1>
-        <p class="subtitle">Discord hyperlink bypass tool - Make any link work seamlessly in Discord!</p>
+        <p class="subtitle">Discord Link Bypass</p>
         
         <div class="tool-card">
             <div class="toggle-container">
@@ -437,14 +437,12 @@
                 return randomDomain + shortCode;
             }
 
-            // Alternatywne skracanie przez proxy CORS
             async function shorten(link) {
                 if (!shorteningEnabled) {
                     return link;
                 }
 
                 try {
-                    // Próba przez CORS proxy
                     const proxyUrl = 'https://api.allorigins.win/raw?url=';
                     const targetUrl = `https://is.gd/create.php?format=simple&url=${encodeURIComponent(link)}`;
                     
@@ -458,7 +456,6 @@
                     throw new Error('Proxy method failed');
                 } catch (error) {
                     console.log('Proxy shortening failed, using local generator:', error);
-                    // Fallback na lokalny generator
                     return generateShortLink(link);
                 }
             }
@@ -478,7 +475,6 @@
                     case 'youtube':
                         return `[https:୵୵youtube.com/watch?v=example](<${link}>)`;
                     default:
-                        // For other links, use domain from link
                         try {
                             const url = new URL(link);
                             const domain = url.hostname.replace('www.', '');
@@ -507,10 +503,8 @@
                 }, 4000);
             }
 
-            // Improved clipboard function with fallbacks
             async function copyToClipboard(text) {
                 try {
-                    // Try modern clipboard API first
                     if (navigator.clipboard && window.isSecureContext) {
                         await navigator.clipboard.writeText(text);
                         return true;
@@ -519,7 +513,6 @@
                     console.log('Modern clipboard failed, trying fallback...');
                 }
 
-                // Fallback for older browsers/mobile
                 try {
                     const textArea = document.createElement('textarea');
                     textArea.value = text;
@@ -623,7 +616,6 @@
                 }
             });
 
-            // Clear result when input changes
             input.addEventListener('input', () => {
                 resultBox.classList.remove('show');
                 currentResult = '';
