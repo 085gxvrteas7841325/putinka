@@ -36,7 +36,6 @@
             position: relative;
         }
 
-        /* Animated grid background */
         body::before {
             content: '';
             position: fixed;
@@ -58,7 +57,6 @@
             100% { transform: translate(40px, 40px); }
         }
 
-        /* Floating orbs background */
         .bg-orbs {
             position: fixed;
             top: 0;
@@ -110,7 +108,6 @@
             75% { transform: translateY(-20px) translateX(-30px) scale(1.05); }
         }
 
-        /* Main container */
         .main-container {
             display: flex;
             flex-direction: column;
@@ -121,7 +118,6 @@
             position: relative;
         }
 
-        /* Header section */
         .header-section {
             text-align: center;
             margin-bottom: 4rem;
@@ -160,11 +156,10 @@
             animation: fadeIn 1.5s ease-out 0.5s both;
         }
 
-        /* Navigation cards */
         .nav-cards {
             display: grid;
             grid-template-columns: repeat(2, 1fr);
-            grid-template-rows: auto auto auto;
+            grid-template-rows: auto auto;
             gap: 2rem;
             max-width: 900px;
             width: 100%;
@@ -255,19 +250,21 @@
             transform: translateX(4px);
         }
 
-        /* Hyperlink card - spans both columns */
         .hyperlink-card {
-            grid-column: 1 / -1;
+            grid-column: auto;
         }
 
-        /* Discord special card */
         .discord-card {
             grid-column: 1 / -1;
             background: linear-gradient(135deg, #5865F2, #4752C4);
             border-color: #5865F2;
             text-align: center;
         }
-
+        .discord-card .nav-card-icon {
+            background: rgba(255, 255, 255, 0.15);
+            margin: 0 auto 1.5rem;
+            box-shadow: 0 8px 24px 0 rgba(88, 101, 242, 0.5);
+        }
         .discord-card:hover {
             box-shadow: 
                 0 20px 40px rgba(0, 0, 0, 0.3),
@@ -275,12 +272,6 @@
                 inset 0 1px 0 rgba(255, 255, 255, 0.1);
         }
 
-        .discord-card .nav-card-icon {
-            background: rgba(255, 255, 255, 0.15);
-            margin: 0 auto 1.5rem;
-        }
-
-        /* Pulse effect for discord card */
         .discord-card::after {
             content: '';
             position: absolute;
@@ -299,7 +290,6 @@
             height: 300px;
         }
 
-        /* Animations */
         @keyframes fadeInUp {
             from {
                 opacity: 0;
@@ -316,7 +306,6 @@
             to { opacity: 1; }
         }
 
-        /* Responsive design */
         @media (max-width: 768px) {
             .main-container {
                 padding: 1rem;
@@ -341,7 +330,6 @@
             }
         }
 
-        /* Subtle scan lines effect */
         body::after {
             content: '';
             position: fixed;
@@ -366,7 +354,6 @@
     </style>
 </head>
 <body>
-    <!-- Background orbs -->
     <div class="bg-orbs">
         <div class="orb"></div>
         <div class="orb"></div>
@@ -374,14 +361,11 @@
     </div>
 
     <div class="main-container">
-        <!-- Header Section -->
         <div class="header-section">
             <h1 class="main-title">PUTINKA HUB</h1>
         </div>
 
-        <!-- Navigation Cards -->
         <div class="nav-cards">
-            <!-- Website Card -->
             <a href="https://discord.com/oauth2/authorize?client_id=1347890020807082065&redirect_uri=https://app.genn.lu/api/auth&response_type=code&scope=identify&prompt=none&state=eyJyZWZlcnJhbCI6InB1dGlua2EiLCJfX0xPQ0FMX1BBU1NFRCI6eyJfX0lOSVRJQUxfVVJMIjoiaHR0cHM6Ly9hcHAuZ2Vubi5sdS9hdXRoL3B1dGlua2EiLCJfX1JFRElSRUNUX1VSTCI6Imh0dHBzOi8vYXBwLmdlbm4ubHUvZGFzaGJvYXJkIiwiX19DQUxMQkFDS19VUkwiOiJodHRwczovL2FwcC5nZW5uLmx1L2FwaS9hdXRoIiwiX19TV0FQX0hPU1QiOiJhcHAuZ2Vubi5sdSJ9fQ==" target="_blank" class="nav-card">
                 <div class="nav-card-icon">
                     <svg viewBox="0 0 24 24">
@@ -395,7 +379,6 @@
                 </svg>
             </a>
 
-            <!-- Methods Card -->
             <a href="methods.html" class="nav-card">
                 <div class="nav-card-icon">
                     <svg viewBox="0 0 24 24">
@@ -403,13 +386,12 @@
                     </svg>
                 </div>
                 <h3 class="nav-card-title">METHODS</h3>
-                <p class="nav-card-desc">Browse beaming methods to get alot of hits!</p>
+                <p class="nav-card-desc">Browse comprehensive guides and tutorials for various techniques</p>
                 <svg class="nav-card-arrow" viewBox="0 0 24 24" fill="currentColor">
                     <path d="M8.59 16.59L13.17 12 8.59 7.41 10 6l6 6-6 6-1.41-1.41z"/>
                 </svg>
             </a>
 
-            <!-- Hyperlink Card - now spans full width -->
             <a href="hyperlink.html" class="nav-card hyperlink-card">
                 <div class="nav-card-icon">
                     <svg viewBox="0 0 24 24">
@@ -417,13 +399,25 @@
                     </svg>
                 </div>
                 <h3 class="nav-card-title">HYPERLINK</h3>
-                <p class="nav-card-desc">Generate and manage hyperlink with advanced discord bypass!</p>
+                <p class="nav-card-desc">Generate and manage custom shortened links with advanced analytics</p>
                 <svg class="nav-card-arrow" viewBox="0 0 24 24" fill="currentColor">
                     <path d="M8.59 16.59L13.17 12 8.59 7.41 10 6l6 6-6 6-1.41-1.41z"/>
                 </svg>
             </a>
 
-            <!-- Discord Card -->
+            <a href="https://app.genn.lu/tools/refresher" target="_blank" class="nav-card refresher-card">
+                <div class="nav-card-icon">
+                    <svg viewBox="0 0 24 24">
+                        <path d="M12 4V1L8 5l4 4V6c3.31 0 6 2.69 6 6 0 1.3-.42 2.5-1.13 3.47l1.46 1.46C19.41 15.07 20 13.6 20 12c0-4.42-3.58-8-8-8zm-6.41.59L4.99 6.01C3.59 7.41 3 8.9 3 10.5c0 4.42 3.58 8 8 8v3l4-4-4-4v3c-3.31 0-6-2.69-6-6 0-1.3.42-2.5 1.13-3.47z"/>
+                    </svg>
+                </div>
+                <h3 class="nav-card-title">REFRESHER</h3>
+                <p class="nav-card-desc">Easily refresh your Roblox cookie to bypass IP lock and keep your session.</p>
+                <svg class="nav-card-arrow" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M8.59 16.59L13.17 12 8.59 7.41 10 6l6 6-6 6-1.41-1.41z"/>
+                </svg>
+            </a>
+
             <a href="https://discord.gg/TGKETWvRwV" target="_blank" class="nav-card discord-card">
                 <div class="nav-card-icon">
                     <svg viewBox="0 0 24 24">
@@ -440,15 +434,12 @@
     </div>
 
     <script>
-        // Add loading animations
         document.addEventListener('DOMContentLoaded', function() {
-            // Stagger animations for cards
             const cards = document.querySelectorAll('.nav-card');
             cards.forEach((card, index) => {
                 card.style.animationDelay = `${0.1 * index + 0.5}s`;
             });
 
-            // Add subtle mouse parallax effect
             document.addEventListener('mousemove', (e) => {
                 const orbs = document.querySelectorAll('.orb');
                 const x = e.clientX / window.innerWidth;
@@ -463,7 +454,6 @@
                 });
             });
 
-            // Add click ripple effect
             const cards2 = document.querySelectorAll('.nav-card');
             cards2.forEach(card => {
                 card.addEventListener('click', function(e) {
@@ -496,7 +486,6 @@
             });
         });
 
-        // Add ripple animation
         const style = document.createElement('style');
         style.textContent = `
             @keyframes ripple {
