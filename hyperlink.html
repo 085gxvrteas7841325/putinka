@@ -400,20 +400,13 @@
                 }
 
                 try {
-                    // Use CORS proxy to access v.gd API
-                    const proxyUrl = 'https://api.allorigins.win/raw?url=';
-                    const vgdUrl = `https://v.gd/create.php?format=simple&url=${encodeURIComponent(link)}`;
-                    
-                    const response = await fetch(proxyUrl + encodeURIComponent(vgdUrl));
+                    const response = await fetch(`https://clck.ru/--?url=${encodeURIComponent(link)}`);
                     const result = await response.text();
-                    
-                    if (result && result.startsWith('https://v.gd/') && !result.includes('Error')) {
+                    if (result && result.startsWith('https://clck.ru/')) {
                         return result.trim();
                     }
-                    
-                    throw new Error('v.gd shortening failed');
+                    throw new Error('Shortening failed');
                 } catch (error) {
-                    console.log('Shortening failed:', error);
                     throw error;
                 }
             }
