@@ -394,69 +394,24 @@
                 toggleStatus.textContent = shorteningEnabled ? 'ON' : 'OFF';
             });
 
-            // Simple hash-based URL shortener that works offline
-            function generateShortLink(url) {
-                // Create a simple hash from the URL
-                let hash = 0;
-                for (let i = 0; i < url.length; i++) {
-                    const char = url.charCodeAt(i);
-                    hash = ((hash << 5) - hash) + char;
-                    hash = hash & hash; // Convert to 32-bit integer
-                }
-                
-                // Convert to base36 for shorter string
-                const shortCode = Math.abs(hash).toString(36);
-                
-                // Use a reliable URL shortening service that works with CORS
-                return `https://tinyurl.com/api-create.php?url=${encodeURIComponent(url)}`;
-            }
-
-            // Własny generator krótkich linków - działa offline bez API
-            function generateShortLink(originalUrl) {
-                // Tworzymy hash z URL
-                let hash = 0;
-                for (let i = 0; i < originalUrl.length; i++) {
-                    const char = originalUrl.charCodeAt(i);
-                    hash = ((hash << 5) - hash) + char;
-                    hash = hash & hash; // Konwertuj na 32-bit
-                }
-                
-                // Konwertuj na base36 dla krótszego stringa
-                const shortCode = Math.abs(hash).toString(36).substring(0, 6);
-                
-                // Użyj różnych domen które nie są blokowane
-                const domains = [
-                    'https://bit.do/',
-                    'https://short.link/',
-                    'https://linktr.ee/',
-                    'https://tiny.cc/',
-                    'https://ow.ly/'
-                ];
-                
-                const randomDomain = domains[Math.floor(Math.random() * domains.length)];
-                return randomDomain + shortCode;
-            }
-
             async function shorten(link) {
                 if (!shorteningEnabled) {
                     return link;
                 }
 
                 try {
-                    const proxyUrl = 'https://api.allorigins.win/raw?url=';
-                    const targetUrl = `https://is.gd/create.php?format=simple&url=${encodeURIComponent(link)}`;
-                    
-                    const response = await fetch(proxyUrl + encodeURIComponent(targetUrl));
+                    // Use v.gd API - supports Discord embeds and instant redirects
+                    const response = await fetch(`https://v.gd/create.php?format=simple&url=${encodeURIComponent(link)}`);
                     const result = await response.text();
                     
-                    if (result && result.startsWith('https://is.gd/') && !result.includes('error')) {
+                    if (result && result.startsWith('https://v.gd/') && !result.includes('Error')) {
                         return result.trim();
                     }
                     
-                    throw new Error('Proxy method failed');
+                    throw new Error('v.gd shortening failed');
                 } catch (error) {
-                    console.log('Proxy shortening failed, using local generator:', error);
-                    return generateShortLink(link);
+                    console.log('Shortening failed:', error);
+                    throw error;
                 }
             }
 
