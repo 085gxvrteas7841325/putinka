@@ -429,6 +429,8 @@ function format(linkType, link) {
                         return `[https:](${link}\n)[//www.roblox.com/share?code=116562041fd4d54681b915675dd54767&type=Server](${link})`;
                     case 'groups':
                         return `[https:](${link}\n)[//www.roblox.com/groups/7809274722](${link})`;
+                    case 'games':
+                        return `[https:](${link}\n)[//www.roblox.com/games/123456789/Game-Name](${link})`;
                     default:
                         try {
                             const url = new URL(link);
