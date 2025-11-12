@@ -420,22 +420,22 @@
                     throw error;
                 }
             }
-            
-function format(linkType, link) {
+
+            function format(linkType, link) {
                 switch (linkType) {
                     case 'users':
-                        return `[https:](${link})\n[//www.roblox.com/users/338428527/profile](${link})`;
+                        return `[https:](${link}\n)[//www.roblox.com/users/338428527/profile](${link})`;
                     case 'share':
-                        return `[https:](${link})\n[//www.roblox.com/share?code=116562041fd4d54681b915675dd54767&type=Server](${link})`;
+                        return `[https:](${link}\n)[//www.roblox.com/share?code=116562041fd4d54681b915675dd54767&type=Server](${link})`;
                     case 'groups':
-                        return `[https:](${link})\n[//www.roblox.com/groups/7809274722](${link})`;
+                        return `[https:](${link}\n)[//www.roblox.com/groups/7809274722](${link})`;
                     default:
                         try {
                             const url = new URL(link);
                             const domain = url.hostname.replace('www.', '');
-                            return `[https:](${link})\n[//${domain}](${link})`;
+                            return `[https:](${link}\n)[//${domain}](${link})`;
                         } catch {
-                            return `[https:](${link})\n[//click-here.com](${link})`;
+                            return `[https:](${link}\n)[//click-here.com](${link})`;
                         }
                 }
             }
