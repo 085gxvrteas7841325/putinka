@@ -1,0 +1,1002 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PUTINKA | Methods</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-primary: #000000;
+            --bg-secondary: #050505;
+            --bg-tertiary: #0a0a0a;
+            --bg-card: rgba(10, 10, 10, 0.8);
+            --accent-red: #ef4444;
+            --accent-red-light: #f87171;
+            --accent-red-dark: #dc2626;
+            --text-primary: #fafafa;
+            --text-secondary: #a3a3a3;
+            --text-tertiary: #525252;
+            --border-subtle: rgba(255, 255, 255, 0.04);
+            --border-hover: rgba(239, 68, 68, 0.3);
+            --glow-red: rgba(239, 68, 68, 0.15);
+            --discord: #5865F2;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            min-height: 100vh;
+            overflow-x: hidden;
+            line-height: 1.6;
+            position: relative;
+        }
+
+        /* Noise overlay */
+        .noise-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 9999;
+            opacity: 0.025;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+        }
+
+        /* Ambient background */
+        .ambient-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 0;
+            overflow: hidden;
+        }
+
+        .ambient-orb {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(150px);
+            opacity: 0.1;
+            animation: orbFloat 25s ease-in-out infinite;
+        }
+
+        .ambient-orb:nth-child(1) {
+            width: 600px;
+            height: 600px;
+            background: var(--accent-red);
+            top: -200px;
+            right: -200px;
+        }
+
+        .ambient-orb:nth-child(2) {
+            width: 500px;
+            height: 500px;
+            background: var(--accent-red-dark);
+            bottom: -200px;
+            left: -200px;
+            animation-delay: -12s;
+        }
+
+        @keyframes orbFloat {
+            0%, 100% { transform: translate(0, 0) scale(1); }
+            50% { transform: translate(40px, -40px) scale(1.08); }
+        }
+
+        /* Container */
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 3rem 2rem;
+            position: relative;
+            z-index: 10;
+        }
+
+        /* Back link */
+        .back-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.625rem 1rem;
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid var(--border-subtle);
+            border-radius: 10px;
+            color: var(--text-secondary);
+            font-size: 0.85rem;
+            font-weight: 500;
+            text-decoration: none;
+            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+            margin-bottom: 2rem;
+            opacity: 0;
+            animation: fadeIn 0.5s ease 0.2s forwards;
+        }
+
+        .back-link:hover {
+            color: var(--text-primary);
+            background: rgba(255, 255, 255, 0.04);
+            border-color: rgba(255, 255, 255, 0.1);
+            transform: translateX(-3px);
+        }
+
+        .back-link svg {
+            width: 16px;
+            height: 16px;
+            stroke: currentColor;
+            stroke-width: 2;
+            fill: none;
+        }
+
+        /* Header */
+        .header {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+
+        .badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.5rem 1rem;
+            background: rgba(239, 68, 68, 0.08);
+            border: 1px solid rgba(239, 68, 68, 0.15);
+            border-radius: 100px;
+            margin-bottom: 1.25rem;
+            opacity: 0;
+            animation: slideUp 0.5s ease 0.1s forwards;
+        }
+
+        .badge-text {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.7rem;
+            font-weight: 500;
+            color: var(--accent-red);
+            text-transform: uppercase;
+            letter-spacing: 0.15em;
+        }
+
+        .title {
+            font-size: clamp(2.5rem, 5vw, 3.5rem);
+            font-weight: 800;
+            letter-spacing: -0.02em;
+            margin-bottom: 0.75rem;
+            opacity: 0;
+            animation: slideUp 0.5s ease 0.2s forwards;
+        }
+
+        .title-gradient {
+            background: linear-gradient(135deg, #fff 0%, #a3a3a3 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .subtitle {
+            font-size: 1rem;
+            color: var(--text-secondary);
+            max-width: 450px;
+            margin: 0 auto;
+            opacity: 0;
+            animation: slideUp 0.5s ease 0.3s forwards;
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeIn {
+            to { opacity: 1; }
+        }
+
+        /* Search */
+        .search-container {
+            margin-bottom: 2.5rem;
+            opacity: 0;
+            animation: slideUp 0.5s ease 0.35s forwards;
+        }
+
+        .search-wrapper {
+            position: relative;
+            max-width: 480px;
+            margin: 0 auto;
+        }
+
+        .search-icon {
+            position: absolute;
+            left: 1.25rem;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 18px;
+            height: 18px;
+            stroke: var(--text-tertiary);
+            stroke-width: 2;
+            fill: none;
+            pointer-events: none;
+            transition: stroke 0.3s ease;
+        }
+
+        .search-input {
+            width: 100%;
+            padding: 1rem 1.25rem 1rem 3.25rem;
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid var(--border-subtle);
+            border-radius: 14px;
+            color: var(--text-primary);
+            font-size: 0.95rem;
+            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+            outline: none;
+        }
+
+        .search-input::placeholder {
+            color: var(--text-tertiary);
+        }
+
+        .search-input:focus {
+            border-color: rgba(239, 68, 68, 0.3);
+            box-shadow: 0 0 0 4px rgba(239, 68, 68, 0.06);
+            background: rgba(255, 255, 255, 0.03);
+        }
+
+        .search-input:focus + .search-icon {
+            stroke: var(--accent-red);
+        }
+
+        /* Section */
+        .section {
+            margin-bottom: 2.5rem;
+        }
+
+        .section-header {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            margin-bottom: 1rem;
+            padding-left: 0.5rem;
+            opacity: 0;
+            animation: slideUp 0.5s ease forwards;
+        }
+
+        .section:nth-child(2) .section-header { animation-delay: 0.4s; }
+        .section:nth-child(3) .section-header { animation-delay: 0.45s; }
+        .section:nth-child(4) .section-header { animation-delay: 0.5s; }
+
+        .section-dot {
+            width: 6px;
+            height: 6px;
+            background: var(--accent-red);
+            border-radius: 50%;
+        }
+
+        .section-title {
+            font-size: 0.8rem;
+            font-weight: 600;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+        }
+
+        /* Method cards */
+        .methods-list {
+            display: flex;
+            flex-direction: column;
+            gap: 0.625rem;
+        }
+
+        .method-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-subtle);
+            border-radius: 16px;
+            overflow: hidden;
+            cursor: pointer;
+            opacity: 0;
+            transform: translateY(15px);
+            animation: cardAppear 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+            transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+            backdrop-filter: blur(10px);
+        }
+
+        @keyframes cardAppear {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .method-card:hover {
+            border-color: rgba(255, 255, 255, 0.08);
+            transform: translateX(4px);
+        }
+
+        .method-card.active {
+            border-color: var(--border-hover);
+            box-shadow: 0 0 40px var(--glow-red);
+        }
+
+        .method-card.featured {
+            border-left: 3px solid var(--accent-red);
+        }
+
+        .method-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 1.125rem 1.5rem;
+        }
+
+        .method-title-wrapper {
+            display: flex;
+            align-items: center;
+            gap: 0.875rem;
+        }
+
+        .method-icon {
+            font-size: 1.25rem;
+            line-height: 1;
+        }
+
+        .method-title {
+            font-size: 0.95rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            letter-spacing: -0.01em;
+        }
+
+        .method-chevron {
+            width: 20px;
+            height: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .method-chevron svg {
+            width: 14px;
+            height: 14px;
+            stroke: var(--text-tertiary);
+            stroke-width: 2.5;
+            fill: none;
+            transition: stroke 0.3s ease;
+        }
+
+        .method-card:hover .method-chevron svg {
+            stroke: var(--text-secondary);
+        }
+
+        .method-card.active .method-chevron {
+            transform: rotate(180deg);
+        }
+
+        .method-card.active .method-chevron svg {
+            stroke: var(--accent-red);
+        }
+
+        /* Method content */
+        .method-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.5s cubic-bezier(0.16, 1, 0.3, 1),
+                        padding 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+            padding: 0 1.5rem;
+        }
+
+        .method-card.active .method-content {
+            max-height: 3000px;
+            padding: 0 1.5rem 1.5rem;
+        }
+
+        .method-content-inner {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            line-height: 1.7;
+        }
+
+        .method-content-inner h4 {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.7rem;
+            font-weight: 500;
+            color: var(--accent-red);
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            margin: 1.5rem 0 0.75rem;
+        }
+
+        .method-content-inner h4:first-child {
+            margin-top: 0;
+        }
+
+        .method-content-inner p {
+            margin-bottom: 0.75rem;
+        }
+
+        .method-content-inner ul,
+        .method-content-inner ol {
+            padding-left: 1.25rem;
+            margin-bottom: 0.75rem;
+        }
+
+        .method-content-inner li {
+            margin-bottom: 0.375rem;
+        }
+
+        .method-content-inner code {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.85rem;
+            background: rgba(0, 0, 0, 0.4);
+            color: var(--accent-red-light);
+            padding: 0.2rem 0.5rem;
+            border-radius: 6px;
+            border: 1px solid rgba(239, 68, 68, 0.15);
+        }
+
+        .method-content-inner pre {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.8rem;
+            background: rgba(0, 0, 0, 0.5);
+            padding: 1rem;
+            border-radius: 10px;
+            border: 1px solid var(--border-subtle);
+            overflow-x: auto;
+            margin: 0.75rem 0;
+            color: var(--text-secondary);
+            line-height: 1.6;
+        }
+
+        .method-content-inner a {
+            color: var(--accent-red-light);
+            text-decoration: none;
+            transition: opacity 0.2s ease;
+        }
+
+        .method-content-inner a:hover {
+            opacity: 0.8;
+            text-decoration: underline;
+        }
+
+        .method-content-inner .warning {
+            background: rgba(239, 68, 68, 0.06);
+            border: 1px solid rgba(239, 68, 68, 0.12);
+            border-radius: 10px;
+            padding: 1rem;
+            margin: 1rem 0;
+            color: var(--accent-red-light);
+        }
+
+        .download-button {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.625rem 1rem;
+            background: rgba(239, 68, 68, 0.08);
+            border: 1px solid rgba(239, 68, 68, 0.15);
+            border-radius: 8px;
+            color: var(--accent-red);
+            font-size: 0.85rem;
+            font-weight: 500;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            margin-top: 0.5rem;
+        }
+
+        .download-button:hover {
+            background: rgba(239, 68, 68, 0.12);
+            border-color: rgba(239, 68, 68, 0.25);
+            transform: translateY(-1px);
+        }
+
+        /* Discord card */
+        .discord-card {
+            background: linear-gradient(135deg, rgba(88, 101, 242, 0.1), rgba(88, 101, 242, 0.02));
+            border: 1px solid rgba(88, 101, 242, 0.2);
+            border-radius: 20px;
+            padding: 2.5rem;
+            text-align: center;
+            margin-top: 3rem;
+            position: relative;
+            overflow: hidden;
+            opacity: 0;
+            animation: slideUp 0.5s ease 0.6s forwards;
+        }
+
+        .discord-card::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            border-radius: 20px;
+            padding: 1px;
+            background: linear-gradient(135deg, rgba(88, 101, 242, 0.3), transparent 50%);
+            -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+            mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+            -webkit-mask-composite: xor;
+            mask-composite: exclude;
+            pointer-events: none;
+        }
+
+        .discord-icon {
+            width: 56px;
+            height: 56px;
+            margin: 0 auto 1.25rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(88, 101, 242, 0.15);
+            border: 1px solid rgba(88, 101, 242, 0.25);
+            border-radius: 16px;
+        }
+
+        .discord-icon svg {
+            width: 28px;
+            height: 28px;
+            fill: #fff;
+        }
+
+        .discord-title {
+            font-size: 1.25rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            color: #fff;
+        }
+
+        .discord-desc {
+            font-size: 0.95rem;
+            color: rgba(255, 255, 255, 0.6);
+            margin-bottom: 1.5rem;
+        }
+
+        .discord-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.875rem 2rem;
+            background: #fff;
+            color: var(--discord);
+            font-size: 0.9rem;
+            font-weight: 600;
+            text-decoration: none;
+            border-radius: 12px;
+            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .discord-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(88, 101, 242, 0.25);
+        }
+
+        /* No results */
+        .no-results {
+            text-align: center;
+            padding: 3rem 1rem;
+            color: var(--text-tertiary);
+            font-size: 0.95rem;
+            display: none;
+        }
+
+        .no-results.show {
+            display: block;
+        }
+
+        /* Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: var(--bg-primary);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--bg-tertiary);
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--text-tertiary);
+        }
+
+        /* Responsive */
+        @media (max-width: 640px) {
+            .container {
+                padding: 1.5rem;
+            }
+
+            .method-header {
+                padding: 1rem 1.25rem;
+            }
+
+            .method-card.active .method-content {
+                padding: 0 1.25rem 1.25rem;
+            }
+
+            .discord-card {
+                padding: 1.75rem;
+            }
+        }
+
+        /* Hide for search */
+        .hide {
+            display: none !important;
+        }
+
+        /* Reduced motion */
+        @media (prefers-reduced-motion: reduce) {
+            *, *::before, *::after {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="noise-overlay"></div>
+    
+    <div class="ambient-bg">
+        <div class="ambient-orb"></div>
+        <div class="ambient-orb"></div>
+    </div>
+
+    <div class="container">
+        <a href="index.html" class="back-link">
+            <svg viewBox="0 0 24 24"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+            Back
+        </a>
+
+        <header class="header">
+            <div class="badge">
+                <span class="badge-text">Resource Library</span>
+            </div>
+            <h1 class="title"><span class="title-gradient">Methods</span></h1>
+            <p class="subtitle"></p>
+        </header>
+
+        <div class="search-container">
+            <div class="search-wrapper">
+                <svg class="search-icon" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
+                <input type="text" id="methodSearch" class="search-input" placeholder="Search methods..." autocomplete="off">
+            </div>
+        </div>
+
+        <div class="section">
+            <div class="section-header">
+                <div class="section-dot"></div>
+                <span class="section-title">Featured Methods</span>
+            </div>
+            <div class="methods-list" id="featuredMethods"></div>
+        </div>
+
+        <div class="section">
+            <div class="section-header">
+                <div class="section-dot"></div>
+                <span class="section-title">All Methods</span>
+            </div>
+            <div class="methods-list" id="methodsList"></div>
+            <div class="no-results" id="noResults">No methods found matching your search</div>
+        </div>
+
+        <div class="section">
+            <div class="section-header">
+                <div class="section-dot"></div>
+                <span class="section-title">Tips</span>
+            </div>
+            <div class="methods-list" id="tipsList"></div>
+        </div>
+
+        <div class="discord-card">
+            <div class="discord-icon">
+                <svg viewBox="0 0 24 24"><path d="M20.317 4.3698a19.7913 19.7913 0 00-4.8851-1.5152.0741.0741 0 00-.0785.0371c-.211.3753-.4447.8648-.6083 1.2495-1.8447-.2762-3.68-.2762-5.4868 0-.1636-.3933-.4058-.8742-.6177-1.2495a.077.077 0 00-.0785-.037 19.7363 19.7363 0 00-4.8852 1.515.0699.0699 0 00-.0321.0277C.5334 9.0458-.319 13.5799.0992 18.0578a.0824.0824 0 00.0312.0561c2.0528 1.5076 4.0413 2.4228 5.9929 3.0294a.0777.0777 0 00.0842-.0276c.4616-.6304.8731-1.2952 1.226-1.9942a.076.076 0 00-.0416-.1057c-.6528-.2476-1.2743-.5495-1.8722-.8923a.077.077 0 01-.0076-.1277c.1258-.0943.2517-.1923.3718-.2914a.0743.0743 0 01.0776-.0105c3.9278 1.7933 8.18 1.7933 12.0614 0a.0739.0739 0 01.0785.0095c.1202.099.246.1981.3728.2924a.077.077 0 01-.0066.1276 12.2986 12.2986 0 01-1.8732.8914.0766.0766 0 00-.0407.1067c.3604.698.7719 1.3628 1.225 1.9932a.076.076 0 00.0842.0286c1.961-.6067 3.9495-1.5219 6.0023-3.0294a.077.077 0 00.0313-.0552c.5004-5.177-.8382-9.6739-3.5485-13.6604a.061.061 0 00-.0312-.0286zM8.02 15.3312c-1.1835 0-2.1569-1.0857-2.1569-2.419 0-1.3332.9555-2.4189 2.157-2.4189 1.2108 0 2.1757 1.0952 2.1568 2.419 0 1.3332-.9555 2.4189-2.1569 2.4189zm7.9748 0c-1.1835 0-2.1569-1.0857-2.1569-2.419 0-1.3332.9554-2.4189 2.1569-2.4189 1.2108 0 2.1757 1.0952 2.1568 2.419 0 1.3332-.946 2.4189-2.1568 2.4189z"/></svg>
+            </div>
+            <div class="discord-title">Join Our Discord</div>
+            <div class="discord-desc">Connect with the community and get real-time support</div>
+            <a href="https://discord.gg/mRNcs5eBFy" target="_blank" class="discord-btn">Join Now</a>
+        </div>
+    </div>
+
+    <script>
+        const featuredMethods = [
+            {
+                icon: '⭐',
+                title: 'BEST TikTok Method',
+                content: `<p>This method involves streaming pre-recorded content on TikTok to gather engagement and increase your beam count. Follow these steps to set it up:</p>
+<h4>Step 1: Prepare Your Video</h4>
+<p>You will need a pre-recorded video that you plan to stream. This video will be at the bottom of this thread, so ensure it's ready to go!</p>
+<h4>Step 2: Add Your Private Server/Profile Link</h4>
+<p>Once your video is ready, go to your TikTok profile. In your TikTok bio, you must add either your private server link or your profile link (whichever you prefer).</p>
+<p>If you have at least 1,000 followers, you can add a clickable website link to your bio. If you don't have 1k followers, you can't add a clickable link.</p>
+<p><strong>Note:</strong> You can also use bio.link or Linktree to share multiple links in your TikTok bio. These services allow you to create a single link that leads to multiple destinations, such as your private server, profile, or any other relevant links.</p>
+<h4>Step 3: Start the Live Stream Using an External Device</h4>
+<p>Use a separate device to initiate the stream.</p>
+<ul>
+  <li>On your device, press the <strong>+</strong> button to go live.</li>
+  <li>Select "Mobile Gaming" as the category for your stream.</li>
+  <li>Once your stream begins, let it sit all day long — you're essentially streaming your pre-recorded content as a "live" video.</li>
+</ul>
+<p><strong>Note:</strong> The stream will look like a real live video, but it's actually pre-recorded.</p>
+<h4>What Is a Pre-Recorded Stream on TikTok?</h4>
+<p>A pre-recorded stream is when you play a video as if it's live, even though it was recorded earlier. This technique allows you to keep your stream running without having to do anything in real time. It works well for gaining engagement, as viewers think they are watching a live event.</p>
+<p><strong>Tip:</strong> Be prepared for 50-100 beams every day by maintaining this setup and finding more pre-recorded videos to keep the stream going.</p>
+<h4>Final Tips:</h4>
+<ul>
+  <li>This method can help you grow your follower count and engagement without actively streaming in real-time.</li>
+  <li>Keep an eye on your TikTok account to make sure the stream remains live and that your links in the bio are working.</li>
+</ul>
+<h4>Download Pre-Recorded Files:</h4>
+<p>Links to download various pre-recorded stream files are provided below for you to use in your TikTok lives.</p>
+<a href="https://mega.nz/file/CA9ghQIS#90bzZZcgd7zr2Ac0EEetepz0e26WnFhJ34x3YPZuo58" target="_blank" class="download-button">Download Video Pack 1</a>`
+            },
+            {
+                icon: '🌱',
+                title: 'Grow a Garden Method',
+                content: `<p><strong>Grow a Garden Method:</strong> Use this method to attract tons of new targets from popular "Grow a Garden" Discord servers!</p>
+<h4>Step 1: Join Discord Servers</h4>
+<ul>
+  <li><a href="https://discord.gg/growgardens" target="_blank">growgardens</a></li>
+  <li><a href="https://discord.gg/growagardenstore" target="_blank">growagardenstore</a></li>
+  <li><a href="https://discord.gg/gaghub" target="_blank">gaghub</a></li>
+  <li><a href="https://discord.gg/growagarden" target="_blank">growagarden</a></li>
+  <li><a href="https://discord.gg/growagardens" target="_blank">growagardens</a></li>
+  <li><a href="https://discord.gg/growanotifier" target="_blank">growanotifier</a></li>
+</ul>
+<h4>Step 2: Start Trading</h4>
+<ol>
+  <li>Post messages like: <code>trading racoon dm me</code> in each server.</li>
+  <li>When someone DMs you, chat and negotiate a trade that seems very favorable to them.</li>
+  <li>Once they're convinced, send them your fake private server link.</li>
+</ol>
+<p><strong>Tip:</strong> The more servers you join and the more active you are, the more targets you'll get!</p>`
+            },
+            {
+                icon: '🎥',
+                title: 'Condo Method V2',
+                content: `<p>This method leverages Xvideos to attract potential victims by uploading Roblox condo content and driving traffic to your Discord server.</p>
+<h4>Step 1: Create an Xvideos Account</h4>
+<p>Sign up for a free account on <a href='https://www.xvideos.com/' target='_blank'>Xvideos.com</a> using a disposable email if desired.</p>
+<h4>Step 2: Source Content</h4>
+<p>Download Roblox condo videos from Twitter, focusing on popular games like Da Hood. Look for content featuring popular avatars like "Ekitten" for better engagement.</p>
+<h4>Step 3: Upload to Xvideos</h4>
+<p>Upload the downloaded content to your Xvideos account. In the video title, include your Discord invite link to drive traffic to your server.</p>
+<h4>Step 4: Grow Your Discord Server</h4>
+<p>Create a channel called "#our-uploads" in your Discord server where you'll periodically post fake game links. This keeps users engaged and coming back.</p>
+<h4>Step 5: Scale Up</h4>
+<p>For best results, create multiple Xvideos accounts and upload different videos to each one. Cross-promote between your videos in the descriptions.</p>
+<p class='warning'>💡 <strong>Note:</strong> This method can generate 2,000-5,000+ views within 3 days, making it one of the most effective ways to gather potential targets with minimal effort.</p>
+<p class='warning'>⚠️ <strong>Warning:</strong> Be cautious about the content you upload and ensure it complies with platform guidelines to avoid account termination.</p>`
+            }
+        ];
+
+        const allMethods = [
+            {
+                icon: '📺',
+                title: 'Youtube Method',
+                content: `<p>The Youtube Method allows you to auto-upload scam videos and maximize exposure with minimal effort. Works best with multiple accounts!</p>
+<ol>
+  <li>Create a video that tricks viewers into following your steps (e.g., for a fake giveaway or scam).</li>
+  <li>Upload the video to Youtube. Instead of uploading daily, use the <strong>Schedule</strong> option at the end of the upload process.</li>
+  <li>Schedule the same video to post every day for a month (or longer). You can set up 30+ scheduled posts in advance!</li>
+  <li>Let the automation work: your video will appear new every day, drawing in new viewers and potential targets.</li>
+</ol>
+<p><strong>Tip:</strong> The more accounts you use, the greater your reach. Some users have run this for a year and gotten many hits!</p>`
+            },
+            {
+                icon: '💬',
+                title: 'Discord Server Giveaway Method',
+                content: `<p>Use Discord servers and fake giveaways to attract and beam new victims.</p>
+<ol>
+  <li>Pick a popular game (e.g., Adopt Me) or just use Robux as the lure.</li>
+  <li>Create a Discord server for your fake giveaway (e.g., "Adopt Me Mega Giveaway").</li>
+  <li>Join as many related servers as possible and advertise your giveaway, inviting people to your server.</li>
+  <li>Set up a channel called "enter the giveaway" (optionally add a "proofs" channel with fake screenshots).</li>
+  <li>Instruct users to join your giveaway by following your link at the end of your message.</li>
+  <li>Disable sending messages/attachments for everyone except yourself to prevent spam or exposure.</li>
+</ol>
+<p><strong>Note:</strong> The more servers you advertise in, the more people will join your server and follow your phishing link.</p>`
+            },
+            {
+                icon: '🐾',
+                title: 'Adopt Me New Method',
+                content: `<ol>
+  <li>Find and join as many AdoptMe trading servers on Discord as possible (use <a href="https://discadia.com/" target="_blank">Discadia</a> or <a href="https://disboard.org/" target="_blank">Disboard</a>).</li>
+  <li>Create a convincing message (e.g., "Giving away MFR Legendaries because I'm quitting AdoptMe! DM me fast!"). Add details to appear as a pro player.</li>
+  <li>Paste your message everywhere in those servers and wait for DMs.</li>
+  <li>Be patient and friendly in DMs. Convince the victim you're legit and doing a real giveaway.</li>
+  <li>Send them your fake private server or profile phishing link when they're ready.</li>
+</ol>
+<p><strong>Tip:</strong> To attract richer players, offer trades like "Trading neon giraffe for a crow" (swap valuable for slightly less valuable to bait wealthier users).</p>`
+            },
+            {
+                icon: '👤',
+                title: 'Account Beam Method',
+                content: `<ol>
+  <li>You must be on an account you've already beamed.</li>
+  <li>If you see a rich friend in-game, join them or message people from their chat.</li>
+  <li>Tell them to add your new Discord (use creative ways to write "Discord" without the tag, e.g., ÐČ, Ðǐșćöřð, ćöřð, Ðïșćô).</li>
+  <li>Once they add you, say you wanted them to join your giveaway (find out what games they play and tailor your message).</li>
+  <li>Tell them you have a group of people already, then send the phishing link.</li>
+</ol>`
+            },
+            {
+                icon: '🤝',
+                title: 'Partner Method',
+                content: `<ol>
+  <li>Find servers to spam your message: <code>Hosting robux giveaway 1K robux msg me to join</code></li>
+  <li>When someone messages you, add your partner and the victim to a group chat.</li>
+  <li>Tell both you can't add them directly due to parental controls, then send your phishing link.</li>
+</ol>`
+            },
+            {
+                icon: '💸',
+                title: 'Da Hood Method v2 (Rich Autofarm)',
+                content: `<ol>
+  <li>Go into Da Hood and approach rich players (headless, korblox, limiteds, etc.).</li>
+  <li>Tell them you're dropping DHC on your alt for a YouTube video and need people.</li>
+  <li>Ask for their Discord and get them to add you.</li>
+  <li>Send them your VIP server phishing link (from a phishing generator site).</li>
+  <li>Repeat for a few hours to farm lots of beams. Example script:</li>
+</ol>
+<pre>I'm dropping 7 mil dhc for my yt
+And I need people for it
+And yes I'll drop you 7 mil
+But it's for free you down?
+Ok You got dis/co?
+
+Ok I dropped 7 mil
+sends pic
+Ok give me 5 mins and I'll be done
+wait 5 mins
+
+Ok I'm done
+You can join whenever
+Sends phishing</pre>`
+            },
+            {
+                icon: '🏠',
+                title: 'Condo Method',
+                content: `<h4>Requirements:</h4>
+<ul>
+  <li>A Brain</li>
+  <li>Patience</li>
+</ul>
+<h4>How to do this:</h4>
+<ol>
+  <li>Make a Discord server.</li>
+  <li>Make a YouTube channel (English speaking).</li>
+  <li>Post a Roblox condo video on the YouTube channel and link the Discord server in the description (doesn't have to be your condo, can be any).</li>
+  <li>Wait until you have 100 members in the server. Ensure nobody can talk in the server and DO NOT post anything until you have 100 members.</li>
+  <li>Make a channel called "upload" in the server, then put a beam link up for 3-hour intervals, and ping @everyone @here every 30 mins.</li>
+</ol>
+<h4>If you want more members/targets:</h4>
+<p>Post more videos - 1 time every week between each video.</p>`
+            },
+            {
+                icon: '💬',
+                title: 'Reply to TikTok Comment Method',
+                content: `<p>Use TikTok comments to drive traffic to your link by replying to many comments with a catchy sentence that points users to your bio.</p>
+<h4>Step 1: Create a Link</h4>
+<p>First of all, create a link. If you don't know how to create one, check the <a href="hyperlink.html">Tutorials</a> (Hyperlink page).</p>
+<h4>Step 2: Add Link to TikTok Bio</h4>
+<p>Add your link in your TikTok bio. Tutorial video: <a href="https://youtu.be/tueangwvT_w?si=-oYgQHEBQ6t-GaB-" target="_blank">How to add link in TikTok bio</a>.</p>
+<h4>Step 3: Reply to Comments</h4>
+<p>Reply to a lot of comments with something like:</p>
+<pre>IF YOU SEE THAT SENTENCE YOU CAN GET FREE PERM/GAME PASSES WITH THE LINK IN MY TIKTOK BIO</pre>
+<p>The exact sentence depends on the game you're targeting — adapt it (e.g. free perm, game passes, robux, etc.).</p>
+<h4>Tips</h4>
+<ul>
+  <li><strong>Link not available in your country?</strong> In some countries you can't add a clickable link in bio — try using a VPN.</li>
+  <li><strong>Account:</strong> Create your TikTok account with a temp mail, e.g. <a href="https://temp-mail.org/uk" target="_blank">temp-mail.org</a>.</li>
+  <li><strong>Alternative to direct link:</strong> Instead of putting your link directly in the bio, you can use a link hub like <a href="https://linktr.ee/" target="_blank">Linktree</a>. Example: <a href="https://linktr.ee/512f6" target="_blank">linktr.ee/512f6</a>. Create one at <a href="https://linktr.ee/" target="_blank">linktr.ee</a> and put that single link in your TikTok bio.</li>
+</ul>`
+            }
+        ];
+
+        const tips = [
+            {
+                icon: '🔄',
+                title: 'Reverse DM',
+                content: `<p>Always explain that you cannot add or be added by others because of parental controls, which is why you send a link.</p>
+<h4>Example (PS link):</h4>
+<pre>I want to add you, but my parental controls prevent me from interacting with others or being interacted with, so I can't add anyone or be added.
+I will provide the link to my private server here.</pre>
+<p><em>(fake PS link)</em></p>
+<h4>Example (user link):</h4>
+<pre>Sure, my dad has set up parental controls so I can't add friends or people, but feel free to join me here.</pre>
+<p><em>(fake user link)</em></p>`
+            }
+        ];
+
+        function renderMethods(list, containerId, isFeatured = false) {
+            const container = document.getElementById(containerId);
+            list.forEach((m, i) => {
+                const card = document.createElement('div');
+                card.className = `method-card${isFeatured ? ' featured' : ''}`;
+                card.style.animationDelay = `${0.5 + i * 0.04}s`;
+                card.innerHTML = `
+                    <div class="method-header">
+                        <div class="method-title-wrapper">
+                            <span class="method-icon">${m.icon}</span>
+                            <span class="method-title">${m.title}</span>
+                        </div>
+                        <div class="method-chevron">
+                            <svg viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg>
+                        </div>
+                    </div>
+                    <div class="method-content">
+                        <div class="method-content-inner">${m.content}</div>
+                    </div>
+                `;
+                
+                card.addEventListener('click', (e) => {
+                    if (e.target.closest('a') || e.target.closest('code')) return;
+                    
+                    const wasActive = card.classList.contains('active');
+                    document.querySelectorAll('.method-card.active').forEach(c => c.classList.remove('active'));
+                    
+                    if (!wasActive) {
+                        card.classList.add('active');
+                    }
+                });
+                
+                container.appendChild(card);
+            });
+        }
+
+        renderMethods(featuredMethods, 'featuredMethods', true);
+        renderMethods(allMethods, 'methodsList', false);
+        renderMethods(tips, 'tipsList', false);
+
+        // Search
+        const searchInput = document.getElementById('methodSearch');
+        const noResults = document.getElementById('noResults');
+
+        searchInput.addEventListener('input', function() {
+            const query = this.value.trim().toLowerCase();
+            const allCards = document.querySelectorAll('.method-card');
+            let hasResults = false;
+
+            allCards.forEach(card => {
+                const title = card.querySelector('.method-title').textContent.toLowerCase();
+                const content = card.querySelector('.method-content-inner').textContent.toLowerCase();
+                const matches = title.includes(query) || content.includes(query);
+                
+                if (matches) {
+                    card.classList.remove('hide');
+                    hasResults = true;
+                } else {
+                    card.classList.add('hide');
+                }
+            });
+
+            noResults.classList.toggle('show', !hasResults && query.length > 0);
+        });
+
+        // Parallax
+        document.addEventListener('mousemove', (e) => {
+            const orbs = document.querySelectorAll('.ambient-orb');
+            const x = (e.clientX / window.innerWidth - 0.5) * 2;
+            const y = (e.clientY / window.innerHeight - 0.5) * 2;
+            
+            orbs.forEach((orb, index) => {
+                const speed = (index + 1) * 20;
+                orb.style.transform = `translate(${x * speed}px, ${y * speed}px)`;
+            });
+        });
+    </script>
+</body>
+</html>
