@@ -226,8 +226,8 @@
             });
             if (!res.ok) throw new Error(`HTTP ${res.status}`);
             const data = await res.json();
-            if (!data.short_link) throw new Error(data.error || 'Brak short_link');
-            return data.short_link;
+            if (!data.shorturl) throw new Error(data.error || 'Brak shorturl');
+            return data.shorturl;
         }
 
         function format(type, link) {
