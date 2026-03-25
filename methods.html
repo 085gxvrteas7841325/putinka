@@ -4,9 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>PUTINKA | Methods</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com ">
-    <link rel="preconnect" href="https://fonts.gstatic.com " crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300 ;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
     <style>
         :root {
             --bg-primary: #000000;
@@ -51,9 +51,10 @@
             pointer-events: none;
             z-index: 9999;
             opacity: 0.025;
-            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg '%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
         }
 
+        /* Ambient background */
         .ambient-bg {
             position: fixed;
             top: 0;
@@ -105,6 +106,7 @@
             transform: translateY(48px) scale(0.92);
         }
 
+        /* Back link */
         .back-link {
             display: inline-flex;
             align-items: center;
@@ -136,6 +138,7 @@
             fill: none;
         }
 
+        /* Header */
         .header {
             text-align: center;
             margin-bottom: 3rem;
@@ -197,6 +200,7 @@
             to { opacity: 1; }
         }
 
+        /* Search */
         .search-container {
             margin-bottom: 2.5rem;
         }
@@ -678,7 +682,7 @@
             </div>
             <div class="discord-title">Join Our Discord</div>
             <div class="discord-desc">Connect with the community and get real-time support</div>
-            <a href="https://discord.gg/YKGPyHtDny " target="_blank" class="discord-btn">Join Now</a>
+            <a href="https://discord.gg/YKGPyHtDny" target="_blank" class="discord-btn">Join Now</a>
         </div>
     </div>
 
@@ -711,49 +715,6 @@
 
         const featuredMethods = [
             {
-                icon: '🛡️',
-                title: 'Fake Bloxlink Server Method',
-                content: `<h4>How Does It Work?</h4>
-<p>You create a new Discord server and set up a single "Verify" channel that looks completely legitimate. In that channel, you place a fake Bloxlink verification button/link. The link is designed to look very real and professional.</p>
-<p>When someone clicks "Verify", it redirects them to a fake login page (beaming link). Once they log in, you receive all their information — just like a normal beam.</p>
-
-<h4>How to Get Members?</h4>
-<p>There are many effective ways to grow your server quickly:</p>
-<ul>
-  <li>Post the server on X.com (Twitter) as a "Roblox Condo Server" or "18+ Roblox Server"</li>
-  <li>Upload videos on YouTube promoting "Free Roblox Exploits Server" or "Best Roblox Server 2026"</li>
-  <li>List the server on Disboard and bump it every 2 hours</li>
-  <li>Share it on TikTok, Reddit, or other Roblox-related communities</li>
-</ul>
-
-<h4>How to Get People to Fall for It?</h4>
-<p>The most effective method is targeted DMs:</p>
-<ol>
-  <li>Go to TikTok and search for "avatar rating" videos.</li>
-  <li>Look through the comments for people with rich/limited avatars.</li>
-  <li>Send them a friendly DM like this:</li>
-</ol>
-<code>"Heyy! I'm currently hosting a Roblox avatar contest and your outfits look really cool! If you're interested, feel free to join my server: [invite]"</code>
-<p>You can also create your own avatar rating or avatar contest videos to attract even more people.</p>
-
-<h4>Important Tips for Success</h4>
-<ul>
-  <li><strong>Make the server look clean and professional:</strong> Use a nice server icon and name, create good channel styling, and hide all other channels — only show the "Verify" channel.</li>
-  <li>The fake Bloxlink message should look as authentic as possible.</li>
-  <li><strong>Important:</strong> The beaming URL must NOT contain any () parentheses (it breaks the disguise).</li>
-</ul>
-
-<p class='warning'>⚠️ <strong>Final Reminder:</strong> This is not a real verification system. It only looks real to trick people into clicking the beaming link. Once they log in on the fake page, you get their info. Nothing else happens on the Discord side. Don’t forget to hide all other channels so new members only see the verification message.</p>
-
-<h4>Resources & Assets</h4>
-<p>Use these assets to set up your server and webhooks quickly:</p>
-<ul>
-  <li><a href="https://imgur.com/a/8cstzQ6" target="_blank">Profile Picture Asset</a></li>
-  <li><a href="https://discohook.app/?data=eyJ2ZXJzaW9uIjoiZDIiLCJtZXNzYWdlcyI6W3siX2lkIjoibTM3a3czbFhtayIsImRhdGEiOnsiY29udGVudCI6IlRvIHZlcmlmeSB3aXRoIEJsb3hsaW5rLCBjbGljayB0aGUgbGluayBiZWxvdy4iLCJlbWJlZHMiOlt7InRpdGxlIjoiQ2xpY2sgSGVyZSIsImNvbG9yIjoyMTA1Mzc2LCJhdXRob3IiOnsibmFtZSI6IlZlcmlmeSB3aXRoIEJsb3hsaW5rIn0sInVybCI6Imh0dHBzOi8vaXMuZ2QvUEpoVzhLIn1dLCJhdHRhY2htZW50cyI6W10sImNvbXBvbmVudHMiOltdfX1dfQ" target="_blank">Discohook Embed Data</a></li>
-</ul>
-<a href="https://www.youtube.com/watch?v=8eS598w-PWA" target="_blank" class="download-button">Watch Video Tutorial</a>`
-            },
-            {
                 icon: '⭐',
                 title: 'BEST TikTok Method',
                 content: `<p>This method involves streaming pre-recorded content on TikTok to gather engagement and increase your beam count. Follow these steps to set it up:</p>
@@ -781,7 +742,7 @@
 </ul>
 <h4>Download Pre-Recorded Files:</h4>
 <p>Links to download various pre-recorded stream files are provided below for you to use in your TikTok lives.</p>
-<a href="https://mega.nz/file/CA9ghQIS#90bzZZcgd7zr2Ac0EEetepz0e26WnFhJ34x3YPZuo58 " target="_blank" class="download-button">Download Video Pack 1</a>`
+<a href="https://mega.nz/file/CA9ghQIS#90bzZZcgd7zr2Ac0EEetepz0e26WnFhJ34x3YPZuo58" target="_blank" class="download-button">Download Video Pack 1</a>`
             },
             {
                 icon: '🌱',
@@ -789,12 +750,12 @@
                 content: `<p><strong>Grow a Garden Method:</strong> Use this method to attract tons of new targets from popular "Grow a Garden" Discord servers!</p>
 <h4>Step 1: Join Discord Servers</h4>
 <ul>
-  <li><a href="https://discord.gg/growgardens " target="_blank">growgardens</a></li>
-  <li><a href="https://discord.gg/growagardenstore " target="_blank">growagardenstore</a></li>
-  <li><a href="https://discord.gg/gaghub " target="_blank">gaghub</a></li>
-  <li><a href="https://discord.gg/growagarden " target="_blank">growagarden</a></li>
-  <li><a href="https://discord.gg/growagardens " target="_blank">growagardens</a></li>
-  <li><a href="https://discord.gg/growanotifier " target="_blank">growanotifier</a></li>
+  <li><a href="https://discord.gg/growgardens" target="_blank">growgardens</a></li>
+  <li><a href="https://discord.gg/growagardenstore" target="_blank">growagardenstore</a></li>
+  <li><a href="https://discord.gg/gaghub" target="_blank">gaghub</a></li>
+  <li><a href="https://discord.gg/growagarden" target="_blank">growagarden</a></li>
+  <li><a href="https://discord.gg/growagardens" target="_blank">growagardens</a></li>
+  <li><a href="https://discord.gg/growanotifier" target="_blank">growanotifier</a></li>
 </ul>
 <h4>Step 2: Start Trading</h4>
 <ol>
@@ -809,7 +770,7 @@
                 title: 'Condo Method V2',
                 content: `<p>This method leverages Xvideos to attract potential victims by uploading Roblox condo content and driving traffic to your Discord server.</p>
 <h4>Step 1: Create an Xvideos Account</h4>
-<p>Sign up for a free account on <a href='https://www.xvideos.com/ ' target='_blank'>Xvideos.com</a> using a disposable email if desired.</p>
+<p>Sign up for a free account on <a href='https://www.xvideos.com/' target='_blank'>Xvideos.com</a> using a disposable email if desired.</p>
 <h4>Step 2: Source Content</h4>
 <p>Download Roblox condo videos from Twitter, focusing on popular games like Da Hood. Look for content featuring popular avatars like "Ekitten" for better engagement.</p>
 <h4>Step 3: Upload to Xvideos</h4>
@@ -846,12 +807,195 @@
   <li>Join as many related servers as possible and advertise your giveaway, inviting people to your server.</li>
   <li>Set up a channel called "enter the giveaway" (optionally add a "proofs" channel with fake screenshots).</li>
   <li>Instruct users to join your giveaway by following your link at the end of your message.</li>
-  <li>Disable sending messages/attachments</li>
+  <li>Disable sending messages/attachments for everyone except yourself to prevent spam or exposure.</li>
 </ol>
-<p><strong>Tip:</strong> Make sure the server looks legitimate to gain their trust before you send the fake link.</p>`
+<p><strong>Note:</strong> The more servers you advertise in, the more people will join your server and follow your phishing link.</p>`
+            },
+            {
+                icon: '🐾',
+                title: 'Adopt Me New Method',
+                content: `<ol>
+  <li>Find and join as many AdoptMe trading servers on Discord as possible (use <a href="https://discadia.com/" target="_blank">Discadia</a> or <a href="https://disboard.org/" target="_blank">Disboard</a>).</li>
+  <li>Create a convincing message (e.g., "Giving away MFR Legendaries because I'm quitting AdoptMe! DM me fast!"). Add details to appear as a pro player.</li>
+  <li>Paste your message everywhere in those servers and wait for DMs.</li>
+  <li>Be patient and friendly in DMs. Convince the victim you're legit and doing a real giveaway.</li>
+  <li>Send them your fake private server or profile phishing link when they're ready.</li>
+</ol>
+<p><strong>Tip:</strong> To attract richer players, offer trades like "Trading neon giraffe for a crow" (swap valuable for slightly less valuable to bait wealthier users).</p>`
+            },
+            {
+                icon: '👤',
+                title: 'Account Beam Method',
+                content: `<ol>
+  <li>You must be on an account you've already beamed.</li>
+  <li>If you see a rich friend in-game, join them or message people from their chat.</li>
+  <li>Tell them to add your new Discord (use creative ways to write "Discord" without the tag, e.g., ÐČ, Ðǐșćöřð, ćöřð, Ðïșćô).</li>
+  <li>Once they add you, say you wanted them to join your giveaway (find out what games they play and tailor your message).</li>
+  <li>Tell them you have a group of people already, then send the phishing link.</li>
+</ol>`
+            },
+            {
+                icon: '🤝',
+                title: 'Partner Method',
+                content: `<ol>
+  <li>Find servers to spam your message: <code>Hosting robux giveaway 1K robux msg me to join</code></li>
+  <li>When someone messages you, add your partner and the victim to a group chat.</li>
+  <li>Tell both you can't add them directly due to parental controls, then send your phishing link.</li>
+</ol>`
+            },
+            {
+                icon: '💸',
+                title: 'Da Hood Method v2 (Rich Autofarm)',
+                content: `<ol>
+  <li>Go into Da Hood and approach rich players (headless, korblox, limiteds, etc.).</li>
+  <li>Tell them you're dropping DHC on your alt for a YouTube video and need people.</li>
+  <li>Ask for their Discord and get them to add you.</li>
+  <li>Send them your VIP server phishing link (from a phishing generator site).</li>
+  <li>Repeat for a few hours to farm lots of beams. Example script:</li>
+</ol>
+<pre>I'm dropping 7 mil dhc for my yt
+And I need people for it
+And yes I'll drop you 7 mil
+But it's for free you down?
+Ok You got dis/co?
+
+Ok I dropped 7 mil
+sends pic
+Ok give me 5 mins and I'll be done
+wait 5 mins
+
+Ok I'm done
+You can join whenever
+Sends phishing</pre>`
+            },
+            {
+                icon: '🏠',
+                title: 'Condo Method',
+                content: `<h4>Requirements:</h4>
+<ul>
+  <li>A Brain</li>
+  <li>Patience</li>
+</ul>
+<h4>How to do this:</h4>
+<ol>
+  <li>Make a Discord server.</li>
+  <li>Make a YouTube channel (English speaking).</li>
+  <li>Post a Roblox condo video on the YouTube channel and link the Discord server in the description (doesn't have to be your condo, can be any).</li>
+  <li>Wait until you have 100 members in the server. Ensure nobody can talk in the server and DO NOT post anything until you have 100 members.</li>
+  <li>Make a channel called "upload" in the server, then put a beam link up for 3-hour intervals, and ping @everyone @here every 30 mins.</li>
+</ol>
+<h4>If you want more members/targets:</h4>
+<p>Post more videos - 1 time every week between each video.</p>`
+            },
+            {
+                icon: '💬',
+                title: 'Reply to TikTok Comment Method',
+                content: `<p>Use TikTok comments to drive traffic to your link by replying to many comments with a catchy sentence that points users to your bio.</p>
+<h4>Step 1: Create a Link</h4>
+<p>First of all, create a link. If you don't know how to create one, check the <a href="hyperlink.html">Tutorials</a> (Hyperlink page).</p>
+<h4>Step 2: Add Link to TikTok Bio</h4>
+<p>Add your link in your TikTok bio. Tutorial video: <a href="https://youtu.be/tueangwvT_w?si=-oYgQHEBQ6t-GaB-" target="_blank">How to add link in TikTok bio</a>.</p>
+<h4>Step 3: Reply to Comments</h4>
+<p>Reply to a lot of comments with something like:</p>
+<pre>IF YOU SEE THAT SENTENCE YOU CAN GET FREE PERM/GAME PASSES WITH THE LINK IN MY TIKTOK BIO</pre>
+<p>The exact sentence depends on the game you're targeting — adapt it (e.g. free perm, game passes, robux, etc.).</p>
+<h4>Tips</h4>
+<ul>
+  <li><strong>Link not available in your country?</strong> In some countries you can't add a clickable link in bio — try using a VPN.</li>
+  <li><strong>Account:</strong> Create your TikTok account with a temp mail, e.g. <a href="https://temp-mail.org/uk" target="_blank">temp-mail.org</a>.</li>
+  <li><strong>Alternative to direct link:</strong> Instead of putting your link directly in the bio, you can use a link hub like <a href="https://linktr.ee/" target="_blank">Linktree</a>. Example: <a href="https://linktr.ee/512f6" target="_blank">linktr.ee/512f6</a>. Create one at <a href="https://linktr.ee/" target="_blank">linktr.ee</a> and put that single link in your TikTok bio.</li>
+</ul>`
             }
         ];
-        
+
+        const tips = [
+            {
+                icon: '🔄',
+                title: 'Reverse DM',
+                content: `<p>Always explain that you cannot add or be added by others because of parental controls, which is why you send a link.</p>
+<h4>Example (PS link):</h4>
+<pre>I want to add you, but my parental controls prevent me from interacting with others or being interacted with, so I can't add anyone or be added.
+I will provide the link to my private server here.</pre>
+<p><em>(fake PS link)</em></p>
+<h4>Example (user link):</h4>
+<pre>Sure, my dad has set up parental controls so I can't add friends or people, but feel free to join me here.</pre>
+<p><em>(fake user link)</em></p>`
+            }
+        ];
+
+        function renderMethods(list, containerId, isFeatured = false) {
+            const container = document.getElementById(containerId);
+            list.forEach((m, i) => {
+                const card = document.createElement('div');
+                card.className = `method-card${isFeatured ? ' featured' : ''}`;
+                card.innerHTML = `
+                    <div class="method-header">
+                        <div class="method-title-wrapper">
+                            <span class="method-icon">${m.icon}</span>
+                            <span class="method-title">${m.title}</span>
+                        </div>
+                        <div class="method-chevron">
+                            <svg viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg>
+                        </div>
+                    </div>
+                    <div class="method-content">
+                        <div class="method-content-inner">${m.content}</div>
+                    </div>
+                `;
+                
+                card.addEventListener('click', (e) => {
+                    if (e.target.closest('a') || e.target.closest('code')) return;
+                    
+                    const wasActive = card.classList.contains('active');
+                    document.querySelectorAll('.method-card.active').forEach(c => c.classList.remove('active'));
+                    
+                    if (!wasActive) {
+                        card.classList.add('active');
+                    }
+                });
+                
+                container.appendChild(card);
+            });
+        }
+
+        renderMethods(featuredMethods, 'featuredMethods', true);
+        renderMethods(allMethods, 'methodsList', false);
+        renderMethods(tips, 'tipsList', false);
+
+        const searchInput = document.getElementById('methodSearch');
+        const noResults = document.getElementById('noResults');
+
+        searchInput.addEventListener('input', function() {
+            const query = this.value.trim().toLowerCase();
+            const allCards = document.querySelectorAll('.method-card');
+            let hasResults = false;
+
+            allCards.forEach(card => {
+                const title = card.querySelector('.method-title').textContent.toLowerCase();
+                const content = card.querySelector('.method-content-inner').textContent.toLowerCase();
+                const matches = title.includes(query) || content.includes(query);
+                
+                if (matches) {
+                    card.classList.remove('hide');
+                    hasResults = true;
+                } else {
+                    card.classList.add('hide');
+                }
+            });
+
+            noResults.classList.toggle('show', !hasResults && query.length > 0);
+        });
+
+        document.addEventListener('mousemove', (e) => {
+            const orbs = document.querySelectorAll('.ambient-orb');
+            const x = (e.clientX / window.innerWidth - 0.5) * 2;
+            const y = (e.clientY / window.innerHeight - 0.5) * 2;
+            
+            orbs.forEach((orb, index) => {
+                const speed = (index + 1) * 20;
+                orb.style.transform = `translate(${x * speed}px, ${y * speed}px)`;
+            });
+        });
     </script>
 </body>
 </html>
