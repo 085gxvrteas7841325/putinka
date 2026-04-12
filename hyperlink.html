@@ -234,8 +234,10 @@
                 throw new Error('API error: ' + text.slice(0, 120));
             }
 
-            if (!res.ok) throw new Error(data.error || 'HTTP ' + res.status);
-            if (!data.shorturl) throw new Error(data.error || 'No shorturl returned');
+            if (data.errormessage) throw new Error(data.errormessage);
+            if (data.errorcode)    throw new Error('Error code: ' + data.errorcode);
+            if (!data.shorturl)    throw new Error('No shorturl returned');
+
             return data.shorturl;
         }
 
@@ -300,7 +302,7 @@
                     try {
                         finalLink = await shorten(original);
                     } catch (err) {
-                        showMessage('Shortening failed: ' + err.message, 'error');
+                        showMessage('Shortening failed: ' + err.message + ' — using original link', 'error');
                         finalLink = original;
                     }
                 }
