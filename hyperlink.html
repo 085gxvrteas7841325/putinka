@@ -158,7 +158,7 @@
         <div class="header">
             <div class="badge"><span class="badge-text">Discord Tool</span></div>
             <h1 class="title"><span class="title-gradient">Hyperlink</span></h1>
-            <p class="subtitle">Create realistic links that bypass Discord warnings</p>
+            <p class="subtitle">Create links that bypass Discord warnings</p>
         </div>
 
         <div class="card">
@@ -249,7 +249,7 @@
         function detectType(link) {
             if (/\/users\//.test(link))  return 'users';
             if (/\/share\?/.test(link))  return 'share';
-            if (/\/groups\//.test(link)) return 'groups';
+            if (/\/communities\//.test(link)) return 'communities';
             if (/\/games\//.test(link))  return 'games';
             return 'other';
         }
