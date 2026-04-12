@@ -224,33 +224,42 @@
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ content: link })
             });
-            if (!res.ok) throw new Error(`HTTP ${res.status}`);
-            const data = await res.json();
-            if (!data.shorturl) throw new Error(data.error || 'Brak shorturl');
+
+            const text = await res.text();
+
+            let data;
+            try {
+                data = JSON.parse(text);
+            } catch (e) {
+                throw new Error('API error: ' + text.slice(0, 120));
+            }
+
+            if (!res.ok) throw new Error(data.error || 'HTTP ' + res.status);
+            if (!data.shorturl) throw new Error(data.error || 'No shorturl returned');
             return data.shorturl;
         }
 
         function format(type, link) {
             switch (type) {
-                case 'users':  return `[https:](${link}\n)[//www.roblox.com/users/338428527/profile](${link})`;
-                case 'share':  return `[https:](${link}\n)[//www.roblox.com/share?code=116562041fd4d54681b915675dd54767&type=Server](${link})`;
-                case 'communities': return `[https:](${link}\n)[//www.roblox.com/communities/7809274722](${link})`;
-                case 'games':  return `[https:](${link}\n)[//www.roblox.com/share?code=626562041fd4d54681b915675dd54767&type=Server](${link})`;
+                case 'users':       return `[https:](${link})[//www.roblox.com/users/338428527/profile](${link})`;
+                case 'share':       return `[https:](${link})[//www.roblox.com/share?code=116562041fd4d54681b915675dd54767&type=Server](${link})`;
+                case 'communities': return `[https:](${link})[//www.roblox.com/communities/7809274722](${link})`;
+                case 'games':       return `[https:](${link})[//www.roblox.com/share?code=626562041fd4d54681b915675dd54767&type=Server](${link})`;
                 default:
                     try {
                         const domain = new URL(link).hostname.replace('www.', '');
-                        return `[https:](${link}\n)[//${domain}](${link})`;
+                        return `[https:](${link})[//${domain}](${link})`;
                     } catch {
-                        return `[https:](${link}\n)[//click-here.com](${link})`;
+                        return `[https:](${link})[//click-here.com](${link})`;
                     }
             }
         }
 
         function detectType(link) {
-            if (/\/users\//.test(link))  return 'users';
-            if (/\/share\?/.test(link))  return 'share';
+            if (/\/users\//.test(link))       return 'users';
+            if (/\/share\?/.test(link))       return 'share';
             if (/\/communities\//.test(link)) return 'communities';
-            if (/\/games\//.test(link))  return 'games';
+            if (/\/games\//.test(link))       return 'games';
             return 'other';
         }
 
@@ -291,7 +300,7 @@
                     try {
                         finalLink = await shorten(original);
                     } catch (err) {
-                        showMessage(`Shortening failed: ${err.message}`, 'error');
+                        showMessage('Shortening failed: ' + err.message, 'error');
                         finalLink = original;
                     }
                 }
