@@ -1,1781 +1,1402 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Methods | PUTINKA</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
-<style>
-:root {
-  --bg-primary: #050508;
-  --bg-secondary: #0a0a0f;
-  --bg-tertiary: #111118;
-  --bg-glass: rgba(15, 15, 25, 0.65);
-  --border-glass: rgba(255, 45, 85, 0.12);
-  --border-subtle: rgba(255, 255, 255, 0.06);
-  --text-primary: #f0f0f5;
-  --text-secondary: #8a8a9a;
-  --text-muted: #5a5a6a;
-  --accent-primary: #ff2d55;
-  --accent-secondary: #ff375f;
-  --accent-glow: rgba(255, 45, 85, 0.35);
-  --accent-gradient: linear-gradient(135deg, #ff2d55, #ff6b35);
-  --code-bg: #0d0d14;
-  --code-border: rgba(255, 45, 85, 0.15);
-  --success: #30d158;
-  --warning: #ff9f0a;
-  --radius-sm: 8px;
-  --radius-md: 12px;
-  --radius-lg: 16px;
-  --shadow-glow: 0 0 40px rgba(255, 45, 85, 0.08);
-}
-
-* { margin: 0; padding: 0; box-sizing: border-box; }
-html { scroll-behavior: smooth; }
-
-body {
-  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-  background: var(--bg-primary);
-  color: var(--text-primary);
-  line-height: 1.6;
-  overflow-x: hidden;
-  min-height: 100vh;
-}
-
-#particles-canvas {
-  position: fixed;
-  top: 0; left: 0;
-  width: 100%; height: 100%;
-  z-index: 0;
-  pointer-events: none;
-}
-
-#auth-overlay {
-  position: fixed;
-  inset: 0;
-  z-index: 9999;
-  background: #050508;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 24px;
-  font-family: 'Inter', sans-serif;
-}
-
-#auth-overlay .brand-text-big {
-  font-size: 42px;
-  font-weight: 800;
-  letter-spacing: 4px;
-  color: #ff1a1a;
-  text-shadow: 0 0 40px rgba(255, 26, 26, 0.5);
-  text-transform: uppercase;
-  margin-bottom: 8px;
-}
-
-#auth-overlay .auth-status {
-  font-size: 13px;
-  color: var(--text-muted);
-  letter-spacing: 1px;
-  text-transform: uppercase;
-}
-
-.spinner {
-  width: 32px;
-  height: 32px;
-  border: 2px solid rgba(255, 45, 85, 0.15);
-  border-top-color: var(--accent-primary);
-  border-radius: 50%;
-  animation: spin 0.8s linear infinite;
-}
-
-@keyframes spin { to { transform: rotate(360deg); } }
-
-#not-found-screen {
-  position: fixed;
-  inset: 0;
-  z-index: 9999;
-  background: var(--bg-primary);
-  display: none;
-  align-items: center;
-  justify-content: center;
-  font-family: 'Inter', sans-serif;
-  padding: 24px;
-}
-
-#nf-particles {
-  position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-  z-index: 0;
-  pointer-events: none;
-}
-
-.nf-content {
-  position: relative;
-  z-index: 1;
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  gap: 12px;
-  max-width: 480px;
-  width: 100%;
-}
-
-#not-found-screen .nf-title {
-  font-family: 'Inter', sans-serif;
-  font-size: 38px;
-  font-weight: 800;
-  color: var(--text-primary);
-  letter-spacing: 1px;
-  text-transform: uppercase;
-  line-height: 1;
-}
-
-#not-found-screen .nf-sub {
-  font-size: 15px;
-  color: var(--text-secondary);
-  letter-spacing: 0.3px;
-}
-
-#not-found-screen .nf-divider {
-  width: 40px;
-  height: 2px;
-  background: var(--accent-gradient);
-  border-radius: 2px;
-  margin: 4px 0;
-}
-
-#not-found-screen .nf-fix-title {
-  font-size: 11px;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 1.5px;
-  color: var(--text-muted);
-  margin-bottom: 4px;
-}
-
-.nf-video-wrap {
-  width: 100%;
-  border-radius: var(--radius-md);
-  overflow: hidden;
-  border: 1px solid var(--border-glass);
-  background: var(--bg-tertiary);
-  aspect-ratio: 16/9;
-}
-
-.nf-video-wrap iframe {
-  width: 100%;
-  height: 100%;
-  display: block;
-  border: none;
-}
-
-.nf-video-title {
-  font-size: 14px;
-  font-weight: 600;
-  color: var(--text-primary);
-  line-height: 1.4;
-}
-
-#not-found-screen .nf-retry {
-  margin-top: 8px;
-  padding: 12px 36px;
-  background: rgba(255, 45, 85, 0.1);
-  border: 1px solid rgba(255, 45, 85, 0.25);
-  border-radius: 10px;
-  color: var(--accent-primary);
-  font-size: 13px;
-  font-weight: 700;
-  font-family: 'Inter', sans-serif;
-  text-transform: uppercase;
-  letter-spacing: 1.5px;
-  cursor: pointer;
-  transition: all 0.2s;
-  align-self: center;
-}
-
-#not-found-screen .nf-retry:hover {
-  background: rgba(255, 45, 85, 0.18);
-  box-shadow: 0 0 24px rgba(255, 45, 85, 0.15);
-  transform: translateY(-1px);
-}
-
-#user-bar {
-  display: none;
-  position: fixed;
-  top: 64px;
-  right: 0;
-  z-index: 90;
-  background: var(--bg-glass);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
-  border-left: 1px solid var(--border-glass);
-  border-bottom: 1px solid var(--border-glass);
-  padding: 10px 20px;
-  border-radius: 0 0 0 12px;
-  font-size: 13px;
-  color: var(--text-secondary);
-  align-items: center;
-  gap: 10px;
-}
-
-.app-container {
-  position: relative;
-  z-index: 1;
-  display: flex;
-  min-height: 100vh;
-}
-
-.sidebar {
-  width: 300px;
-  background: var(--bg-glass);
-  backdrop-filter: blur(24px) saturate(1.4);
-  -webkit-backdrop-filter: blur(24px) saturate(1.4);
-  border-right: 1px solid var(--border-glass);
-  position: fixed;
-  top: 0; left: 0;
-  height: 100vh;
-  overflow-y: auto;
-  overflow-x: hidden;
-  z-index: 100;
-  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-}
-
-.sidebar::-webkit-scrollbar { width: 4px; }
-.sidebar::-webkit-scrollbar-track { background: transparent; }
-.sidebar::-webkit-scrollbar-thumb { background: var(--accent-primary); border-radius: 4px; }
-
-.sidebar-header {
-  padding: 24px;
-  border-bottom: 1px solid var(--border-subtle);
-  position: sticky;
-  top: 0;
-  background: var(--bg-glass);
-  backdrop-filter: blur(24px);
-  -webkit-backdrop-filter: blur(24px);
-  z-index: 10;
-}
-
-.brand { display: flex; align-items: center; gap: 12px; }
-
-.brand-icon {
-  width: 40px; height: 40px;
-  border-radius: 10px; overflow: hidden;
-  flex-shrink: 0;
-  box-shadow: 0 4px 20px var(--accent-glow);
-}
-
-.brand-icon img { width: 100%; height: 100%; object-fit: cover; }
-
-.brand-text {
-  font-size: 20px; font-weight: 800;
-  letter-spacing: 1px; color: #ff1a1a;
-  text-transform: uppercase;
-  text-shadow: 0 0 20px rgba(255, 26, 26, 0.4);
-}
-
-.search-box { margin-top: 16px; position: relative; }
-
-.search-box input {
-  width: 100%;
-  padding: 10px 14px 10px 38px;
-  background: rgba(255, 255, 255, 0.04);
-  border: 1px solid var(--border-subtle);
-  border-radius: var(--radius-sm);
-  color: var(--text-primary);
-  font-size: 13px;
-  font-family: inherit;
-  outline: none;
-  transition: all 0.2s ease;
-}
-
-.search-box input:focus {
-  border-color: var(--accent-primary);
-  box-shadow: 0 0 0 3px rgba(255, 45, 85, 0.1);
-}
-
-.search-box input::placeholder { color: var(--text-muted); }
-
-.search-icon {
-  position: absolute; left: 12px; top: 50%;
-  transform: translateY(-50%);
-  color: var(--text-muted); font-size: 14px;
-}
-
-.sidebar-nav { padding: 12px 0; }
-
-.nav-section { margin-bottom: 4px; }
-
-.nav-section-header {
-  display: flex; align-items: center; gap: 10px;
-  padding: 10px 24px;
-  font-size: 12px; font-weight: 700;
-  text-transform: uppercase; letter-spacing: 1px;
-  color: var(--text-muted); user-select: none;
-}
-
-.nav-item {
-  display: flex; align-items: center; gap: 10px;
-  padding: 8px 24px 8px 36px;
-  margin: 1px 0;
-  color: var(--text-secondary);
-  font-size: 13px; font-weight: 500;
-  cursor: pointer;
-  transition: all 0.15s ease;
-  text-decoration: none;
-  position: relative;
-  font-family: 'JetBrains Mono', monospace;
-}
-
-.nav-item::before {
-  content: '';
-  position: absolute; left: 24px; top: 50%;
-  transform: translateY(-50%);
-  width: 4px; height: 4px;
-  border-radius: 50%;
-  background: var(--text-muted);
-  transition: all 0.2s;
-}
-
-.nav-item:hover { color: var(--text-primary); background: rgba(255, 45, 85, 0.05); }
-.nav-item:hover::before { background: var(--accent-primary); }
-.nav-item.active { color: var(--accent-primary); background: rgba(255, 45, 85, 0.08); }
-.nav-item.active::before { background: var(--accent-primary); box-shadow: 0 0 6px var(--accent-glow); }
-
-.nav-item.special {
-  color: var(--accent-primary);
-  background: rgba(255, 45, 85, 0.06);
-  border-left: 2px solid var(--accent-primary);
-  animation: special-pulse 2.5s ease-in-out infinite;
-}
-
-.nav-item.special::before {
-  background: var(--accent-primary);
-  box-shadow: 0 0 8px var(--accent-glow);
-  width: 5px;
-  height: 5px;
-}
-
-@keyframes special-pulse {
-  0%, 100% { box-shadow: inset 3px 0 0 rgba(255,45,85,0.15); }
-  50% { box-shadow: inset 3px 0 12px rgba(255,45,85,0.35); }
-}
-
-.main-content {
-  flex: 1; margin-left: 300px;
-  min-height: 100vh; display: flex; flex-direction: column;
-}
-
-.topbar {
-  height: 64px;
-  background: var(--bg-glass);
-  backdrop-filter: blur(24px) saturate(1.4);
-  -webkit-backdrop-filter: blur(24px) saturate(1.4);
-  border-bottom: 1px solid var(--border-glass);
-  display: flex; align-items: center;
-  justify-content: space-between;
-  padding: 0 32px;
-  position: sticky; top: 0; z-index: 50;
-}
-
-.topbar-title { font-size: 16px; font-weight: 600; color: var(--text-primary); letter-spacing: -0.3px; }
-
-.topbar-actions { display: flex; align-items: center; gap: 12px; }
-
-.btn-icon {
-  width: 36px; height: 36px;
-  border-radius: var(--radius-sm);
-  background: rgba(255, 255, 255, 0.04);
-  border: 1px solid var(--border-subtle);
-  color: var(--text-secondary);
-  display: flex; align-items: center; justify-content: center;
-  cursor: pointer; transition: all 0.2s; font-size: 16px;
-}
-
-.btn-icon:hover {
-  background: rgba(255, 45, 85, 0.1);
-  border-color: var(--border-glass);
-  color: var(--accent-primary);
-}
-
-.mobile-menu-toggle {
-  display: none; background: none; border: none;
-  color: var(--text-primary); font-size: 20px; cursor: pointer;
-}
-
-.content-area {
-  flex: 1; padding: 40px 48px;
-  max-width: 900px; width: 100%; margin: 0 auto;
-}
-
-.page-header {
-  margin-bottom: 40px; padding-bottom: 32px;
-  border-bottom: 1px solid var(--border-subtle);
-}
-
-.page-header h1 {
-  font-size: 36px; font-weight: 700;
-  letter-spacing: -1px; margin-bottom: 12px;
-  background: linear-gradient(135deg, #fff 0%, #ff8fa3 100%);
-  -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
-}
-
-.page-header p { font-size: 16px; color: var(--text-secondary); line-height: 1.7; max-width: 600px; }
-
-.method-card {
-  background: var(--bg-glass);
-  backdrop-filter: blur(20px) saturate(1.3);
-  -webkit-backdrop-filter: blur(20px) saturate(1.3);
-  border: 1px solid var(--border-glass);
-  border-radius: var(--radius-lg);
-  margin-bottom: 20px; overflow: hidden;
-  transition: all 0.3s ease;
-  position: relative; scroll-margin-top: 80px;
-}
-
-.method-card::after {
-  content: '';
-  position: absolute; top: 0; left: 0; right: 0; height: 1px;
-  background: linear-gradient(90deg, transparent, var(--accent-primary), transparent);
-  opacity: 0.3;
-}
-
-.method-card:hover {
-  border-color: rgba(255, 45, 85, 0.25);
-  box-shadow: var(--shadow-glow), 0 8px 32px rgba(0,0,0,0.4);
-  transform: translateY(-2px);
-}
-
-.method-header {
-  padding: 22px 28px;
-  display: flex; align-items: flex-start; justify-content: space-between;
-  gap: 16px; cursor: pointer; user-select: none;
-}
-
-.method-title-area { flex: 1; }
-
-.method-tag {
-  display: inline-flex; align-items: center; gap: 6px;
-  padding: 4px 10px;
-  background: rgba(255, 45, 85, 0.1);
-  border: 1px solid rgba(255, 45, 85, 0.2);
-  border-radius: 6px;
-  font-size: 11px; font-weight: 600;
-  text-transform: uppercase; letter-spacing: 0.8px;
-  color: var(--accent-primary); margin-bottom: 10px;
-}
-
-.method-name { font-family: 'JetBrains Mono', monospace; font-size: 19px; font-weight: 600; color: var(--text-primary); letter-spacing: -0.3px; }
-.method-name .fn { color: var(--accent-primary); }
-.method-name .params { color: var(--text-secondary); font-weight: 400; }
-
-.method-toggle {
-  width: 32px; height: 32px; border-radius: 8px;
-  background: rgba(255, 255, 255, 0.04);
-  border: 1px solid var(--border-subtle);
-  color: var(--text-secondary);
-  display: flex; align-items: center; justify-content: center;
-  cursor: pointer; transition: all 0.2s;
-  flex-shrink: 0; font-size: 12px;
-}
-
-.method-toggle:hover { background: rgba(255, 45, 85, 0.1); color: var(--accent-primary); }
-.method-toggle.active { transform: rotate(180deg); }
-
-.method-body {
-  max-height: 0; overflow: hidden;
-  transition: max-height 0.4s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.3s ease;
-  opacity: 0;
-}
-
-.method-body.open { max-height: 2000px; opacity: 1; }
-
-.method-content { padding: 0 28px 28px; }
-
-.method-description { font-size: 14px; color: var(--text-secondary); line-height: 1.7; margin-bottom: 24px; }
-
-.section-label {
-  font-size: 11px; font-weight: 600; text-transform: uppercase;
-  letter-spacing: 1.2px; color: var(--text-muted);
-  margin-bottom: 12px;
-  display: flex; align-items: center; gap: 8px;
-}
-
-.section-label::after { content: ''; flex: 1; height: 1px; background: var(--border-subtle); }
-
-.params-table { width: 100%; border-collapse: collapse; margin-bottom: 20px; font-size: 13px; }
-.params-table th { text-align: left; padding: 10px 16px; color: var(--text-muted); font-weight: 600; font-size: 11px; text-transform: uppercase; letter-spacing: 0.8px; border-bottom: 1px solid var(--border-subtle); }
-.params-table td { padding: 12px 16px; border-bottom: 1px solid var(--border-subtle); color: var(--text-secondary); vertical-align: top; }
-.params-table tr:last-child td { border-bottom: none; }
-.params-table .param-name { font-family: 'JetBrains Mono', monospace; color: var(--text-primary); font-weight: 500; }
-.params-table .param-type { font-family: 'JetBrains Mono', monospace; color: var(--accent-primary); font-size: 12px; background: rgba(255, 45, 85, 0.08); padding: 2px 6px; border-radius: 4px; }
-.params-table .param-req { font-size: 10px; font-weight: 600; text-transform: uppercase; padding: 2px 6px; border-radius: 4px; }
-.params-table .param-req.required { color: var(--accent-primary); background: rgba(255, 45, 85, 0.1); }
-.params-table .param-req.optional { color: var(--warning); background: rgba(255, 159, 10, 0.1); }
-
-.returns-box { background: rgba(48, 209, 88, 0.05); border: 1px solid rgba(48, 209, 88, 0.15); border-radius: var(--radius-md); padding: 16px 20px; margin-bottom: 20px; }
-.returns-box .returns-type { font-family: 'JetBrains Mono', monospace; color: var(--success); font-size: 13px; font-weight: 600; margin-bottom: 6px; }
-.returns-box .returns-desc { font-size: 13px; color: var(--text-secondary); line-height: 1.6; }
-
-.overlay { display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.6); z-index: 99; }
-
-@media (max-width: 1024px) {
-  .sidebar { transform: translateX(-100%); }
-  .sidebar.open { transform: translateX(0); }
-  .main-content { margin-left: 0; }
-  .mobile-menu-toggle { display: flex; }
-  .overlay.active { display: block; }
-  .content-area { padding: 24px; }
-  .page-header h1 { font-size: 28px; }
-}
-
-@media (max-width: 640px) {
-  .content-area { padding: 16px; }
-  .topbar { padding: 0 16px; }
-  .method-header { padding: 20px; }
-  .method-content { padding: 0 20px 20px; }
-  .page-header h1 { font-size: 24px; }
-  .params-table { font-size: 12px; }
-  .params-table th, .params-table td { padding: 8px 10px; }
-  #not-found-screen .nf-title { font-size: 28px; }
-  .nf-content { max-width: 100%; }
-}
-
-.fade-in { animation: fadeIn 0.5s ease forwards; opacity: 0; }
-@keyframes fadeIn { to { opacity: 1; } }
-.stagger-1 { animation-delay: 0.05s; }
-.stagger-2 { animation-delay: 0.1s; }
-.stagger-3 { animation-delay: 0.15s; }
-.stagger-4 { animation-delay: 0.2s; }
-.stagger-5 { animation-delay: 0.25s; }
-
-::-webkit-scrollbar { width: 8px; height: 8px; }
-::-webkit-scrollbar-track { background: var(--bg-primary); }
-::-webkit-scrollbar-thumb { background: #2a2a3a; border-radius: 4px; }
-::-webkit-scrollbar-thumb:hover { background: var(--accent-primary); }
-::selection { background: rgba(255, 45, 85, 0.3); color: var(--text-primary); }
-</style>
-<base target="_blank">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Methods | PUTINKA</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap"
+    rel="stylesheet">
+  <style>
+    :root {
+      --bg-primary: #050508;
+      --bg-secondary: #0a0a0f;
+      --bg-tertiary: #111118;
+      --bg-glass: rgba(15, 15, 25, 0.65);
+      --border-glass: rgba(255, 45, 85, 0.12);
+      --border-subtle: rgba(255, 255, 255, 0.06);
+      --text-primary: #f0f0f5;
+      --text-secondary: #8a8a9a;
+      --text-muted: #5a5a6a;
+      --accent-primary: #ff2d55;
+      --accent-secondary: #ff375f;
+      --accent-glow: rgba(255, 45, 85, 0.35);
+      --accent-gradient: linear-gradient(135deg, #ff2d55, #ff6b35);
+      --code-bg: #0d0d14;
+      --code-border: rgba(255, 45, 85, 0.15);
+      --success: #30d158;
+      --warning: #ff9f0a;
+      --radius-sm: 8px;
+      --radius-md: 12px;
+      --radius-lg: 16px;
+      --shadow-glow: 0 0 40px rgba(255, 45, 85, 0.08);
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      background: var(--bg-primary);
+      color: var(--text-primary);
+      line-height: 1.6;
+      overflow-x: hidden;
+      min-height: 100vh;
+    }
+
+    #particles-canvas {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 0;
+      pointer-events: none;
+    }
+
+    #auth-overlay {
+      position: fixed;
+      inset: 0;
+      z-index: 9999;
+      background: #050508;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 24px;
+      font-family: 'Inter', sans-serif;
+    }
+
+    #auth-overlay .brand-text-big {
+      font-size: 42px;
+      font-weight: 800;
+      letter-spacing: 4px;
+      color: #ff1a1a;
+      text-shadow: 0 0 40px rgba(255, 26, 26, 0.5);
+      text-transform: uppercase;
+      margin-bottom: 8px;
+    }
+
+    #auth-overlay .auth-status {
+      font-size: 13px;
+      color: var(--text-muted);
+      letter-spacing: 1px;
+      text-transform: uppercase;
+    }
+
+    .spinner {
+      width: 32px;
+      height: 32px;
+      border: 2px solid rgba(255, 45, 85, 0.15);
+      border-top-color: var(--accent-primary);
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+    }
+
+    @keyframes spin {
+      to {
+        transform: rotate(360deg);
+      }
+    }
+
+    #not-found-screen {
+      position: fixed;
+      inset: 0;
+      z-index: 9999;
+      background: var(--bg-primary);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      font-family: 'Inter', sans-serif;
+      padding: 24px;
+    }
+
+    #nf-particles {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 0;
+      pointer-events: none;
+    }
+
+    .nf-content {
+      position: relative;
+      z-index: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 12px;
+      max-width: 480px;
+      width: 100%;
+    }
+
+    #not-found-screen .nf-title {
+      font-family: 'Inter', sans-serif;
+      font-size: 38px;
+      font-weight: 800;
+      color: var(--text-primary);
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      line-height: 1;
+    }
+
+    #not-found-screen .nf-sub {
+      font-size: 15px;
+      color: var(--text-secondary);
+      letter-spacing: 0.3px;
+    }
+
+    #not-found-screen .nf-divider {
+      width: 40px;
+      height: 2px;
+      background: var(--accent-gradient);
+      border-radius: 2px;
+      margin: 4px 0;
+    }
+
+    #not-found-screen .nf-fix-title {
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+      color: var(--text-muted);
+      margin-bottom: 4px;
+    }
+
+    .nf-video-wrap {
+      width: 100%;
+      border-radius: var(--radius-md);
+      overflow: hidden;
+      border: 1px solid var(--border-glass);
+      background: var(--bg-tertiary);
+      aspect-ratio: 16/9;
+    }
+
+    .nf-video-wrap iframe {
+      width: 100%;
+      height: 100%;
+      display: block;
+      border: none;
+    }
+
+    .nf-video-title {
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--text-primary);
+      line-height: 1.4;
+    }
+
+    #not-found-screen .nf-retry {
+      margin-top: 8px;
+      padding: 12px 36px;
+      background: rgba(255, 45, 85, 0.1);
+      border: 1px solid rgba(255, 45, 85, 0.25);
+      border-radius: 10px;
+      color: var(--accent-primary);
+      font-size: 13px;
+      font-weight: 700;
+      font-family: 'Inter', sans-serif;
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+      cursor: pointer;
+      transition: all 0.2s;
+      align-self: center;
+    }
+
+    #not-found-screen .nf-retry:hover {
+      background: rgba(255, 45, 85, 0.18);
+      box-shadow: 0 0 24px rgba(255, 45, 85, 0.15);
+      transform: translateY(-1px);
+    }
+
+    #user-bar {
+      display: none;
+      position: fixed;
+      top: 64px;
+      right: 0;
+      z-index: 90;
+      background: var(--bg-glass);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border-left: 1px solid var(--border-glass);
+      border-bottom: 1px solid var(--border-glass);
+      padding: 10px 20px;
+      border-radius: 0 0 0 12px;
+      font-size: 13px;
+      color: var(--text-secondary);
+      align-items: center;
+      gap: 10px;
+    }
+
+    .app-container {
+      position: relative;
+      z-index: 1;
+      display: flex;
+      min-height: 100vh;
+    }
+
+    .sidebar {
+      width: 300px;
+      background: var(--bg-glass);
+      backdrop-filter: blur(24px) saturate(1.4);
+      -webkit-backdrop-filter: blur(24px) saturate(1.4);
+      border-right: 1px solid var(--border-glass);
+      position: fixed;
+      top: 0;
+      left: 0;
+      height: 100vh;
+      overflow-y: auto;
+      overflow-x: hidden;
+      z-index: 100;
+      transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .sidebar::-webkit-scrollbar {
+      width: 4px;
+    }
+
+    .sidebar::-webkit-scrollbar-track {
+      background: transparent;
+    }
+
+    .sidebar::-webkit-scrollbar-thumb {
+      background: var(--accent-primary);
+      border-radius: 4px;
+    }
+
+    .sidebar-header {
+      padding: 24px;
+      border-bottom: 1px solid var(--border-subtle);
+      position: sticky;
+      top: 0;
+      background: var(--bg-glass);
+      backdrop-filter: blur(24px);
+      -webkit-backdrop-filter: blur(24px);
+      z-index: 10;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .brand-icon {
+      width: 40px;
+      height: 40px;
+      border-radius: 10px;
+      overflow: hidden;
+      flex-shrink: 0;
+      box-shadow: 0 4px 20px var(--accent-glow);
+    }
+
+    .brand-icon img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .brand-text {
+      font-size: 20px;
+      font-weight: 800;
+      letter-spacing: 1px;
+      color: #ff1a1a;
+      text-transform: uppercase;
+      text-shadow: 0 0 20px rgba(255, 26, 26, 0.4);
+    }
+
+    .search-box {
+      margin-top: 16px;
+      position: relative;
+    }
+
+    .search-box input {
+      width: 100%;
+      padding: 10px 14px 10px 38px;
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-sm);
+      color: var(--text-primary);
+      font-size: 13px;
+      font-family: inherit;
+      outline: none;
+      transition: all 0.2s ease;
+    }
+
+    .search-box input:focus {
+      border-color: var(--accent-primary);
+      box-shadow: 0 0 0 3px rgba(255, 45, 85, 0.1);
+    }
+
+    .search-box input::placeholder {
+      color: var(--text-muted);
+    }
+
+    .search-icon {
+      position: absolute;
+      left: 12px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--text-muted);
+      font-size: 14px;
+    }
+
+    .sidebar-nav {
+      padding: 12px 0;
+    }
+
+    .nav-section {
+      margin-bottom: 4px;
+    }
+
+    .nav-section-header {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 10px 24px;
+      font-size: 12px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      color: var(--text-muted);
+      user-select: none;
+    }
+
+    .nav-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 8px 24px 8px 36px;
+      margin: 1px 0;
+      color: var(--text-secondary);
+      font-size: 13px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.15s ease;
+      text-decoration: none;
+      position: relative;
+      font-family: 'JetBrains Mono', monospace;
+    }
+
+    .nav-item::before {
+      content: '';
+      position: absolute;
+      left: 24px;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 4px;
+      height: 4px;
+      border-radius: 50%;
+      background: var(--text-muted);
+      transition: all 0.2s;
+    }
+
+    .nav-item:hover {
+      color: var(--text-primary);
+      background: rgba(255, 45, 85, 0.05);
+    }
+
+    .nav-item:hover::before {
+      background: var(--accent-primary);
+    }
+
+    .nav-item.active {
+      color: var(--accent-primary);
+      background: rgba(255, 45, 85, 0.08);
+    }
+
+    .nav-item.active::before {
+      background: var(--accent-primary);
+      box-shadow: 0 0 6px var(--accent-glow);
+    }
+
+    .nav-item.special {
+      color: var(--accent-primary);
+      background: rgba(255, 45, 85, 0.06);
+      border-left: 2px solid var(--accent-primary);
+      animation: special-pulse 2.5s ease-in-out infinite;
+    }
+
+    .nav-item.special::before {
+      background: var(--accent-primary);
+      box-shadow: 0 0 8px var(--accent-glow);
+      width: 5px;
+      height: 5px;
+    }
+
+    @keyframes special-pulse {
+
+      0%,
+      100% {
+        box-shadow: inset 3px 0 0 rgba(255, 45, 85, 0.15);
+      }
+
+      50% {
+        box-shadow: inset 3px 0 12px rgba(255, 45, 85, 0.35);
+      }
+    }
+
+    .main-content {
+      flex: 1;
+      margin-left: 300px;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .topbar {
+      height: 64px;
+      background: var(--bg-glass);
+      backdrop-filter: blur(24px) saturate(1.4);
+      -webkit-backdrop-filter: blur(24px) saturate(1.4);
+      border-bottom: 1px solid var(--border-glass);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 32px;
+      position: sticky;
+      top: 0;
+      z-index: 50;
+    }
+
+    .topbar-title {
+      font-size: 16px;
+      font-weight: 600;
+      color: var(--text-primary);
+      letter-spacing: -0.3px;
+    }
+
+    .topbar-actions {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .btn-icon {
+      width: 36px;
+      height: 36px;
+      border-radius: var(--radius-sm);
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid var(--border-subtle);
+      color: var(--text-secondary);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: all 0.2s;
+      font-size: 16px;
+    }
+
+    .btn-icon:hover {
+      background: rgba(255, 45, 85, 0.1);
+      border-color: var(--border-glass);
+      color: var(--accent-primary);
+    }
+
+    .mobile-menu-toggle {
+      display: none;
+      background: none;
+      border: none;
+      color: var(--text-primary);
+      font-size: 20px;
+      cursor: pointer;
+    }
+
+    .content-area {
+      flex: 1;
+      padding: 40px 48px;
+      max-width: 900px;
+      width: 100%;
+      margin: 0 auto;
+    }
+
+    .page-header {
+      margin-bottom: 40px;
+      padding-bottom: 32px;
+      border-bottom: 1px solid var(--border-subtle);
+    }
+
+    .page-header h1 {
+      font-size: 36px;
+      font-weight: 700;
+      letter-spacing: -1px;
+      margin-bottom: 12px;
+      background: linear-gradient(135deg, #fff 0%, #ff8fa3 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .page-header p {
+      font-size: 16px;
+      color: var(--text-secondary);
+      line-height: 1.7;
+      max-width: 600px;
+    }
+
+    .method-card {
+      background: var(--bg-glass);
+      backdrop-filter: blur(20px) saturate(1.3);
+      -webkit-backdrop-filter: blur(20px) saturate(1.3);
+      border: 1px solid var(--border-glass);
+      border-radius: var(--radius-lg);
+      margin-bottom: 20px;
+      overflow: hidden;
+      transition: all 0.3s ease;
+      position: relative;
+      scroll-margin-top: 80px;
+    }
+
+    .method-card::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, var(--accent-primary), transparent);
+      opacity: 0.3;
+    }
+
+    .method-card:hover {
+      border-color: rgba(255, 45, 85, 0.25);
+      box-shadow: var(--shadow-glow), 0 8px 32px rgba(0, 0, 0, 0.4);
+      transform: translateY(-2px);
+    }
+
+    .method-header {
+      padding: 22px 28px;
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 16px;
+      cursor: pointer;
+      user-select: none;
+    }
+
+    .method-title-area {
+      flex: 1;
+    }
+
+    .method-tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 4px 10px;
+      background: rgba(255, 45, 85, 0.1);
+      border: 1px solid rgba(255, 45, 85, 0.2);
+      border-radius: 6px;
+      font-size: 11px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+      color: var(--accent-primary);
+      margin-bottom: 10px;
+    }
+
+    .method-name {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 19px;
+      font-weight: 600;
+      color: var(--text-primary);
+      letter-spacing: -0.3px;
+    }
+
+    .method-name .fn {
+      color: var(--accent-primary);
+    }
+
+    .method-name .params {
+      color: var(--text-secondary);
+      font-weight: 400;
+    }
+
+    .method-toggle {
+      width: 32px;
+      height: 32px;
+      border-radius: 8px;
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid var(--border-subtle);
+      color: var(--text-secondary);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: all 0.2s;
+      flex-shrink: 0;
+      font-size: 12px;
+    }
+
+    .method-toggle:hover {
+      background: rgba(255, 45, 85, 0.1);
+      color: var(--accent-primary);
+    }
+
+    .method-toggle.active {
+      transform: rotate(180deg);
+    }
+
+    .method-body {
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.4s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.3s ease;
+      opacity: 0;
+    }
+
+    .method-body.open {
+      max-height: 2000px;
+      opacity: 1;
+    }
+
+    .method-content {
+      padding: 0 28px 28px;
+    }
+
+    .method-description {
+      font-size: 14px;
+      color: var(--text-secondary);
+      line-height: 1.7;
+      margin-bottom: 24px;
+    }
+
+    .section-label {
+      font-size: 11px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 1.2px;
+      color: var(--text-muted);
+      margin-bottom: 12px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .section-label::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: var(--border-subtle);
+    }
+
+    .params-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-bottom: 20px;
+      font-size: 13px;
+    }
+
+    .params-table th {
+      text-align: left;
+      padding: 10px 16px;
+      color: var(--text-muted);
+      font-weight: 600;
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+      border-bottom: 1px solid var(--border-subtle);
+    }
+
+    .params-table td {
+      padding: 12px 16px;
+      border-bottom: 1px solid var(--border-subtle);
+      color: var(--text-secondary);
+      vertical-align: top;
+    }
+
+    .params-table tr:last-child td {
+      border-bottom: none;
+    }
+
+    .params-table .param-name {
+      font-family: 'JetBrains Mono', monospace;
+      color: var(--text-primary);
+      font-weight: 500;
+    }
+
+    .params-table .param-type {
+      font-family: 'JetBrains Mono', monospace;
+      color: var(--accent-primary);
+      font-size: 12px;
+      background: rgba(255, 45, 85, 0.08);
+      padding: 2px 6px;
+      border-radius: 4px;
+    }
+
+    .params-table .param-req {
+      font-size: 10px;
+      font-weight: 600;
+      text-transform: uppercase;
+      padding: 2px 6px;
+      border-radius: 4px;
+    }
+
+    .params-table .param-req.required {
+      color: var(--accent-primary);
+      background: rgba(255, 45, 85, 0.1);
+    }
+
+    .params-table .param-req.optional {
+      color: var(--warning);
+      background: rgba(255, 159, 10, 0.1);
+    }
+
+    .returns-box {
+      background: rgba(48, 209, 88, 0.05);
+      border: 1px solid rgba(48, 209, 88, 0.15);
+      border-radius: var(--radius-md);
+      padding: 16px 20px;
+      margin-bottom: 20px;
+    }
+
+    .returns-box .returns-type {
+      font-family: 'JetBrains Mono', monospace;
+      color: var(--success);
+      font-size: 13px;
+      font-weight: 600;
+      margin-bottom: 6px;
+    }
+
+    .returns-box .returns-desc {
+      font-size: 13px;
+      color: var(--text-secondary);
+      line-height: 1.6;
+    }
+
+    .overlay {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(0, 0, 0, 0.6);
+      z-index: 99;
+    }
+
+    @media (max-width: 1024px) {
+      .sidebar {
+        transform: translateX(-100%);
+      }
+
+      .sidebar.open {
+        transform: translateX(0);
+      }
+
+      .main-content {
+        margin-left: 0;
+      }
+
+      .mobile-menu-toggle {
+        display: flex;
+      }
+
+      .overlay.active {
+        display: block;
+      }
+
+      .content-area {
+        padding: 24px;
+      }
+
+      .page-header h1 {
+        font-size: 28px;
+      }
+    }
+
+    @media (max-width: 640px) {
+      .content-area {
+        padding: 16px;
+      }
+
+      .topbar {
+        padding: 0 16px;
+      }
+
+      .method-header {
+        padding: 20px;
+      }
+
+      .method-content {
+        padding: 0 20px 20px;
+      }
+
+      .page-header h1 {
+        font-size: 24px;
+      }
+
+      .params-table {
+        font-size: 12px;
+      }
+
+      .params-table th,
+      .params-table td {
+        padding: 8px 10px;
+      }
+
+      #not-found-screen .nf-title {
+        font-size: 28px;
+      }
+
+      .nf-content {
+        max-width: 100%;
+      }
+    }
+
+    .fade-in {
+      animation: fadeIn 0.5s ease forwards;
+      opacity: 0;
+    }
+
+    @keyframes fadeIn {
+      to {
+        opacity: 1;
+      }
+    }
+
+    .stagger-1 {
+      animation-delay: 0.05s;
+    }
+
+    .stagger-2 {
+      animation-delay: 0.1s;
+    }
+
+    .stagger-3 {
+      animation-delay: 0.15s;
+    }
+
+    .stagger-4 {
+      animation-delay: 0.2s;
+    }
+
+    .stagger-5 {
+      animation-delay: 0.25s;
+    }
+
+    ::-webkit-scrollbar {
+      width: 8px;
+      height: 8px;
+    }
+
+    ::-webkit-scrollbar-track {
+      background: var(--bg-primary);
+    }
+
+    ::-webkit-scrollbar-thumb {
+      background: #2a2a3a;
+      border-radius: 4px;
+    }
+
+    ::-webkit-scrollbar-thumb:hover {
+      background: var(--accent-primary);
+    }
+
+    ::selection {
+      background: rgba(255, 45, 85, 0.3);
+      color: var(--text-primary);
+    }
+
+    @keyframes shake-notification {
+
+      0%,
+      100% {
+        transform: translateX(0);
+        box-shadow: 0 0 0 transparent;
+      }
+
+      10%,
+      30%,
+      50%,
+      70%,
+      90% {
+        transform: translateX(-5px);
+        box-shadow: 0 0 20px var(--accent-primary);
+        border-color: var(--accent-primary);
+      }
+
+      20%,
+      40%,
+      60%,
+      80% {
+        transform: translateX(5px);
+      }
+    }
+
+    .shake-notification {
+      animation: shake-notification 4s ease-in-out infinite;
+      border-color: rgba(255, 45, 85, 0.5);
+    }
+  </style>
+  <base target="_blank">
 </head>
+
 <body>
 
-<div id="auth-overlay">
-  <div style="text-align:center;">
-    <div class="brand-text-big">PUTINKA</div>
-    <div class="auth-status" id="auth-status-text">Verifying access...</div>
+  <div id="auth-overlay">
+    <div style="text-align:center;">
+      <div class="brand-text-big">PUTINKA</div>
+      <div class="auth-status" id="auth-status-text">Verifying access...</div>
+    </div>
+    <div class="spinner"></div>
   </div>
-  <div class="spinner"></div>
-</div>
 
-<div id="not-found-screen">
-  <canvas id="nf-particles"></canvas>
-  <div class="nf-content">
-    <div class="nf-title">NO ACCESS!</div>
-    <div class="nf-sub">You don't use PUTINKA website</div>
-    <div class="nf-divider"></div>
-    <div class="nf-fix-title">How to fix it:</div>
-    <div class="nf-video-wrap">
-      <iframe src="https://www.youtube.com/embed/7U7Jdn9qZA8" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+  <div id="not-found-screen">
+    <canvas id="nf-particles"></canvas>
+    <div class="nf-content">
+      <div class="nf-title">NO ACCESS!</div>
+      <div class="nf-sub">You don't use PUTINKA website</div>
+      <div class="nf-divider"></div>
+      <div class="nf-fix-title">How to fix it:</div>
+      <div class="nf-video-wrap">
+        <iframe src="https://www.youtube.com/embed/7U7Jdn9qZA8"
+          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+          allowfullscreen></iframe>
+      </div>
+      <div class="nf-video-title">IF STILL DOES NOT WORK MAKE A TICKET ON DISCORD</div>
+      <button class="nf-retry" onclick="retryAuth()">Retry</button>
     </div>
-    <div class="nf-video-title">IF STILL DOES NOT WORK MAKE A TICKET ON DISCORD</div>
-    <button class="nf-retry" onclick="retryAuth()">Retry</button>
   </div>
-</div>
 
-<div id="user-bar">
-  <span style="color:var(--accent-primary); font-weight:600;" id="user-name"></span>
-  <button onclick="logout()" style="background:rgba(255,45,85,0.1); border:1px solid rgba(255,45,85,0.2); color:var(--accent-primary); padding:4px 10px; border-radius:6px; cursor:pointer; font-size:12px;">Logout</button>
-</div>
+  <div id="user-bar">
+    <span style="color:var(--accent-primary); font-weight:600;" id="user-name"></span>
+    <button onclick="logout()"
+      style="background:rgba(255,45,85,0.1); border:1px solid rgba(255,45,85,0.2); color:var(--accent-primary); padding:4px 10px; border-radius:6px; cursor:pointer; font-size:12px;">Logout</button>
+  </div>
 
-<canvas id="particles-canvas"></canvas>
-<div class="overlay" id="overlay"></div>
+  <canvas id="particles-canvas"></canvas>
+  <div class="overlay" id="overlay"></div>
 
-<div class="app-container">
-  <aside class="sidebar" id="sidebar">
-    <div class="sidebar-header">
-      <div class="brand">
-        <div class="brand-icon">
-          <img src="https://cdn.discordapp.com/attachments/1464652178139648184/1496656483901898772/channels4_profile.png?ex=69eaad78&is=69e95bf8&hm=1a3547f837ad1c54c2c973a11038a10e8cf1c22c59b64ae7d8b23a21b4be8d65&" alt="PUTINKA">
-        </div>
-        <div class="brand-text">PUTINKA</div>
-      </div>
-      <div class="search-box">
-        <span class="search-icon">&#9906;</span>
-        <input type="text" placeholder="Search methods..." id="searchInput">
-      </div>
-    </div>
-    <nav class="sidebar-nav" id="sidebarNav">
-      <div class="nav-section">
-        <div class="nav-section-header"><span>Methods</span></div>
-        <div class="nav-section-body">
-          <a class="nav-item special" href="#loadstring" data-target="loadstring">loadstring</a>
-          <a class="nav-item" href="#decompile" data-target="decompile">decompile</a>
-          <a class="nav-item" href="#WorldToScreen" data-target="WorldToScreen">WorldToScreen</a>
-          <a class="nav-item" href="#notify" data-target="notify">notify</a>
-          <a class="nav-item" href="#identifyexecutor" data-target="identifyexecutor">identifyexecutor</a>
-          <a class="nav-item" href="#getscripthash" data-target="getscripthash">getscripthash</a>
-          <a class="nav-item" href="#getgetname" data-target="getgetname">getgetname</a>
-          <a class="nav-item" href="#getscripts" data-target="getscripts">getscripts</a>
-          <a class="nav-item" href="#getscriptbytecode" data-target="getscriptbytecode">getscriptbytecode</a>
-          <a class="nav-item" href="#base64encode" data-target="base64encode">base64encode</a>
-          <a class="nav-item" href="#base64decode" data-target="base64decode">base64decode</a>
-          <a class="nav-item" href="#print" data-target="print">print</a>
-          <a class="nav-item" href="#warn" data-target="warn">warn</a>
-          <a class="nav-item" href="#error" data-target="error">error</a>
-          <a class="nav-item" href="#setrobloxinput" data-target="setrobloxinput">setrobloxinput</a>
-          <a class="nav-item" href="#isrbxactive" data-target="isrbxactive">isrbxactive</a>
-          <a class="nav-item" href="#setclipboard" data-target="setclipboard">setclipboard</a>
-          <a class="nav-item" href="#keyrelease" data-target="keyrelease">keyrelease</a>
-          <a class="nav-item" href="#keypress" data-target="keypress">keypress</a>
-          <a class="nav-item" href="#iskeypressed" data-target="iskeypressed">iskeypressed</a>
-          <a class="nav-item" href="#ismouse1pressed" data-target="ismouse1pressed">ismouse1pressed</a>
-          <a class="nav-item" href="#ismouse2pressed" data-target="ismouse2pressed">ismouse2pressed</a>
-          <a class="nav-item" href="#mouse1press" data-target="mouse1press">mouse1press</a>
-          <a class="nav-item" href="#mouse1release" data-target="mouse1release">mouse1release</a>
-          <a class="nav-item" href="#mouse1click" data-target="mouse1click">mouse1click</a>
-          <a class="nav-item" href="#mouse2press" data-target="mouse2press">mouse2press</a>
-          <a class="nav-item" href="#mouse2release" data-target="mouse2release">mouse2release</a>
-          <a class="nav-item" href="#mouse2click" data-target="mouse2click">mouse2click</a>
-          <a class="nav-item" href="#mousemoveabs" data-target="mousemoveabs">mousemoveabs</a>
-          <a class="nav-item" href="#mousemoverel" data-target="mousemoverel">mousemoverel</a>
-          <a class="nav-item" href="#mousescroll" data-target="mousescroll">mousescroll</a>
-          <a class="nav-item" href="#run_secure" data-target="run_secure">run_secure</a>
-          <a class="nav-item" href="#setfflag" data-target="setfflag">setfflag</a>
-          <a class="nav-item" href="#getfflag" data-target="getfflag">getfflag</a>
-          <a class="nav-item" href="#require" data-target="require">require</a>
-          <a class="nav-item" href="#wait" data-target="wait">wait</a>
-          <a class="nav-item" href="#spawn" data-target="spawn">spawn</a>
-          <a class="nav-item" href="#task_spawn" data-target="task_spawn">task.spawn</a>
-          <a class="nav-item" href="#task_wait" data-target="task_wait">task.wait</a>
-        </div>
-      </div>
-    </nav>
-  </aside>
-
-  <main class="main-content">
-    <header class="topbar">
-      <button class="mobile-menu-toggle" id="menuToggle">&#9776;</button>
-      <div class="topbar-title">Methods</div>
-      <div class="topbar-actions">
-        <button class="btn-icon" title="Copy link">&#128279;</button>
-        <button class="btn-icon" title="GitHub">&#10094;&#10095;</button>
-      </div>
-    </header>
-
-    <div class="content-area">
-      <div class="page-header">
-        <h1>Methods</h1>
-        <p>Built-in environment functions for the runtime. These methods provide low-level access to execution, reflection, input, and system interaction capabilities.</p>
-      </div>
-
-      <div class="method-card fade-in stagger-1" id="loadstring" data-search="loadstring loads chunk as a lua function and returns it if compilation is successful. otherwise, if an error has occurred during compilation, nil followed by the error message will be returned.">
-        <div class="method-header" onclick="toggleMethod(this)">
-          <div class="method-title-area">
-            <div class="method-tag">Function</div>
-            <div class="method-name"><span class="fn">loadstring</span><span class="params">(chunk: string, chunkname: string)</span></div>
+  <div class="app-container">
+    <aside class="sidebar" id="sidebar">
+      <div class="sidebar-header">
+        <div class="brand">
+          <div class="brand-icon">
+            <img
+              src="https://cdn.discordapp.com/attachments/1464652178139648184/1496656483901898772/channels4_profile.png?ex=69eaad78&is=69e95bf8&hm=1a3547f837ad1c54c2c973a11038a10e8cf1c22c59b64ae7d8b23a21b4be8d65&"
+              alt="PUTINKA">
           </div>
-          <div class="method-toggle">&#9662;</div>
+          <div class="brand-text">PUTINKA</div>
         </div>
-        <div class="method-body">
-          <div class="method-content">
-            <p class="method-description">Loads chunk as a Lua function and returns it if compilation is successful. Otherwise, if an error has occurred during compilation, nil followed by the error message will be returned.</p>
-            <div class="section-label">Parameters</div>
-            <table class="params-table">
-              <thead><tr><th>Name</th><th>Type</th><th>Req</th><th>Description</th></tr></thead>
-              <tbody>
-                <tr><td><span class="param-name">chunk</span></td><td><span class="param-type">string</span></td><td><span class="param-req required">req</span></td><td>The source code string to compile and load.</td></tr>
-                <tr><td><span class="param-name">chunkname</span></td><td><span class="param-type">string</span></td><td><span class="param-req required">req</span></td><td>Optional chunk name for debugging and stack traces.</td></tr>
-              </tbody>
-            </table>
-            <div class="section-label">Returns</div>
-            <div class="returns-box">
-              <div class="returns-type">function | nil, string?</div>
-              <div class="returns-desc">On success, returns the compiled function. On failure, returns nil and an error string.</div>
+        <div class="search-box">
+          <span class="search-icon">&#9906;</span>
+          <input type="text" placeholder="Search methods..." id="searchInput">
+        </div>
+      </div>
+      <nav class="sidebar-nav" id="sidebarNav">
+        <div class="nav-section">
+          <div class="nav-section-header"><span>Methods</span></div>
+          <div class="nav-section-body">
+            <a class="nav-item special" href="#m1" data-target="m1">1</a>
+            <a class="nav-item" href="#m2" data-target="m2">2</a>
+            <a class="nav-item" href="#m3" data-target="m3">3</a>
+            <a class="nav-item" href="#m4" data-target="m4">4</a>
+            <a class="nav-item" href="#m5" data-target="m5">5</a>
+            <a class="nav-item" href="#m6" data-target="m6">6</a>
+            <a class="nav-item" href="#m7" data-target="m7">7</a>
+            <a class="nav-item" href="#m8" data-target="m8">8</a>
+            <a class="nav-item" href="#m9" data-target="m9">9</a>
+            <a class="nav-item" href="#m10" data-target="m10">10</a>
+          </div>
+        </div>
+      </nav>
+    </aside>
+
+    <main class="main-content">
+      <header class="topbar">
+        <button class="mobile-menu-toggle" id="menuToggle">&#9776;</button>
+        <div class="topbar-title">Methods</div>
+        <div class="topbar-actions">
+          <a class="btn-icon" title="Discord" href="https://discord.gg/sF5hPzEqCf" target="_blank"
+            style="text-decoration:none;">&#128279;</a>
+        </div>
+      </header>
+
+      <div class="content-area">
+        <div class="page-header">
+          <h1>Methods</h1>
+          <p>Built-in environment functions for the runtime. These methods provide low-level access to execution,
+            reflection, input, and system interaction capabilities.</p>
+        </div>
+
+        <div class="method-card fade-in stagger-1 shake-notification" id="m1" data-search="1">
+          <div class="method-header" onclick="toggleMethod(this)">
+            <div class="method-title-area">
+              <div class="method-name"><span class="fn">1</span></div>
+            </div>
+            <div class="method-toggle">&#9662;</div>
+          </div>
+          <div class="method-body">
+            <div class="method-content">
+              <p class="method-description">#-#</p>
             </div>
           </div>
         </div>
-      </div>
 
-      <div class="method-card fade-in stagger-2" id="decompile" data-search="decompile decompiles script and returns the decompiled script.">
-        <div class="method-header" onclick="toggleMethod(this)">
-          <div class="method-title-area">
-            <div class="method-tag">Function</div>
-            <div class="method-name"><span class="fn">decompile</span><span class="params">(script: Instance)</span></div>
+        <div class="method-card fade-in stagger-2" id="m2" data-search="2">
+          <div class="method-header" onclick="toggleMethod(this)">
+            <div class="method-title-area">
+              <div class="method-name"><span class="fn">2</span></div>
+            </div>
+            <div class="method-toggle">&#9662;</div>
           </div>
-          <div class="method-toggle">&#9662;</div>
-        </div>
-        <div class="method-body">
-          <div class="method-content">
-            <p class="method-description">Decompiles Script and returns the decompiled script. If the decompilation fails, then notify an error message.</p>
-            <div class="section-label">Parameters</div>
-            <table class="params-table">
-              <thead><tr><th>Name</th><th>Type</th><th>Req</th><th>Description</th></tr></thead>
-              <tbody><tr><td><span class="param-name">script</span></td><td><span class="param-type">Instance</span></td><td><span class="param-req required">req</span></td><td>The script instance to decompile.</td></tr></tbody>
-            </table>
-            <div class="section-label">Returns</div>
-            <div class="returns-box">
-              <div class="returns-type">string</div>
-              <div class="returns-desc">The decompiled source code of the script.</div>
+          <div class="method-body">
+            <div class="method-content">
+              <p class="method-description">#-#</p>
             </div>
           </div>
         </div>
-      </div>
 
-      <div class="method-card fade-in stagger-3" id="WorldToScreen" data-search="worldtoscreen converts a 3d world position to a 2d screen position.">
-        <div class="method-header" onclick="toggleMethod(this)">
-          <div class="method-title-area">
-            <div class="method-tag">Function</div>
-            <div class="method-name"><span class="fn">WorldToScreen</span><span class="params">(position: Vector3)</span></div>
+        <div class="method-card fade-in stagger-3" id="m3" data-search="3">
+          <div class="method-header" onclick="toggleMethod(this)">
+            <div class="method-title-area">
+              <div class="method-name"><span class="fn">3</span></div>
+            </div>
+            <div class="method-toggle">&#9662;</div>
           </div>
-          <div class="method-toggle">&#9662;</div>
-        </div>
-        <div class="method-body">
-          <div class="method-content">
-            <p class="method-description">Converts a 3D world position to a 2D screen position. Returns the screen coordinates and a boolean indicating if the point is on screen.</p>
-            <div class="section-label">Parameters</div>
-            <table class="params-table">
-              <thead><tr><th>Name</th><th>Type</th><th>Req</th><th>Description</th></tr></thead>
-              <tbody><tr><td><span class="param-name">position</span></td><td><span class="param-type">Vector3</span></td><td><span class="param-req required">req</span></td><td>The world-space position to convert.</td></tr></tbody>
-            </table>
-            <div class="section-label">Returns</div>
-            <div class="returns-box">
-              <div class="returns-type">(Vector2, boolean)</div>
-              <div class="returns-desc">Screen-space coordinates and visibility flag.</div>
+          <div class="method-body">
+            <div class="method-content">
+              <p class="method-description">#-#</p>
             </div>
           </div>
         </div>
+
+        <div class="method-card fade-in stagger-4" id="m4" data-search="4">
+          <div class="method-header" onclick="toggleMethod(this)">
+            <div class="method-title-area">
+              <div class="method-name"><span class="fn">4</span></div>
+            </div>
+            <div class="method-toggle">&#9662;</div>
+          </div>
+          <div class="method-body">
+            <div class="method-content">
+              <p class="method-description">#-#</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="method-card fade-in stagger-5" id="m5" data-search="5">
+          <div class="method-header" onclick="toggleMethod(this)">
+            <div class="method-title-area">
+              <div class="method-name"><span class="fn">5</span></div>
+            </div>
+            <div class="method-toggle">&#9662;</div>
+          </div>
+          <div class="method-body">
+            <div class="method-content">
+              <p class="method-description">#-#</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="method-card fade-in stagger-1" id="m6" data-search="6">
+          <div class="method-header" onclick="toggleMethod(this)">
+            <div class="method-title-area">
+              <div class="method-name"><span class="fn">6</span></div>
+            </div>
+            <div class="method-toggle">&#9662;</div>
+          </div>
+          <div class="method-body">
+            <div class="method-content">
+              <p class="method-description">#-#</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="method-card fade-in stagger-2" id="m7" data-search="7">
+          <div class="method-header" onclick="toggleMethod(this)">
+            <div class="method-title-area">
+              <div class="method-name"><span class="fn">7</span></div>
+            </div>
+            <div class="method-toggle">&#9662;</div>
+          </div>
+          <div class="method-body">
+            <div class="method-content">
+              <p class="method-description">#-#</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="method-card fade-in stagger-3" id="m8" data-search="8">
+          <div class="method-header" onclick="toggleMethod(this)">
+            <div class="method-title-area">
+              <div class="method-name"><span class="fn">8</span></div>
+            </div>
+            <div class="method-toggle">&#9662;</div>
+          </div>
+          <div class="method-body">
+            <div class="method-content">
+              <p class="method-description">#-#</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="method-card fade-in stagger-4" id="m9" data-search="9">
+          <div class="method-header" onclick="toggleMethod(this)">
+            <div class="method-title-area">
+              <div class="method-name"><span class="fn">9</span></div>
+            </div>
+            <div class="method-toggle">&#9662;</div>
+          </div>
+          <div class="method-body">
+            <div class="method-content">
+              <p class="method-description">#-#</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="method-card fade-in stagger-5" id="m10" data-search="10">
+          <div class="method-header" onclick="toggleMethod(this)">
+            <div class="method-title-area">
+              <div class="method-name"><span class="fn">10</span></div>
+            </div>
+            <div class="method-toggle">&#9662;</div>
+          </div>
+          <div class="method-body">
+            <div class="method-content">
+              <p class="method-description">#-#</p>
+            </div>
+          </div>
+        </div>
+
+
+
+
+
+
+
+        <div style="height: 80px;"></div>
       </div>
+    </main>
+  </div>
 
-      <div class="method-card fade-in stagger-4" id="notify" data-search="notify sends a matcha notification with a message, title, and duration in seconds.">
-        <div class="method-header" onclick="toggleMethod(this)">
-          <div class="method-title-area">
-            <div class="method-tag">Function</div>
-            <div class="method-name"><span class="fn">notify</span><span class="params">(message: string, title: string, duration: number)</span></div>
-          </div>
-          <div class="method-toggle">&#9662;</div>
-        </div>
-        <div class="method-body">
-          <div class="method-content">
-            <p class="method-description">Sends a Matcha notification with a message, title, and duration in seconds.</p>
-            <div class="section-label">Parameters</div>
-            <table class="params-table">
-              <thead><tr><th>Name</th><th>Type</th><th>Req</th><th>Description</th></tr></thead>
-              <tbody>
-                <tr><td><span class="param-name">message</span></td><td><span class="param-type">string</span></td><td><span class="param-req required">req</span></td><td>The body text of the notification.</td></tr>
-                <tr><td><span class="param-name">title</span></td><td><span class="param-type">string</span></td><td><span class="param-req required">req</span></td><td>The title of the notification.</td></tr>
-                <tr><td><span class="param-name">duration</span></td><td><span class="param-type">number</span></td><td><span class="param-req required">req</span></td><td>How long the notification stays visible in seconds.</td></tr>
-              </tbody>
-            </table>
-            <div class="section-label">Returns</div>
-            <div class="returns-box"><div class="returns-type">void</div><div class="returns-desc">No return value.</div></div>
-          </div>
-        </div>
-      </div>
+  <script>
+    const API_BASE = 'https://methodsapi.vercel.app';
 
-      <div class="method-card fade-in stagger-5" id="identifyexecutor" data-search="identifyexecutor returns the name and version of the current executor.">
-        <div class="method-header" onclick="toggleMethod(this)">
-          <div class="method-title-area">
-            <div class="method-tag">Function</div>
-            <div class="method-name"><span class="fn">identifyexecutor</span><span class="params">()</span></div>
-          </div>
-          <div class="method-toggle">&#9662;</div>
-        </div>
-        <div class="method-body">
-          <div class="method-content">
-            <p class="method-description">Returns the name and version of the current executor.</p>
-            <div class="section-label">Parameters</div>
-            <table class="params-table">
-              <thead><tr><th>Name</th><th>Type</th><th>Req</th><th>Description</th></tr></thead>
-              <tbody><tr><td colspan="4" style="text-align:center;color:var(--text-muted)">No parameters</td></tr></tbody>
-            </table>
-            <div class="section-label">Returns</div>
-            <div class="returns-box"><div class="returns-type">string</div><div class="returns-desc">The executor name and version (e.g., "Matcha 1.0").</div></div>
-          </div>
-        </div>
-      </div>
-
-      <div class="method-card fade-in stagger-1" id="getscripthash" data-search="getscripthash returns fnv-1a 64-bit hash of bytecode for the given script.">
-        <div class="method-header" onclick="toggleMethod(this)">
-          <div class="method-title-area">
-            <div class="method-tag">Function</div>
-            <div class="method-name"><span class="fn">getscripthash</span><span class="params">(script: Instance)</span></div>
-          </div>
-          <div class="method-toggle">&#9662;</div>
-        </div>
-        <div class="method-body">
-          <div class="method-content">
-            <p class="method-description">Returns FNV-1a 64-bit hash of bytecode for the given script.</p>
-            <div class="section-label">Parameters</div>
-            <table class="params-table">
-              <thead><tr><th>Name</th><th>Type</th><th>Req</th><th>Description</th></tr></thead>
-              <tbody><tr><td><span class="param-name">script</span></td><td><span class="param-type">Instance</span></td><td><span class="param-req required">req</span></td><td>The script instance to hash.</td></tr></tbody>
-            </table>
-            <div class="section-label">Returns</div>
-            <div class="returns-box"><div class="returns-type">string</div><div class="returns-desc">The 64-bit FNV-1a hash string.</div></div>
-          </div>
-        </div>
-      </div>
-
-      <div class="method-card fade-in stagger-2" id="getgetname" data-search="getgetname returns the name of the current game.">
-        <div class="method-header" onclick="toggleMethod(this)">
-          <div class="method-title-area">
-            <div class="method-tag">Function</div>
-            <div class="method-name"><span class="fn">getgetname</span><span class="params">()</span></div>
-          </div>
-          <div class="method-toggle">&#9662;</div>
-        </div>
-        <div class="method-body">
-          <div class="method-content">
-            <p class="method-description">Returns the name of the current game.</p>
-            <div class="section-label">Parameters</div>
-            <table class="params-table">
-              <thead><tr><th>Name</th><th>Type</th><th>Req</th><th>Description</th></tr></thead>
-              <tbody><tr><td colspan="4" style="text-align:center;color:var(--text-muted)">No parameters</td></tr></tbody>
-            </table>
-            <div class="section-label">Returns</div>
-            <div class="returns-box"><div class="returns-type">string</div><div class="returns-desc">The current game name.</div></div>
-          </div>
-        </div>
-      </div>
-
-      <div class="method-card fade-in stagger-3" id="getscripts" data-search="getscripts returns all script instances currently loaded in the game.">
-        <div class="method-header" onclick="toggleMethod(this)">
-          <div class="method-title-area">
-            <div class="method-tag">Function</div>
-            <div class="method-name"><span class="fn">getscripts</span><span class="params">()</span></div>
-          </div>
-          <div class="method-toggle">&#9662;</div>
-        </div>
-        <div class="method-body">
-          <div class="method-content">
-            <p class="method-description">Returns all script instances currently loaded in the game.</p>
-            <div class="section-label">Parameters</div>
-            <table class="params-table">
-              <thead><tr><th>Name</th><th>Type</th><th>Req</th><th>Description</th></tr></thead>
-              <tbody><tr><td colspan="4" style="text-align:center;color:var(--text-muted)">No parameters</td></tr></tbody>
-            </table>
-            <div class="section-label">Returns</div>
-            <div class="returns-box"><div class="returns-type">{ Instance }</div><div class="returns-desc">An array of all script instances.</div></div>
-          </div>
-        </div>
-      </div>
-
-      <div class="method-card fade-in stagger-4" id="getscriptbytecode" data-search="getscriptbytecode returns the raw bytecode of a script.">
-        <div class="method-header" onclick="toggleMethod(this)">
-          <div class="method-title-area">
-            <div class="method-tag">Function</div>
-            <div class="method-name"><span class="fn">getscriptbytecode</span><span class="params">(script: Instance)</span></div>
-          </div>
-          <div class="method-toggle">&#9662;</div>
-        </div>
-        <div class="method-body">
-          <div class="method-content">
-            <p class="method-description">Returns the raw bytecode of a script.</p>
-            <div class="section-label">Parameters</div>
-            <table class="params-table">
-              <thead><tr><th>Name</th><th>Type</th><th>Req</th><th>Description</th></tr></thead>
-              <tbody><tr><td><span class="param-name">script</span></td><td><span class="param-type">Instance</span></td><td><span class="param-req required">req</span></td><td>The script instance to read bytecode from.</td></tr></tbody>
-            </table>
-            <div class="section-label">Returns</div>
-            <div class="returns-box"><div class="returns-type">string</div><div class="returns-desc">The raw bytecode string.</div></div>
-          </div>
-        </div>
-      </div>
-
-      <div class="method-card fade-in stagger-5" id="base64encode" data-search="base64encode encodes a string to base64 format.">
-        <div class="method-header" onclick="toggleMethod(this)">
-          <div class="method-title-area">
-            <div class="method-tag">Function</div>
-            <div class="method-name"><span class="fn">base64encode</span><span class="params">(data: string)</span></div>
-          </div>
-          <div class="method-toggle">&#9662;</div>
-        </div>
-        <div class="method-body">
-          <div class="method-content">
-            <p class="method-description">Encodes a string to Base64 format.</p>
-            <div class="section-label">Parameters</div>
-            <table class="params-table">
-              <thead><tr><th>Name</th><th>Type</th><th>Req</th><th>Description</th></tr></thead>
-              <tbody><tr><td><span class="param-name">data</span></td><td><span class="param-type">string</span></td><td><span class="param-req required">req</span></td><td>The raw string to encode.</td></tr></tbody>
-            </table>
-            <div class="section-label">Returns</div>
-            <div class="returns-box"><div class="returns-type">string</div><div class="returns-desc">The Base64-encoded string.</div></div>
-          </div>
-        </div>
-      </div>
-
-      <div class="method-card fade-in stagger-1" id="base64decode" data-search="base64decode decodes a base64 string back to normal string.">
-        <div class="method-header" onclick="toggleMethod(this)">
-          <div class="method-title-area">
-            <div class="method-tag">Function</div>
-            <div class="method-name"><span class="fn">base64decode</span><span class="params">(data: string)</span></div>
-          </div>
-          <div class="method-toggle">&#9662;</div>
-        </div>
-        <div class="method-body">
-          <div class="method-content">
-            <p class="method-description">Decodes a Base64 string back to normal string.</p>
-            <div class="section-label">Parameters</div>
-            <table class="params-table">
-              <thead><tr><th>Name</th><th>Type</th><th>Req</th><th>Description</th></tr></thead>
-              <tbody><tr><td><span class="param-name">data</span></td><td><span class="param-type">string</span></td><td><span class="param-req required">req</span></td><td>The Base64 string to decode.</td></tr></tbody>
-            </table>
-            <div class="section-label">Returns</div>
-            <div class="returns-box"><div class="returns-type">string</div><div class="returns-desc">The decoded raw string.</div></div>
-          </div>
-        </div>
-      </div>
-
-      <div class="method-card fade-in stagger-2" id="print" data-search="print outputs a message to the console.">
-        <div class="method-header" onclick="toggleMethod(this)">
-          <div class="method-title-area">
-            <div class="method-tag">Function</div>
-            <div class="method-name"><span class="fn">print</span><span class="params">(message: string)</span></div>
-          </div>
-          <div class="method-toggle">&#9662;</div>
-        </div>
-        <div class="method-body">
-          <div class="method-content">
-            <p class="method-description">Outputs a message to the console.</p>
-            <div class="section-label">Parameters</div>
-            <table class="params-table">
-              <thead><tr><th>Name</th><th>Type</th><th>Req</th><th>Description</th></tr></thead>
-              <tbody><tr><td><span class="param-name">message</span></td><td><span class="param-type">string</span></td><td><span class="param-req required">req</span></td><td>The message to print.</td></tr></tbody>
-            </table>
-            <div class="section-label">Returns</div>
-            <div class="returns-box"><div class="returns-type">void</div><div class="returns-desc">No return value.</div></div>
-          </div>
-        </div>
-      </div>
-
-      <div class="method-card fade-in stagger-3" id="warn" data-search="warn outputs a warning message to the console.">
-        <div class="method-header" onclick="toggleMethod(this)">
-          <div class="method-title-area">
-            <div class="method-tag">Function</div>
-            <div class="method-name"><span class="fn">warn</span><span class="params">(message: string)</span></div>
-          </div>
-          <div class="method-toggle">&#9662;</div>
-        </div>
-        <div class="method-body">
-          <div class="method-content">
-            <p class="method-description">Outputs a warning message to the console.</p>
-            <div class="section-label">Parameters</div>
-            <table class="params-table">
-              <thead><tr><th>Name</th><th>Type</th><th>Req</th><th>Description</th></tr></thead>
-              <tbody><tr><td><span class="param-name">message</span></td><td><span class="param-type">string</span></td><td><span class="param-req required">req</span></td><td>The warning message.</td></tr></tbody>
-            </table>
-            <div class="section-label">Returns</div>
-            <div class="returns-box"><div class="returns-type">void</div><div class="returns-desc">No return value.</div></div>
-          </div>
-        </div>
-      </div>
-
-      <div class="method-card fade-in stagger-4" id="error" data-search="error outputs an error message to the console.">
-        <div class="method-header" onclick="toggleMethod(this)">
-          <div class="method-title-area">
-            <div class="method-tag">Function</div>
-            <div class="method-name"><span class="fn">error</span><span class="params">(message: string)</span></div>
-          </div>
-          <div class="method-toggle">&#9662;</div>
-        </div>
-        <div class="method-body">
-          <div class="method-content">
-            <p class="method-description">Outputs an error message to the console.</p>
-            <div class="section-label">Parameters</div>
-            <table class="params-table">
-              <thead><tr><th>Name</th><th>Type</th><th>Req</th><th>Description</th></tr></thead>
-              <tbody><tr><td><span class="param-name">message</span></td><td><span class="param-type">string</span></td><td><span class="param-req required">req</span></td><td>The error message.</td></tr></tbody>
-            </table>
-            <div class="section-label">Returns</div>
-            <div class="returns-box"><div class="returns-type">void</div><div class="returns-desc">No return value.</div></div>
-          </div>
-        </div>
-      </div>
-
-      <div class="method-card fade-in stagger-5" id="setrobloxinput" data-search="setrobloxinput toggles sending inputs to the game.">
-        <div class="method-header" onclick="toggleMethod(this)">
-          <div class="method-title-area">
-            <div class="method-tag">Function</div>
-            <div class="method-name"><span class="fn">setrobloxinput</span><span class="params">(state: boolean)</span></div>
-          </div>
-          <div class="method-toggle">&#9662;</div>
-        </div>
-        <div class="method-body">
-          <div class="method-content">
-            <p class="method-description">Toggles sending inputs to the game. When disabled, input functions will not affect the Roblox window.</p>
-            <div class="section-label">Parameters</div>
-            <table class="params-table">
-              <thead><tr><th>Name</th><th>Type</th><th>Req</th><th>Description</th></tr></thead>
-              <tbody><tr><td><span class="param-name">state</span></td><td><span class="param-type">boolean</span></td><td><span class="param-req required">req</span></td><td>True to enable input, false to disable.</td></tr></tbody>
-            </table>
-            <div class="section-label">Returns</div>
-            <div class="returns-box"><div class="returns-type">nil</div><div class="returns-desc">No return value.</div></div>
-          </div>
-        </div>
-      </div>
-
-      <div class="method-card fade-in stagger-1" id="isrbxactive" data-search="isrbxactive returns whether the roblox window is currently focused and active.">
-        <div class="method-header" onclick="toggleMethod(this)">
-          <div class="method-title-area">
-            <div class="method-tag">Function</div>
-            <div class="method-name"><span class="fn">isrbxactive</span><span class="params">()</span></div>
-          </div>
-          <div class="method-toggle">&#9662;</div>
-        </div>
-        <div class="method-body">
-          <div class="method-content">
-            <p class="method-description">Returns whether the Roblox window is currently focused and active.</p>
-            <div class="section-label">Parameters</div>
-            <table class="params-table">
-              <thead><tr><th>Name</th><th>Type</th><th>Req</th><th>Description</th></tr></thead>
-              <tbody><tr><td colspan="4" style="text-align:center;color:var(--text-muted)">No parameters</td></tr></tbody>
-            </table>
-            <div class="section-label">Returns</div>
-            <div class="returns-box"><div class="returns-type">boolean</div><div class="returns-desc">True if Roblox is the active window.</div></div>
-          </div>
-        </div>
-      </div>
-
-      <div class="method-card fade-in stagger-2" id="setclipboard" data-search="setclipboard copies the given string to the system clipboard.">
-        <div class="method-header" onclick="toggleMethod(this)">
-          <div class="method-title-area">
-            <div class="method-tag">Function</div>
-            <div class="method-name"><span class="fn">setclipboard</span><span class="params">(value: string)</span></div>
-          </div>
-          <div class="method-toggle">&#9662;</div>
-        </div>
-        <div class="method-body">
-          <div class="method-content">
-            <p class="method-description">Copies the given string to the system clipboard.</p>
-            <div class="section-label">Parameters</div>
-            <table class="params-table">
-              <thead><tr><th>Name</th><th>Type</th><th>Req</th><th>Description</th></tr></thead>
-              <tbody><tr><td><span class="param-name">value</span></td><td><span class="param-type">string</span></td><td><span class="param-req required">req</span></td><td>The text to copy.</td></tr></tbody>
-            </table>
-            <div class="section-label">Returns</div>
-            <div class="returns-box"><div class="returns-type">nil</div><div class="returns-desc">No return value.</div></div>
-          </div>
-        </div>
-      </div>
-
-      <div class="method-card fade-in stagger-3" id="keyrelease" data-search="keyrelease releases a previously pressed key.">
-        <div class="method-header" onclick="toggleMethod(this)">
-          <div class="method-title-area">
-            <div class="method-tag">Function</div>
-            <div class="method-name"><span class="fn">keyrelease</span><span class="params">(keycode: int)</span></div>
-          </div>
-          <div class="method-toggle">&#9662;</div>
-        </div>
-        <div class="method-body">
-          <div class="method-content">
-            <p class="method-description">Releases a previously pressed key.</p>
-            <div class="section-label">Parameters</div>
-            <table class="params-table">
-              <thead><tr><th>Name</th><th>Type</th><th>Req</th><th>Description</th></tr></thead>
-              <tbody><tr><td><span class="param-name">keycode</span></td><td><span class="param-type">int</span></td><td><span class="param-req required">req</span></td><td>The virtual key code to release.</td></tr></tbody>
-            </table>
-            <div class="section-label">Returns</div>
-            <div class="returns-box"><div class="returns-type">nil</div><div class="returns-desc">No return value.</div></div>
-          </div>
-        </div>
-      </div>
-
-      <div class="method-card fade-in stagger-4" id="keypress" data-search="keypress simulates a key press. the key remains held until keyrelease is called.">
-        <div class="method-header" onclick="toggleMethod(this)">
-          <div class="method-title-area">
-            <div class="method-tag">Function</div>
-            <div class="method-name"><span class="fn">keypress</span><span class="params">(keycode: int)</span></div>
-          </div>
-          <div class="method-toggle">&#9662;</div>
-        </div>
-        <div class="method-body">
-          <div class="method-content">
-            <p class="method-description">Simulates a key press. The key remains held until keyrelease is called.</p>
-            <div class="section-label">Parameters</div>
-            <table class="params-table">
-              <thead><tr><th>Name</th><th>Type</th><th>Req</th><th>Description</th></tr></thead>
-              <tbody><tr><td><span class="param-name">keycode</span></td><td><span class="param-type">int</span></td><td><span class="param-req required">req</span></td><td>The virtual key code to press.</td></tr></tbody>
-            </table>
-            <div class="section-label">Returns</div>
-            <div class="returns-box"><div class="returns-type">nil</div><div class="returns-desc">No return value.</div></div>
-          </div>
-        </div>
-      </div>
-
-      <div class="method-card fade-in stagger-5" id="iskeypressed" data-search="iskeypressed checks whether a specific key is currently being held down.">
-        <div class="method-header" onclick="toggleMethod(this)">
-          <div class="method-title-area">
-            <div class="method-tag">Function</div>
-            <div class="method-name"><span class="fn">iskeypressed</span><span class="params">(keycode: int)</span></div>
-          </div>
-          <div class="method-toggle">&#9662;</div>
-        </div>
-        <div class="method-body">
-          <div class="method-content">
-            <p class="method-description">Checks whether a specific key is currently being held down.</p>
-            <div class="section-label">Parameters</div>
-            <table class="params-table">
-              <thead><tr><th>Name</th><th>Type</th><th>Req</th><th>Description</th></tr></thead>
-              <tbody><tr><td><span class="param-name">keycode</span></td><td><span class="param-type">int</span></td><td><span class="param-req required">req</span></td><td>The virtual key code to check.</td></tr></tbody>
-            </table>
-            <div class="section-label">Returns</div>
-            <div class="returns-box"><div class="returns-type">boolean</div><div class="returns-desc">True if the key is pressed.</div></div>
-          </div>
-        </div>
-      </div>
-
-      <div class="method-card fade-in stagger-1" id="ismouse1pressed" data-search="ismouse1pressed checks whether the left mouse button is currently held down.">
-        <div class="method-header" onclick="toggleMethod(this)">
-          <div class="method-title-area">
-            <div class="method-tag">Function</div>
-            <div class="method-name"><span class="fn">ismouse1pressed</span><span class="params">()</span></div>
-          </div>
-          <div class="method-toggle">&#9662;</div>
-        </div>
-        <div class="method-body">
-          <div class="method-content">
-            <p class="method-description">Checks whether the left mouse button is currently held down.</p>
-            <div class="section-label">Parameters</div>
-            <table class="params-table">
-              <thead><tr><th>Name</th><th>Type</th><th>Req</th><th>Description</th></tr></thead>
-              <tbody><tr><td colspan="4" style="text-align:center;color:var(--text-muted)">No parameters</td></tr></tbody>
-            </table>
-            <div class="section-label">Returns</div>
-            <div class="returns-box"><div class="returns-type">boolean</div><div class="returns-desc">True if left mouse button is pressed.</div></div>
-          </div>
-        </div>
-      </div>
-
-      <div class="method-card fade-in stagger-2" id="ismouse2pressed" data-search="ismouse2pressed checks whether the right mouse button is currently held down.">
-        <div class="method-header" onclick="toggleMethod(this)">
-          <div class="method-title-area">
-            <div class="method-tag">Function</div>
-            <div class="method-name"><span class="fn">ismouse2pressed</span><span class="params">()</span></div>
-          </div>
-          <div class="method-toggle">&#9662;</div>
-        </div>
-        <div class="method-body">
-          <div class="method-content">
-            <p class="method-description">Checks whether the right mouse button is currently held down.</p>
-            <div class="section-label">Parameters</div>
-            <table class="params-table">
-              <thead><tr><th>Name</th><th>Type</th><th>Req</th><th>Description</th></tr></thead>
-              <tbody><tr><td colspan="4" style="text-align:center;color:var(--text-muted)">No parameters</td></tr></tbody>
-            </table>
-            <div class="section-label">Returns</div>
-            <div class="returns-box"><div class="returns-type">boolean</div><div class="returns-desc">True if right mouse button is pressed.</div></div>
-          </div>
-        </div>
-      </div>
-
-      <div class="method-card fade-in stagger-3" id="mouse1press" data-search="mouse1press simulates pressing the left mouse button.">
-        <div class="method-header" onclick="toggleMethod(this)">
-          <div class="method-title-area">
-            <div class="method-tag">Function</div>
-            <div class="method-name"><span class="fn">mouse1press</span><span class="params">()</span></div>
-          </div>
-          <div class="method-toggle">&#9662;</div>
-        </div>
-        <div class="method-body">
-          <div class="method-content">
-            <p class="method-description">Simulates pressing the left mouse button.</p>
-            <div class="section-label">Parameters</div>
-            <table class="params-table">
-              <thead><tr><th>Name</th><th>Type</th><th>Req</th><th>Description</th></tr></thead>
-              <tbody><tr><td colspan="4" style="text-align:center;color:var(--text-muted)">No parameters</td></tr></tbody>
-            </table>
-            <div class="section-label">Returns</div>
-            <div class="returns-box"><div class="returns-type">nil</div><div class="returns-desc">No return value.</div></div>
-          </div>
-        </div>
-      </div>
-
-      <div class="method-card fade-in stagger-4" id="mouse1release" data-search="mouse1release simulates releasing the left mouse button.">
-        <div class="method-header" onclick="toggleMethod(this)">
-          <div class="method-title-area">
-            <div class="method-tag">Function</div>
-            <div class="method-name"><span class="fn">mouse1release</span><span class="params">()</span></div>
-          </div>
-          <div class="method-toggle">&#9662;</div>
-        </div>
-        <div class="method-body">
-          <div class="method-content">
-            <p class="method-description">Simulates releasing the left mouse button.</p>
-            <div class="section-label">Parameters</div>
-            <table class="params-table">
-              <thead><tr><th>Name</th><th>Type</th><th>Req</th><th>Description</th></tr></thead>
-              <tbody><tr><td colspan="4" style="text-align:center;color:var(--text-muted)">No parameters</td></tr></tbody>
-            </table>
-            <div class="section-label">Returns</div>
-            <div class="returns-box"><div class="returns-type">nil</div><div class="returns-desc">No return value.</div></div>
-          </div>
-        </div>
-      </div>
-
-      <div class="method-card fade-in stagger-5" id="mouse1click" data-search="mouse1click simulates a full left mouse button click (press and release).">
-        <div class="method-header" onclick="toggleMethod(this)">
-          <div class="method-title-area">
-            <div class="method-tag">Function</div>
-            <div class="method-name"><span class="fn">mouse1click</span><span class="params">()</span></div>
-          </div>
-          <div class="method-toggle">&#9662;</div>
-        </div>
-        <div class="method-body">
-          <div class="method-content">
-            <p class="method-description">Simulates a full left mouse button click (press and release).</p>
-            <div class="section-label">Parameters</div>
-            <table class="params-table">
-              <thead><tr><th>Name</th><th>Type</th><th>Req</th><th>Description</th></tr></thead>
-              <tbody><tr><td colspan="4" style="text-align:center;color:var(--text-muted)">No parameters</td></tr></tbody>
-            </table>
-            <div class="section-label">Returns</div>
-            <div class="returns-box"><div class="returns-type">nil</div><div class="returns-desc">No return value.</div></div>
-          </div>
-        </div>
-      </div>
-
-      <div class="method-card fade-in stagger-1" id="mouse2press" data-search="mouse2press simulates pressing the right mouse button.">
-        <div class="method-header" onclick="toggleMethod(this)">
-          <div class="method-title-area">
-            <div class="method-tag">Function</div>
-            <div class="method-name"><span class="fn">mouse2press</span><span class="params">()</span></div>
-          </div>
-          <div class="method-toggle">&#9662;</div>
-        </div>
-        <div class="method-body">
-          <div class="method-content">
-            <p class="method-description">Simulates pressing the right mouse button.</p>
-            <div class="section-label">Parameters</div>
-            <table class="params-table">
-              <thead><tr><th>Name</th><th>Type</th><th>Req</th><th>Description</th></tr></thead>
-              <tbody><tr><td colspan="4" style="text-align:center;color:var(--text-muted)">No parameters</td></tr></tbody>
-            </table>
-            <div class="section-label">Returns</div>
-            <div class="returns-box"><div class="returns-type">nil</div><div class="returns-desc">No return value.</div></div>
-          </div>
-        </div>
-      </div>
-
-      <div class="method-card fade-in stagger-2" id="mouse2release" data-search="mouse2release simulates releasing the right mouse button.">
-        <div class="method-header" onclick="toggleMethod(this)">
-          <div class="method-title-area">
-            <div class="method-tag">Function</div>
-            <div class="method-name"><span class="fn">mouse2release</span><span class="params">()</span></div>
-          </div>
-          <div class="method-toggle">&#9662;</div>
-        </div>
-        <div class="method-body">
-          <div class="method-content">
-            <p class="method-description">Simulates releasing the right mouse button.</p>
-            <div class="section-label">Parameters</div>
-            <table class="params-table">
-              <thead><tr><th>Name</th><th>Type</th><th>Req</th><th>Description</th></tr></thead>
-              <tbody><tr><td colspan="4" style="text-align:center;color:var(--text-muted)">No parameters</td></tr></tbody>
-            </table>
-            <div class="section-label">Returns</div>
-            <div class="returns-box"><div class="returns-type">nil</div><div class="returns-desc">No return value.</div></div>
-          </div>
-        </div>
-      </div>
-
-      <div class="method-card fade-in stagger-3" id="mouse2click" data-search="mouse2click simulates a full right mouse button click (press and release).">
-        <div class="method-header" onclick="toggleMethod(this)">
-          <div class="method-title-area">
-            <div class="method-tag">Function</div>
-            <div class="method-name"><span class="fn">mouse2click</span><span class="params">()</span></div>
-          </div>
-          <div class="method-toggle">&#9662;</div>
-        </div>
-        <div class="method-body">
-          <div class="method-content">
-            <p class="method-description">Simulates a full right mouse button click (press and release).</p>
-            <div class="section-label">Parameters</div>
-            <table class="params-table">
-              <thead><tr><th>Name</th><th>Type</th><th>Req</th><th>Description</th></tr></thead>
-              <tbody><tr><td colspan="4" style="text-align:center;color:var(--text-muted)">No parameters</td></tr></tbody>
-            </table>
-            <div class="section-label">Returns</div>
-            <div class="returns-box"><div class="returns-type">nil</div><div class="returns-desc">No return value.</div></div>
-          </div>
-        </div>
-      </div>
-
-      <div class="method-card fade-in stagger-4" id="mousemoveabs" data-search="mousemoveabs moves the mouse cursor to absolute screen coordinates.">
-        <div class="method-header" onclick="toggleMethod(this)">
-          <div class="method-title-area">
-            <div class="method-tag">Function</div>
-            <div class="method-name"><span class="fn">mousemoveabs</span><span class="params">(x: int, y: int)</span></div>
-          </div>
-          <div class="method-toggle">&#9662;</div>
-        </div>
-        <div class="method-body">
-          <div class="method-content">
-            <p class="method-description">Moves the mouse cursor to absolute screen coordinates.</p>
-            <div class="section-label">Parameters</div>
-            <table class="params-table">
-              <thead><tr><th>Name</th><th>Type</th><th>Req</th><th>Description</th></tr></thead>
-              <tbody>
-                <tr><td><span class="param-name">x</span></td><td><span class="param-type">int</span></td><td><span class="param-req required">req</span></td><td>Absolute X coordinate.</td></tr>
-                <tr><td><span class="param-name">y</span></td><td><span class="param-type">int</span></td><td><span class="param-req required">req</span></td><td>Absolute Y coordinate.</td></tr>
-              </tbody>
-            </table>
-            <div class="section-label">Returns</div>
-            <div class="returns-box"><div class="returns-type">nil</div><div class="returns-desc">No return value.</div></div>
-          </div>
-        </div>
-      </div>
-
-      <div class="method-card fade-in stagger-5" id="mousemoverel" data-search="mousemoverel moves the mouse cursor relative to its current position.">
-        <div class="method-header" onclick="toggleMethod(this)">
-          <div class="method-title-area">
-            <div class="method-tag">Function</div>
-            <div class="method-name"><span class="fn">mousemoverel</span><span class="params">(x: int, y: int)</span></div>
-          </div>
-          <div class="method-toggle">&#9662;</div>
-        </div>
-        <div class="method-body">
-          <div class="method-content">
-            <p class="method-description">Moves the mouse cursor relative to its current position.</p>
-            <div class="section-label">Parameters</div>
-            <table class="params-table">
-              <thead><tr><th>Name</th><th>Type</th><th>Req</th><th>Description</th></tr></thead>
-              <tbody>
-                <tr><td><span class="param-name">x</span></td><td><span class="param-type">int</span></td><td><span class="param-req required">req</span></td><td>Relative X offset.</td></tr>
-                <tr><td><span class="param-name">y</span></td><td><span class="param-type">int</span></td><td><span class="param-req required">req</span></td><td>Relative Y offset.</td></tr>
-              </tbody>
-            </table>
-            <div class="section-label">Returns</div>
-            <div class="returns-box"><div class="returns-type">nil</div><div class="returns-desc">No return value.</div></div>
-          </div>
-        </div>
-      </div>
-
-      <div class="method-card fade-in stagger-1" id="mousescroll" data-search="mousescroll simulates scrolling the mouse wheel.">
-        <div class="method-header" onclick="toggleMethod(this)">
-          <div class="method-title-area">
-            <div class="method-tag">Function</div>
-            <div class="method-name"><span class="fn">mousescroll</span><span class="params">(amount: int)</span></div>
-          </div>
-          <div class="method-toggle">&#9662;</div>
-        </div>
-        <div class="method-body">
-          <div class="method-content">
-            <p class="method-description">Simulates scrolling the mouse wheel.</p>
-            <div class="section-label">Parameters</div>
-            <table class="params-table">
-              <thead><tr><th>Name</th><th>Type</th><th>Req</th><th>Description</th></tr></thead>
-              <tbody><tr><td><span class="param-name">amount</span></td><td><span class="param-type">int</span></td><td><span class="param-req required">req</span></td><td>Scroll amount. Positive for up, negative for down.</td></tr></tbody>
-            </table>
-            <div class="section-label">Returns</div>
-            <div class="returns-box"><div class="returns-type">nil</div><div class="returns-desc">No return value.</div></div>
-          </div>
-        </div>
-      </div>
-
-      <div class="method-card fade-in stagger-2" id="run_secure" data-search="run_secure run protected code.">
-        <div class="method-header" onclick="toggleMethod(this)">
-          <div class="method-title-area">
-            <div class="method-tag">Function</div>
-            <div class="method-name"><span class="fn">run.secure</span><span class="params">(text: string)</span></div>
-          </div>
-          <div class="method-toggle">&#9662;</div>
-        </div>
-        <div class="method-body">
-          <div class="method-content">
-            <p class="method-description">Run protected code. Code protection is not available to the public.</p>
-            <div class="section-label">Parameters</div>
-            <table class="params-table">
-              <thead><tr><th>Name</th><th>Type</th><th>Req</th><th>Description</th></tr></thead>
-              <tbody><tr><td><span class="param-name">text</span></td><td><span class="param-type">string</span></td><td><span class="param-req required">req</span></td><td>The protected code to execute.</td></tr></tbody>
-            </table>
-            <div class="section-label">Returns</div>
-            <div class="returns-box"><div class="returns-type">void</div><div class="returns-desc">No return value.</div></div>
-          </div>
-        </div>
-      </div>
-
-      <div class="method-card fade-in stagger-3" id="setfflag" data-search="setfflag sets fflag with value.">
-        <div class="method-header" onclick="toggleMethod(this)">
-          <div class="method-title-area">
-            <div class="method-tag">Function</div>
-            <div class="method-name"><span class="fn">setfflag</span><span class="params">(FFlag: string, value: string)</span></div>
-          </div>
-          <div class="method-toggle">&#9662;</div>
-        </div>
-        <div class="method-body">
-          <div class="method-content">
-            <p class="method-description">Sets FFlag with Value. This function is not complete.</p>
-            <div class="section-label">Parameters</div>
-            <table class="params-table">
-              <thead><tr><th>Name</th><th>Type</th><th>Req</th><th>Description</th></tr></thead>
-              <tbody>
-                <tr><td><span class="param-name">FFlag</span></td><td><span class="param-type">string</span></td><td><span class="param-req required">req</span></td><td>The fast flag name.</td></tr>
-                <tr><td><span class="param-name">value</span></td><td><span class="param-type">string</span></td><td><span class="param-req required">req</span></td><td>The value to set.</td></tr>
-              </tbody>
-            </table>
-            <div class="section-label">Returns</div>
-            <div class="returns-box"><div class="returns-type">void</div><div class="returns-desc">No return value.</div></div>
-          </div>
-        </div>
-      </div>
-
-      <div class="method-card fade-in stagger-4" id="getfflag" data-search="getfflag gets the value of an fflag.">
-        <div class="method-header" onclick="toggleMethod(this)">
-          <div class="method-title-area">
-            <div class="method-tag">Function</div>
-            <div class="method-name"><span class="fn">getfflag</span><span class="params">(FFlag: string)</span></div>
-          </div>
-          <div class="method-toggle">&#9662;</div>
-        </div>
-        <div class="method-body">
-          <div class="method-content">
-            <p class="method-description">Gets the value of an FFlag. This function is not complete.</p>
-            <div class="section-label">Parameters</div>
-            <table class="params-table">
-              <thead><tr><th>Name</th><th>Type</th><th>Req</th><th>Description</th></tr></thead>
-              <tbody><tr><td><span class="param-name">FFlag</span></td><td><span class="param-type">string</span></td><td><span class="param-req required">req</span></td><td>The fast flag name.</td></tr></tbody>
-            </table>
-            <div class="section-label">Returns</div>
-            <div class="returns-box"><div class="returns-type">string</div><div class="returns-desc">The current value of the fast flag.</div></div>
-          </div>
-        </div>
-      </div>
-
-      <div class="method-card fade-in stagger-5" id="require" data-search="require loads and executes a module script.">
-        <div class="method-header" onclick="toggleMethod(this)">
-          <div class="method-title-area">
-            <div class="method-tag">Function</div>
-            <div class="method-name"><span class="fn">require</span><span class="params">(path: string)</span></div>
-          </div>
-          <div class="method-toggle">&#9662;</div>
-        </div>
-        <div class="method-body">
-          <div class="method-content">
-            <p class="method-description">Loads and executes a module script. Require only accepts files ending with .lua and .luau.</p>
-            <div class="section-label">Parameters</div>
-            <table class="params-table">
-              <thead><tr><th>Name</th><th>Type</th><th>Req</th><th>Description</th></tr></thead>
-              <tbody><tr><td><span class="param-name">path</span></td><td><span class="param-type">string</span></td><td><span class="param-req required">req</span></td><td>The file path to the module.</td></tr></tbody>
-            </table>
-            <div class="section-label">Returns</div>
-            <div class="returns-box"><div class="returns-type">table</div><div class="returns-desc">The exported table from the module.</div></div>
-          </div>
-        </div>
-      </div>
-
-      <div class="method-card fade-in stagger-1" id="wait" data-search="wait yields the current thread for the specified duration in seconds.">
-        <div class="method-header" onclick="toggleMethod(this)">
-          <div class="method-title-area">
-            <div class="method-tag">Function</div>
-            <div class="method-name"><span class="fn">wait</span><span class="params">(time: number)</span></div>
-          </div>
-          <div class="method-toggle">&#9662;</div>
-        </div>
-        <div class="method-body">
-          <div class="method-content">
-            <p class="method-description">Yields the current thread for the specified duration in seconds.</p>
-            <div class="section-label">Parameters</div>
-            <table class="params-table">
-              <thead><tr><th>Name</th><th>Type</th><th>Req</th><th>Description</th></tr></thead>
-              <tbody><tr><td><span class="param-name">time</span></td><td><span class="param-type">number</span></td><td><span class="param-req required">req</span></td><td>Duration to wait in seconds.</td></tr></tbody>
-            </table>
-            <div class="section-label">Returns</div>
-            <div class="returns-box"><div class="returns-type">void</div><div class="returns-desc">No return value.</div></div>
-          </div>
-        </div>
-      </div>
-
-      <div class="method-card fade-in stagger-2" id="spawn" data-search="spawn schedules a function to run on the next frame.">
-        <div class="method-header" onclick="toggleMethod(this)">
-          <div class="method-title-area">
-            <div class="method-tag">Function</div>
-            <div class="method-name"><span class="fn">spawn</span><span class="params">(target: function)</span></div>
-          </div>
-          <div class="method-toggle">&#9662;</div>
-        </div>
-        <div class="method-body">
-          <div class="method-content">
-            <p class="method-description">Schedules a function to run on the next frame.</p>
-            <div class="section-label">Parameters</div>
-            <table class="params-table">
-              <thead><tr><th>Name</th><th>Type</th><th>Req</th><th>Description</th></tr></thead>
-              <tbody><tr><td><span class="param-name">target</span></td><td><span class="param-type">function</span></td><td><span class="param-req required">req</span></td><td>The function to spawn.</td></tr></tbody>
-            </table>
-            <div class="section-label">Returns</div>
-            <div class="returns-box"><div class="returns-type">nil</div><div class="returns-desc">No return value.</div></div>
-          </div>
-        </div>
-      </div>
-
-      <div class="method-card fade-in stagger-3" id="task_spawn" data-search="task.spawn spawns a new thread that runs the given function.">
-        <div class="method-header" onclick="toggleMethod(this)">
-          <div class="method-title-area">
-            <div class="method-tag">Function</div>
-            <div class="method-name"><span class="fn">task.spawn</span><span class="params">(target: function)</span></div>
-          </div>
-          <div class="method-toggle">&#9662;</div>
-        </div>
-        <div class="method-body">
-          <div class="method-content">
-            <p class="method-description">Spawns a new thread that runs the given function.</p>
-            <div class="section-label">Parameters</div>
-            <table class="params-table">
-              <thead><tr><th>Name</th><th>Type</th><th>Req</th><th>Description</th></tr></thead>
-              <tbody><tr><td><span class="param-name">target</span></td><td><span class="param-type">function</span></td><td><span class="param-req required">req</span></td><td>The function to run.</td></tr></tbody>
-            </table>
-            <div class="section-label">Returns</div>
-            <div class="returns-box"><div class="returns-type">nil</div><div class="returns-desc">No return value.</div></div>
-          </div>
-        </div>
-      </div>
-
-      <div class="method-card fade-in stagger-4" id="task_wait" data-search="task.wait yields the current thread for the specified duration using the task scheduler.">
-        <div class="method-header" onclick="toggleMethod(this)">
-          <div class="method-title-area">
-            <div class="method-tag">Function</div>
-            <div class="method-name"><span class="fn">task.wait</span><span class="params">(time: number)</span></div>
-          </div>
-          <div class="method-toggle">&#9662;</div>
-        </div>
-        <div class="method-body">
-          <div class="method-content">
-            <p class="method-description">Yields the current thread for the specified duration using the task scheduler.</p>
-            <div class="section-label">Parameters</div>
-            <table class="params-table">
-              <thead><tr><th>Name</th><th>Type</th><th>Req</th><th>Description</th></tr></thead>
-              <tbody><tr><td><span class="param-name">time</span></td><td><span class="param-type">number</span></td><td><span class="param-req required">req</span></td><td>Duration to wait in seconds.</td></tr></tbody>
-            </table>
-            <div class="section-label">Returns</div>
-            <div class="returns-box"><div class="returns-type">void</div><div class="returns-desc">No return value.</div></div>
-          </div>
-        </div>
-      </div>
-
-      <div style="height: 80px;"></div>
-    </div>
-  </main>
-</div>
-
-<script>
-const API_BASE = 'https://methodsapi.vercel.app';
-
-function initNFParticles() {
-  const canvas = document.getElementById('nf-particles');
-  if (!canvas) return;
-  const ctx = canvas.getContext('2d');
-  let w, h, parts = [];
-  function resize() { w = canvas.width = canvas.offsetWidth; h = canvas.height = canvas.offsetHeight; }
-  function create() {
-    parts = [];
-    for (let i = 0; i < 60; i++) {
-      parts.push({ x: Math.random()*w, y: Math.random()*h, vx: (Math.random()-0.5)*0.3, vy: (Math.random()-0.5)*0.3, size: Math.random()*1.5+0.5, a: Math.random()*0.4+0.1 });
-    }
-  }
-  function draw() {
-    ctx.clearRect(0,0,w,h);
-    for (let i = 0; i < parts.length; i++) {
-      let p = parts[i];
-      p.x += p.vx; p.y += p.vy;
-      if (p.x < 0 || p.x > w) p.vx *= -1;
-      if (p.y < 0 || p.y > h) p.vy *= -1;
-      ctx.beginPath(); ctx.arc(p.x, p.y, p.size, 0, Math.PI*2);
-      ctx.fillStyle = 'rgba(255,45,85,' + p.a + ')'; ctx.fill();
-      for (let j = i+1; j < parts.length; j++) {
-        let p2 = parts[j], dx = p.x-p2.x, dy = p.y-p2.y, d = Math.sqrt(dx*dx+dy*dy);
-        if (d < 100) {
-          ctx.beginPath(); ctx.moveTo(p.x,p.y); ctx.lineTo(p2.x,p2.y);
-          ctx.strokeStyle = 'rgba(255,45,85,' + (1-d/100)*0.08 + ')';
-          ctx.lineWidth = 0.6; ctx.stroke();
+    function initNFParticles() {
+      const canvas = document.getElementById('nf-particles');
+      if (!canvas) return;
+      const ctx = canvas.getContext('2d');
+      let w, h, parts = [];
+      function resize() { w = canvas.width = canvas.offsetWidth; h = canvas.height = canvas.offsetHeight; }
+      function create() {
+        parts = [];
+        for (let i = 0; i < 60; i++) {
+          parts.push({ x: Math.random() * w, y: Math.random() * h, vx: (Math.random() - 0.5) * 0.3, vy: (Math.random() - 0.5) * 0.3, size: Math.random() * 1.5 + 0.5, a: Math.random() * 0.4 + 0.1 });
         }
       }
-    }
-    requestAnimationFrame(draw);
-  }
-  window.addEventListener('resize', () => { resize(); create(); });
-  resize(); create(); draw();
-}
-
-function showNotFound() {
-  document.getElementById('auth-overlay').style.display = 'none';
-  document.getElementById('not-found-screen').style.display = 'flex';
-  initNFParticles();
-}
-
-function retryAuth() {
-  localStorage.removeItem('putinka_token');
-  window.location.href = API_BASE + '/auth/discord';
-}
-
-function logout() {
-  localStorage.removeItem('putinka_token');
-  window.location.href = API_BASE + '/auth/discord';
-}
-
-function grantAccess(username) {
-  document.getElementById('auth-overlay').style.display = 'none';
-  document.getElementById('not-found-screen').style.display = 'none';
-  document.getElementById('user-bar').style.display = 'flex';
-  document.getElementById('user-name').textContent = username;
-  initApp();
-}
-
-(function init() {
-  const params = new URLSearchParams(window.location.search);
-  const tokenFromUrl = params.get('token');
-  const errorFromUrl = params.get('error');
-
-  if (tokenFromUrl) {
-    localStorage.setItem('putinka_token', tokenFromUrl);
-    window.history.replaceState({}, document.title, window.location.pathname);
-  }
-
-  if (errorFromUrl === 'unauthorized') {
-    showNotFound();
-    return;
-  }
-
-  if (errorFromUrl === 'server') {
-    document.getElementById('auth-status-text').textContent = 'Server error. Retrying...';
-    setTimeout(() => { window.location.href = API_BASE + '/auth/discord'; }, 2000);
-    return;
-  }
-
-  const token = localStorage.getItem('putinka_token');
-
-  if (!token) {
-    document.getElementById('auth-status-text').textContent = 'Redirecting to Discord...';
-    setTimeout(() => { window.location.href = API_BASE + '/auth/discord'; }, 800);
-    return;
-  }
-
-  document.getElementById('auth-status-text').textContent = 'Verifying session...';
-
-  fetch(API_BASE + '/api/me', {
-    headers: { 'Authorization': 'Bearer ' + token }
-  })
-  .then(r => {
-    if (!r.ok) throw new Error('invalid');
-    return r.json();
-  })
-  .then(user => {
-    grantAccess(user.username);
-  })
-  .catch(() => {
-    localStorage.removeItem('putinka_token');
-    document.getElementById('auth-status-text').textContent = 'Redirecting to Discord...';
-    setTimeout(() => { window.location.href = API_BASE + '/auth/discord'; }, 800);
-  });
-})();
-
-function initApp() {
-  (function() {
-    const canvas = document.getElementById('particles-canvas');
-    const ctx = canvas.getContext('2d');
-    let width, height, particles = [];
-    const PARTICLE_COUNT = 80, CONNECTION_DIST = 120, MOUSE_DIST = 150;
-    let mouse = { x: null, y: null };
-
-    function resize() { width = canvas.width = window.innerWidth; height = canvas.height = window.innerHeight; }
-
-    function createParticles() {
-      particles = [];
-      for (let i = 0; i < PARTICLE_COUNT; i++) {
-        particles.push({ x: Math.random()*width, y: Math.random()*height, vx: (Math.random()-0.5)*0.4, vy: (Math.random()-0.5)*0.4, size: Math.random()*2+0.5, alpha: Math.random()*0.5+0.2 });
-      }
-    }
-
-    function draw() {
-      ctx.clearRect(0, 0, width, height);
-      for (let i = 0; i < particles.length; i++) {
-        let p = particles[i];
-        p.x += p.vx; p.y += p.vy;
-        if (p.x < 0 || p.x > width) p.vx *= -1;
-        if (p.y < 0 || p.y > height) p.vy *= -1;
-        ctx.beginPath(); ctx.arc(p.x, p.y, p.size, 0, Math.PI*2);
-        ctx.fillStyle = 'rgba(255,45,85,' + p.alpha + ')'; ctx.fill();
-        for (let j = i+1; j < particles.length; j++) {
-          let p2 = particles[j], dx = p.x-p2.x, dy = p.y-p2.y, dist = Math.sqrt(dx*dx+dy*dy);
-          if (dist < CONNECTION_DIST) {
-            ctx.beginPath(); ctx.moveTo(p.x,p.y); ctx.lineTo(p2.x,p2.y);
-            ctx.strokeStyle = 'rgba(255,45,85,' + (1-dist/CONNECTION_DIST)*0.12 + ')';
-            ctx.lineWidth = 0.8; ctx.stroke();
+      function draw() {
+        ctx.clearRect(0, 0, w, h);
+        for (let i = 0; i < parts.length; i++) {
+          let p = parts[i];
+          p.x += p.vx; p.y += p.vy;
+          if (p.x < 0 || p.x > w) p.vx *= -1;
+          if (p.y < 0 || p.y > h) p.vy *= -1;
+          ctx.beginPath(); ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+          ctx.fillStyle = 'rgba(255,45,85,' + p.a + ')'; ctx.fill();
+          for (let j = i + 1; j < parts.length; j++) {
+            let p2 = parts[j], dx = p.x - p2.x, dy = p.y - p2.y, d = Math.sqrt(dx * dx + dy * dy);
+            if (d < 100) {
+              ctx.beginPath(); ctx.moveTo(p.x, p.y); ctx.lineTo(p2.x, p2.y);
+              ctx.strokeStyle = 'rgba(255,45,85,' + (1 - d / 100) * 0.08 + ')';
+              ctx.lineWidth = 0.6; ctx.stroke();
+            }
           }
         }
-        if (mouse.x !== null) {
-          let dx = p.x-mouse.x, dy = p.y-mouse.y, dist = Math.sqrt(dx*dx+dy*dy);
-          if (dist < MOUSE_DIST) {
-            ctx.beginPath(); ctx.moveTo(p.x,p.y); ctx.lineTo(mouse.x,mouse.y);
-            ctx.strokeStyle = 'rgba(255,45,85,' + (1-dist/MOUSE_DIST)*0.2 + ')';
-            ctx.lineWidth = 0.6; ctx.stroke();
-          }
-        }
+        requestAnimationFrame(draw);
       }
-      requestAnimationFrame(draw);
+      window.addEventListener('resize', () => { resize(); create(); });
+      resize(); create(); draw();
     }
 
-    window.addEventListener('resize', () => { resize(); createParticles(); });
-    window.addEventListener('mousemove', e => { mouse.x = e.clientX; mouse.y = e.clientY; });
-    window.addEventListener('mouseleave', () => { mouse.x = null; mouse.y = null; });
-    resize(); createParticles(); draw();
-  })();
+    function showNotFound() {
+      document.getElementById('auth-overlay').style.display = 'none';
+      document.getElementById('not-found-screen').style.display = 'flex';
+      initNFParticles();
+    }
 
-  const sidebar = document.getElementById('sidebar');
-  const overlay = document.getElementById('overlay');
-  const menuToggle = document.getElementById('menuToggle');
+    function retryAuth() {
+      localStorage.removeItem('putinka_token');
+      window.location.href = API_BASE + '/auth/discord';
+    }
 
-  menuToggle.addEventListener('click', () => { sidebar.classList.toggle('open'); overlay.classList.toggle('active'); });
-  overlay.addEventListener('click', () => { sidebar.classList.remove('open'); overlay.classList.remove('active'); });
+    function logout() {
+      localStorage.removeItem('putinka_token');
+      window.location.href = API_BASE + '/auth/discord';
+    }
 
-  document.querySelectorAll('.nav-item').forEach(item => {
-    item.addEventListener('click', e => {
-      e.preventDefault();
-      document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active'));
-      item.classList.add('active');
-      const target = document.getElementById(item.getAttribute('data-target'));
-      if (target) window.scrollTo({ top: target.getBoundingClientRect().top + window.pageYOffset - 80, behavior: 'smooth' });
-      if (window.innerWidth <= 1024) { sidebar.classList.remove('open'); overlay.classList.remove('active'); }
-    });
-  });
+    function grantAccess(username) {
+      document.getElementById('auth-overlay').style.display = 'none';
+      document.getElementById('not-found-screen').style.display = 'none';
+      document.getElementById('user-bar').style.display = 'flex';
+      document.getElementById('user-name').textContent = username;
+      initApp();
+    }
 
-  document.getElementById('searchInput').addEventListener('input', e => {
-    const q = e.target.value.toLowerCase();
-    document.querySelectorAll('.method-card').forEach(card => {
-      const match = (card.getAttribute('data-search')||'').includes(q) || card.querySelector('.method-name').innerText.toLowerCase().includes(q);
-      card.style.display = (q === '' || match) ? '' : 'none';
-    });
-    document.querySelectorAll('.nav-item').forEach(item => {
-      const t = document.getElementById(item.getAttribute('data-target'));
-      if (t) item.style.display = (t.style.display === 'none') ? 'none' : '';
-    });
-  });
+    (function init() {
+      const params = new URLSearchParams(window.location.search);
+      const tokenFromUrl = params.get('token');
+      const errorFromUrl = params.get('error');
 
-  window.addEventListener('scroll', () => {
-    const pos = window.pageYOffset + 100;
-    document.querySelectorAll('.method-card').forEach(card => {
-      if (pos >= card.offsetTop && pos < card.offsetTop + card.offsetHeight) {
-        document.querySelectorAll('.nav-item').forEach(item => {
-          item.classList.toggle('active', item.getAttribute('data-target') === card.id);
+      if (tokenFromUrl) {
+        localStorage.setItem('putinka_token', tokenFromUrl);
+        window.history.replaceState({}, document.title, window.location.pathname);
+      }
+
+      if (errorFromUrl === 'unauthorized') {
+        showNotFound();
+        return;
+      }
+
+      if (errorFromUrl === 'server') {
+        document.getElementById('auth-status-text').textContent = 'Server error. Retrying...';
+        setTimeout(() => { window.location.href = API_BASE + '/auth/discord'; }, 2000);
+        return;
+      }
+
+      const token = localStorage.getItem('putinka_token');
+
+      if (!token) {
+        document.getElementById('auth-status-text').textContent = 'Redirecting to Discord...';
+        setTimeout(() => { window.location.href = API_BASE + '/auth/discord'; }, 800);
+        return;
+      }
+
+      document.getElementById('auth-status-text').textContent = 'Verifying session...';
+
+      fetch(API_BASE + '/api/me', {
+        headers: { 'Authorization': 'Bearer ' + token }
+      })
+        .then(r => {
+          if (!r.ok) throw new Error('invalid');
+          return r.json();
+        })
+        .then(user => {
+          grantAccess(user.username);
+        })
+        .catch(() => {
+          localStorage.removeItem('putinka_token');
+          document.getElementById('auth-status-text').textContent = 'Redirecting to Discord...';
+          setTimeout(() => { window.location.href = API_BASE + '/auth/discord'; }, 800);
         });
-      }
-    });
-  });
-}
+    })();
 
-window.toggleMethod = function(header) {
-  const card = header.closest('.method-card');
-  const body = card.querySelector('.method-body');
-  const toggle = header.querySelector('.method-toggle');
-  const isOpen = body.classList.contains('open');
-  document.querySelectorAll('.method-body.open').forEach(b => {
-    if (b !== body) { b.classList.remove('open'); b.closest('.method-card').querySelector('.method-toggle').classList.remove('active'); }
-  });
-  if (isOpen) { body.classList.remove('open'); toggle.classList.remove('active'); }
-  else { body.classList.add('open'); toggle.classList.add('active'); }
-};
-</script>
+    function initApp() {
+      (function () {
+        const canvas = document.getElementById('particles-canvas');
+        const ctx = canvas.getContext('2d');
+        let width, height, particles = [];
+        const PARTICLE_COUNT = 80, CONNECTION_DIST = 120, MOUSE_DIST = 150;
+        let mouse = { x: null, y: null };
+
+        function resize() { width = canvas.width = window.innerWidth; height = canvas.height = window.innerHeight; }
+
+        function createParticles() {
+          particles = [];
+          for (let i = 0; i < PARTICLE_COUNT; i++) {
+            particles.push({ x: Math.random() * width, y: Math.random() * height, vx: (Math.random() - 0.5) * 0.4, vy: (Math.random() - 0.5) * 0.4, size: Math.random() * 2 + 0.5, alpha: Math.random() * 0.5 + 0.2 });
+          }
+        }
+
+        function draw() {
+          ctx.clearRect(0, 0, width, height);
+          for (let i = 0; i < particles.length; i++) {
+            let p = particles[i];
+            p.x += p.vx; p.y += p.vy;
+            if (p.x < 0 || p.x > width) p.vx *= -1;
+            if (p.y < 0 || p.y > height) p.vy *= -1;
+            ctx.beginPath(); ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+            ctx.fillStyle = 'rgba(255,45,85,' + p.alpha + ')'; ctx.fill();
+            for (let j = i + 1; j < particles.length; j++) {
+              let p2 = particles[j], dx = p.x - p2.x, dy = p.y - p2.y, dist = Math.sqrt(dx * dx + dy * dy);
+              if (dist < CONNECTION_DIST) {
+                ctx.beginPath(); ctx.moveTo(p.x, p.y); ctx.lineTo(p2.x, p2.y);
+                ctx.strokeStyle = 'rgba(255,45,85,' + (1 - dist / CONNECTION_DIST) * 0.12 + ')';
+                ctx.lineWidth = 0.8; ctx.stroke();
+              }
+            }
+            if (mouse.x !== null) {
+              let dx = p.x - mouse.x, dy = p.y - mouse.y, dist = Math.sqrt(dx * dx + dy * dy);
+              if (dist < MOUSE_DIST) {
+                ctx.beginPath(); ctx.moveTo(p.x, p.y); ctx.lineTo(mouse.x, mouse.y);
+                ctx.strokeStyle = 'rgba(255,45,85,' + (1 - dist / MOUSE_DIST) * 0.2 + ')';
+                ctx.lineWidth = 0.6; ctx.stroke();
+              }
+            }
+          }
+          requestAnimationFrame(draw);
+        }
+
+        window.addEventListener('resize', () => { resize(); createParticles(); });
+        window.addEventListener('mousemove', e => { mouse.x = e.clientX; mouse.y = e.clientY; });
+        window.addEventListener('mouseleave', () => { mouse.x = null; mouse.y = null; });
+        resize(); createParticles(); draw();
+      })();
+
+      const sidebar = document.getElementById('sidebar');
+      const overlay = document.getElementById('overlay');
+      const menuToggle = document.getElementById('menuToggle');
+
+      menuToggle.addEventListener('click', () => { sidebar.classList.toggle('open'); overlay.classList.toggle('active'); });
+      overlay.addEventListener('click', () => { sidebar.classList.remove('open'); overlay.classList.remove('active'); });
+
+      document.querySelectorAll('.nav-item').forEach(item => {
+        item.addEventListener('click', e => {
+          e.preventDefault();
+          document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active'));
+          item.classList.add('active');
+          const target = document.getElementById(item.getAttribute('data-target'));
+          if (target) window.scrollTo({ top: target.getBoundingClientRect().top + window.pageYOffset - 80, behavior: 'smooth' });
+          if (window.innerWidth <= 1024) { sidebar.classList.remove('open'); overlay.classList.remove('active'); }
+        });
+      });
+
+      document.getElementById('searchInput').addEventListener('input', e => {
+        const q = e.target.value.toLowerCase();
+        document.querySelectorAll('.method-card').forEach(card => {
+          const match = (card.getAttribute('data-search') || '').includes(q) || card.querySelector('.method-name').innerText.toLowerCase().includes(q);
+          card.style.display = (q === '' || match) ? '' : 'none';
+        });
+        document.querySelectorAll('.nav-item').forEach(item => {
+          const t = document.getElementById(item.getAttribute('data-target'));
+          if (t) item.style.display = (t.style.display === 'none') ? 'none' : '';
+        });
+      });
+
+      window.addEventListener('scroll', () => {
+        const pos = window.pageYOffset + 100;
+        document.querySelectorAll('.method-card').forEach(card => {
+          if (pos >= card.offsetTop && pos < card.offsetTop + card.offsetHeight) {
+            document.querySelectorAll('.nav-item').forEach(item => {
+              item.classList.toggle('active', item.getAttribute('data-target') === card.id);
+            });
+          }
+        });
+      });
+    }
+
+    window.toggleMethod = function (header) {
+      const card = header.closest('.method-card');
+      const body = card.querySelector('.method-body');
+      const toggle = header.querySelector('.method-toggle');
+      const isOpen = body.classList.contains('open');
+      document.querySelectorAll('.method-body.open').forEach(b => {
+        if (b !== body) { b.classList.remove('open'); b.closest('.method-card').querySelector('.method-toggle').classList.remove('active'); }
+      });
+      if (isOpen) { body.classList.remove('open'); toggle.classList.remove('active'); }
+      else { body.classList.add('open'); toggle.classList.add('active'); }
+    };
+  </script>
 </body>
+
 </html>
