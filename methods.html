@@ -97,7 +97,7 @@ body {
   position: fixed;
   inset: 0;
   z-index: 9999;
-  background: rgba(5, 5, 8, 0.4);
+  background: var(--bg-primary);
   display: none;
   align-items: center;
   justify-content: center;
@@ -121,7 +121,7 @@ body {
   flex-direction: column;
   align-items: flex-start;
   gap: 12px;
-  max-width: 440px;
+  max-width: 480px;
   width: 100%;
 }
 
@@ -158,90 +158,27 @@ body {
   margin-bottom: 4px;
 }
 
-.nf-embed {
-  display: flex;
+.nf-video-wrap {
   width: 100%;
-  background: rgba(15, 15, 25, 0.95);
+  border-radius: var(--radius-md);
+  overflow: hidden;
   border: 1px solid var(--border-glass);
-  border-radius: 4px;
-  overflow: hidden;
-  text-decoration: none;
-  transition: all 0.2s ease;
-}
-
-.nf-embed:hover {
-  border-color: rgba(255, 45, 85, 0.35);
-  transform: translateY(-2px);
-  box-shadow: 0 8px 32px rgba(0,0,0,0.4);
-}
-
-.nf-embed-side {
-  width: 4px;
-  background: var(--accent-primary);
-  flex-shrink: 0;
-}
-
-.nf-embed-body {
-  padding: 14px 16px;
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-  flex: 1;
-  min-width: 0;
-}
-
-.nf-embed-site {
-  font-size: 12px;
-  font-weight: 600;
-  color: var(--text-muted);
-}
-
-.nf-embed-title {
-  font-size: 15px;
-  font-weight: 600;
-  color: var(--accent-primary);
-  line-height: 1.4;
-}
-
-.nf-embed-desc {
-  font-size: 13px;
-  color: var(--text-secondary);
-  line-height: 1.5;
-}
-
-.nf-embed-thumb {
-  position: relative;
-  width: 100%;
-  aspect-ratio: 16/9;
-  border-radius: 6px;
-  overflow: hidden;
-  margin-top: 4px;
   background: var(--bg-tertiary);
+  aspect-ratio: 16/9;
 }
 
-.nf-embed-thumb img {
+.nf-video-wrap iframe {
   width: 100%;
   height: 100%;
-  object-fit: cover;
   display: block;
+  border: none;
 }
 
-.nf-embed-play {
-  position: absolute;
-  inset: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: rgba(0,0,0,0.35);
-  font-size: 32px;
-  color: #fff;
-  text-shadow: 0 2px 12px rgba(0,0,0,0.5);
-  opacity: 0;
-  transition: opacity 0.2s;
-}
-
-.nf-embed:hover .nf-embed-play {
-  opacity: 1;
+.nf-video-title {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text-primary);
+  line-height: 1.4;
 }
 
 #not-found-screen .nf-retry {
@@ -641,18 +578,10 @@ body {
     <div class="nf-sub">You don't use PUTINKA website</div>
     <div class="nf-divider"></div>
     <div class="nf-fix-title">How to fix it:</div>
-    <a href="https://www.youtube.com/watch?v=dQw4w9WgXcQ" class="nf-embed" target="_blank">
-      <div class="nf-embed-side"></div>
-      <div class="nf-embed-body">
-        <div class="nf-embed-site">youtube.com</div>
-        <div class="nf-embed-title">How to use PUTINKA</div>
-        <div class="nf-embed-desc">Watch this tutorial to learn how to access the PUTINKA methods documentation.</div>
-        <div class="nf-embed-thumb">
-          <img src="https://i.ytimg.com/vi/dQw4w9WgXcQ/hqdefault.jpg" alt="Preview">
-          <div class="nf-embed-play">&#9654;</div>
-        </div>
-      </div>
-    </a>
+    <div class="nf-video-wrap">
+      <iframe src="https://www.youtube.com/embed/dQw4w9WgXcQ" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+    </div>
+    <div class="nf-video-title">Rick Astley - Never Gonna Give You Up (Official Video) [4K]</div>
     <button class="nf-retry" onclick="retryAuth()">Retry</button>
   </div>
 </div>
