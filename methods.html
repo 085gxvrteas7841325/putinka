@@ -581,6 +581,8 @@
       align-items: flex-start;
       justify-content: space-between;
       gap: 16px;
+      cursor: pointer;
+      user-select: none;
     }
 
     .method-title-area {
@@ -646,6 +648,14 @@
     }
 
     .method-body {
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.4s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.3s ease;
+      opacity: 0;
+    }
+
+    .method-body.open {
+      max-height: 2000px;
       opacity: 1;
     }
 
@@ -1020,7 +1030,7 @@
         </div>
 
         <div class="method-card fade-in stagger-1 shake-notification" id="m1" data-search="1">
-          <div class="method-header">
+          <div class="method-header" onclick="toggleMethod(this)">
             <div class="method-title-area" style="display: flex; align-items: center; gap: 12px;">
               <div class="method-name"><span class="fn">1</span></div>
               <div class="method-tag"
@@ -1036,7 +1046,7 @@
         </div>
 
         <div class="method-card fade-in stagger-2" id="m2" data-search="2">
-          <div class="method-header">
+          <div class="method-header" onclick="toggleMethod(this)">
             <div class="method-title-area">
               <div class="method-name"><span class="fn">2</span></div>
             </div>
@@ -1049,7 +1059,7 @@
         </div>
 
         <div class="method-card fade-in stagger-3" id="m3" data-search="3">
-          <div class="method-header">
+          <div class="method-header" onclick="toggleMethod(this)">
             <div class="method-title-area">
               <div class="method-name"><span class="fn">3</span></div>
             </div>
@@ -1062,7 +1072,7 @@
         </div>
 
         <div class="method-card fade-in stagger-4" id="m4" data-search="4">
-          <div class="method-header">
+          <div class="method-header" onclick="toggleMethod(this)">
             <div class="method-title-area">
               <div class="method-name"><span class="fn">4</span></div>
             </div>
@@ -1075,7 +1085,7 @@
         </div>
 
         <div class="method-card fade-in stagger-5" id="m5" data-search="5">
-          <div class="method-header">
+          <div class="method-header" onclick="toggleMethod(this)">
             <div class="method-title-area">
               <div class="method-name"><span class="fn">5</span></div>
             </div>
@@ -1088,7 +1098,7 @@
         </div>
 
         <div class="method-card fade-in stagger-1" id="m6" data-search="6">
-          <div class="method-header">
+          <div class="method-header" onclick="toggleMethod(this)">
             <div class="method-title-area">
               <div class="method-name"><span class="fn">6</span></div>
             </div>
@@ -1101,7 +1111,7 @@
         </div>
 
         <div class="method-card fade-in stagger-2" id="m7" data-search="7">
-          <div class="method-header">
+          <div class="method-header" onclick="toggleMethod(this)">
             <div class="method-title-area">
               <div class="method-name"><span class="fn">7</span></div>
             </div>
@@ -1114,7 +1124,7 @@
         </div>
 
         <div class="method-card fade-in stagger-3" id="m8" data-search="8">
-          <div class="method-header">
+          <div class="method-header" onclick="toggleMethod(this)">
             <div class="method-title-area">
               <div class="method-name"><span class="fn">8</span></div>
             </div>
@@ -1127,7 +1137,7 @@
         </div>
 
         <div class="method-card fade-in stagger-4" id="m9" data-search="9">
-          <div class="method-header">
+          <div class="method-header" onclick="toggleMethod(this)">
             <div class="method-title-area">
               <div class="method-name"><span class="fn">9</span></div>
             </div>
@@ -1140,7 +1150,7 @@
         </div>
 
         <div class="method-card fade-in stagger-5" id="m10" data-search="10">
-          <div class="method-header">
+          <div class="method-header" onclick="toggleMethod(this)">
             <div class="method-title-area">
               <div class="method-name"><span class="fn">10</span></div>
             </div>
@@ -1371,13 +1381,12 @@
     window.toggleMethod = function (header) {
       const card = header.closest('.method-card');
       const body = card.querySelector('.method-body');
-      const toggle = header.querySelector('.method-toggle');
       const isOpen = body.classList.contains('open');
       document.querySelectorAll('.method-body.open').forEach(b => {
-        if (b !== body) { b.classList.remove('open'); b.closest('.method-card').querySelector('.method-toggle').classList.remove('active'); }
+        if (b !== body) { b.classList.remove('open'); }
       });
-      if (isOpen) { body.classList.remove('open'); toggle.classList.remove('active'); }
-      else { body.classList.add('open'); toggle.classList.add('active'); }
+      if (isOpen) { body.classList.remove('open'); }
+      else { body.classList.add('open'); }
     };
   </script>
 </body>
