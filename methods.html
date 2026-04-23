@@ -97,38 +97,40 @@ body {
   position: fixed;
   inset: 0;
   z-index: 9999;
-  background: #050508;
+  background: rgba(5, 5, 8, 0.4);
   display: none;
-  flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 16px;
   font-family: 'Inter', sans-serif;
   padding: 24px;
-  text-align: center;
 }
 
-#not-found-screen .nf-lock {
-  width: 64px;
-  height: 64px;
-  border-radius: 16px;
-  background: rgba(255, 45, 85, 0.08);
-  border: 1px solid rgba(255, 45, 85, 0.2);
+#nf-particles {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 0;
+  pointer-events: none;
+}
+
+.nf-content {
+  position: relative;
+  z-index: 1;
   display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 28px;
-  color: var(--accent-primary);
-  margin-bottom: 8px;
-  box-shadow: 0 0 30px rgba(255, 45, 85, 0.1);
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 12px;
+  max-width: 440px;
+  width: 100%;
 }
 
 #not-found-screen .nf-title {
   font-family: 'Inter', sans-serif;
-  font-size: 32px;
+  font-size: 38px;
   font-weight: 800;
   color: var(--text-primary);
-  letter-spacing: 2px;
+  letter-spacing: 1px;
   text-transform: uppercase;
   line-height: 1;
 }
@@ -144,7 +146,7 @@ body {
   height: 2px;
   background: var(--accent-gradient);
   border-radius: 2px;
-  margin: 8px 0;
+  margin: 4px 0;
 }
 
 #not-found-screen .nf-fix-title {
@@ -153,65 +155,93 @@ body {
   text-transform: uppercase;
   letter-spacing: 1.5px;
   color: var(--text-muted);
-  margin-bottom: 12px;
+  margin-bottom: 4px;
 }
 
-#not-found-screen .nf-video {
-  display: block;
+.nf-embed {
+  display: flex;
   width: 100%;
-  max-width: 320px;
-  background: var(--bg-glass);
+  background: rgba(15, 15, 25, 0.95);
   border: 1px solid var(--border-glass);
-  border-radius: var(--radius-md);
+  border-radius: 4px;
   overflow: hidden;
   text-decoration: none;
-  transition: all 0.3s ease;
-  margin-bottom: 8px;
+  transition: all 0.2s ease;
 }
 
-#not-found-screen .nf-video:hover {
-  border-color: rgba(255, 45, 85, 0.3);
-  box-shadow: 0 0 20px rgba(255, 45, 85, 0.1);
+.nf-embed:hover {
+  border-color: rgba(255, 45, 85, 0.35);
   transform: translateY(-2px);
+  box-shadow: 0 8px 32px rgba(0,0,0,0.4);
 }
 
-#not-found-screen .nf-video-thumb {
+.nf-embed-side {
+  width: 4px;
+  background: var(--accent-primary);
+  flex-shrink: 0;
+}
+
+.nf-embed-body {
+  padding: 14px 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  flex: 1;
+  min-width: 0;
+}
+
+.nf-embed-site {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text-muted);
+}
+
+.nf-embed-title {
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--accent-primary);
+  line-height: 1.4;
+}
+
+.nf-embed-desc {
+  font-size: 13px;
+  color: var(--text-secondary);
+  line-height: 1.5;
+}
+
+.nf-embed-thumb {
   position: relative;
   width: 100%;
   aspect-ratio: 16/9;
+  border-radius: 6px;
+  overflow: hidden;
+  margin-top: 4px;
   background: var(--bg-tertiary);
+}
+
+.nf-embed-thumb img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.nf-embed-play {
+  position: absolute;
+  inset: 0;
   display: flex;
   align-items: center;
   justify-content: center;
+  background: rgba(0,0,0,0.35);
+  font-size: 32px;
+  color: #fff;
+  text-shadow: 0 2px 12px rgba(0,0,0,0.5);
+  opacity: 0;
+  transition: opacity 0.2s;
 }
 
-#not-found-screen .nf-play {
-  width: 48px;
-  height: 48px;
-  border-radius: 50%;
-  background: rgba(255, 45, 85, 0.15);
-  border: 1px solid rgba(255, 45, 85, 0.3);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 16px;
-  color: var(--accent-primary);
-  padding-left: 4px;
-  transition: all 0.2s;
-}
-
-#not-found-screen .nf-video:hover .nf-play {
-  background: rgba(255, 45, 85, 0.25);
-  box-shadow: 0 0 20px rgba(255, 45, 85, 0.2);
-}
-
-#not-found-screen .nf-video-label {
-  padding: 10px 14px;
-  font-size: 13px;
-  font-weight: 600;
-  color: var(--text-secondary);
-  text-align: left;
-  border-top: 1px solid var(--border-subtle);
+.nf-embed:hover .nf-embed-play {
+  opacity: 1;
 }
 
 #not-found-screen .nf-retry {
@@ -228,6 +258,7 @@ body {
   letter-spacing: 1.5px;
   cursor: pointer;
   transition: all 0.2s;
+  align-self: center;
 }
 
 #not-found-screen .nf-retry:hover {
@@ -244,6 +275,7 @@ body {
   z-index: 90;
   background: var(--bg-glass);
   backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
   border-left: 1px solid var(--border-glass);
   border-bottom: 1px solid var(--border-glass);
   padding: 10px 20px;
@@ -572,7 +604,8 @@ body {
   .page-header h1 { font-size: 24px; }
   .params-table { font-size: 12px; }
   .params-table th, .params-table td { padding: 8px 10px; }
-  #not-found-screen .nf-title { font-size: 26px; }
+  #not-found-screen .nf-title { font-size: 28px; }
+  .nf-content { max-width: 100%; }
 }
 
 .fade-in { animation: fadeIn 0.5s ease forwards; opacity: 0; }
@@ -602,18 +635,26 @@ body {
 </div>
 
 <div id="not-found-screen">
-  <div class="nf-lock">&#128274;</div>
-  <div class="nf-title">NO ACCESS!</div>
-  <div class="nf-sub">You don't use PUTINKA.</div>
-  <div class="nf-divider"></div>
-  <div class="nf-fix-title">How to fix it:</div>
-  <a href="https://youtu.be/7U7Jdn9qZA8" class="nf-video" target="_blank">
-    <div class="nf-video-thumb">
-      <div class="nf-play">&#9654;</div>
-    </div>
-    <div class="nf-video-label">Watch tutorial</div>
-  </a>
-  <button class="nf-retry" onclick="retryAuth()">Retry</button>
+  <canvas id="nf-particles"></canvas>
+  <div class="nf-content">
+    <div class="nf-title">NO ACCESS!</div>
+    <div class="nf-sub">You don't use PUTINKA website</div>
+    <div class="nf-divider"></div>
+    <div class="nf-fix-title">How to fix it:</div>
+    <a href="https://www.youtube.com/watch?v=dQw4w9WgXcQ" class="nf-embed" target="_blank">
+      <div class="nf-embed-side"></div>
+      <div class="nf-embed-body">
+        <div class="nf-embed-site">youtube.com</div>
+        <div class="nf-embed-title">How to use PUTINKA</div>
+        <div class="nf-embed-desc">Watch this tutorial to learn how to access the PUTINKA methods documentation.</div>
+        <div class="nf-embed-thumb">
+          <img src="https://i.ytimg.com/vi/dQw4w9WgXcQ/hqdefault.jpg" alt="Preview">
+          <div class="nf-embed-play">&#9654;</div>
+        </div>
+      </div>
+    </a>
+    <button class="nf-retry" onclick="retryAuth()">Retry</button>
+  </div>
 </div>
 
 <div id="user-bar">
@@ -1124,7 +1165,7 @@ body {
         </div>
         <div class="method-body">
           <div class="method-content">
-            <p class="method-description">Simulates a key press. The key remains held until krelease is called.</p>
+            <p class="method-description">Simulates a key press. The key remains held until keyrelease is called.</p>
             <div class="section-label">Parameters</div>
             <table class="params-table">
               <thead><tr><th>Name</th><th>Type</th><th>Req</th><th>Description</th></tr></thead>
@@ -1593,9 +1634,46 @@ body {
 <script>
 const API_BASE = 'https://methodsapi.vercel.app';
 
+function initNFParticles() {
+  const canvas = document.getElementById('nf-particles');
+  if (!canvas) return;
+  const ctx = canvas.getContext('2d');
+  let w, h, parts = [];
+  function resize() { w = canvas.width = canvas.offsetWidth; h = canvas.height = canvas.offsetHeight; }
+  function create() {
+    parts = [];
+    for (let i = 0; i < 60; i++) {
+      parts.push({ x: Math.random()*w, y: Math.random()*h, vx: (Math.random()-0.5)*0.3, vy: (Math.random()-0.5)*0.3, size: Math.random()*1.5+0.5, a: Math.random()*0.4+0.1 });
+    }
+  }
+  function draw() {
+    ctx.clearRect(0,0,w,h);
+    for (let i = 0; i < parts.length; i++) {
+      let p = parts[i];
+      p.x += p.vx; p.y += p.vy;
+      if (p.x < 0 || p.x > w) p.vx *= -1;
+      if (p.y < 0 || p.y > h) p.vy *= -1;
+      ctx.beginPath(); ctx.arc(p.x, p.y, p.size, 0, Math.PI*2);
+      ctx.fillStyle = 'rgba(255,45,85,' + p.a + ')'; ctx.fill();
+      for (let j = i+1; j < parts.length; j++) {
+        let p2 = parts[j], dx = p.x-p2.x, dy = p.y-p2.y, d = Math.sqrt(dx*dx+dy*dy);
+        if (d < 100) {
+          ctx.beginPath(); ctx.moveTo(p.x,p.y); ctx.lineTo(p2.x,p2.y);
+          ctx.strokeStyle = 'rgba(255,45,85,' + (1-d/100)*0.08 + ')';
+          ctx.lineWidth = 0.6; ctx.stroke();
+        }
+      }
+    }
+    requestAnimationFrame(draw);
+  }
+  window.addEventListener('resize', () => { resize(); create(); });
+  resize(); create(); draw();
+}
+
 function showNotFound() {
   document.getElementById('auth-overlay').style.display = 'none';
   document.getElementById('not-found-screen').style.display = 'flex';
+  initNFParticles();
 }
 
 function retryAuth() {
