@@ -52,7 +52,6 @@ body {
   pointer-events: none;
 }
 
-/* AUTH SCREENS */
 #auth-overlay {
   position: fixed;
   inset: 0;
@@ -103,56 +102,140 @@ body {
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 20px;
+  gap: 16px;
   font-family: 'Inter', sans-serif;
+  padding: 24px;
+  text-align: center;
 }
 
-#not-found-screen .nf-code {
-  font-family: 'JetBrains Mono', monospace;
-  font-size: 11px;
-  font-weight: 600;
-  letter-spacing: 3px;
+#not-found-screen .nf-lock {
+  width: 64px;
+  height: 64px;
+  border-radius: 16px;
+  background: rgba(255, 45, 85, 0.08);
+  border: 1px solid rgba(255, 45, 85, 0.2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 28px;
   color: var(--accent-primary);
-  text-transform: uppercase;
-  opacity: 0.6;
+  margin-bottom: 8px;
+  box-shadow: 0 0 30px rgba(255, 45, 85, 0.1);
 }
 
 #not-found-screen .nf-title {
-  font-family: 'JetBrains Mono', monospace;
-  font-size: 52px;
-  font-weight: 600;
-  color: var(--accent-primary);
-  text-shadow: 0 0 60px rgba(255, 45, 85, 0.4);
-  letter-spacing: -1px;
+  font-family: 'Inter', sans-serif;
+  font-size: 32px;
+  font-weight: 800;
+  color: var(--text-primary);
+  letter-spacing: 2px;
+  text-transform: uppercase;
   line-height: 1;
 }
 
 #not-found-screen .nf-sub {
-  font-size: 13px;
+  font-size: 15px;
+  color: var(--text-secondary);
+  letter-spacing: 0.3px;
+}
+
+#not-found-screen .nf-divider {
+  width: 40px;
+  height: 2px;
+  background: var(--accent-gradient);
+  border-radius: 2px;
+  margin: 8px 0;
+}
+
+#not-found-screen .nf-fix-title {
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
   color: var(--text-muted);
-  letter-spacing: 1px;
+  margin-bottom: 12px;
+}
+
+#not-found-screen .nf-video {
+  display: block;
+  width: 100%;
+  max-width: 320px;
+  background: var(--bg-glass);
+  border: 1px solid var(--border-glass);
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  text-decoration: none;
+  transition: all 0.3s ease;
+  margin-bottom: 8px;
+}
+
+#not-found-screen .nf-video:hover {
+  border-color: rgba(255, 45, 85, 0.3);
+  box-shadow: 0 0 20px rgba(255, 45, 85, 0.1);
+  transform: translateY(-2px);
+}
+
+#not-found-screen .nf-video-thumb {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 16/9;
+  background: var(--bg-tertiary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+#not-found-screen .nf-play {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background: rgba(255, 45, 85, 0.15);
+  border: 1px solid rgba(255, 45, 85, 0.3);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 16px;
+  color: var(--accent-primary);
+  padding-left: 4px;
+  transition: all 0.2s;
+}
+
+#not-found-screen .nf-video:hover .nf-play {
+  background: rgba(255, 45, 85, 0.25);
+  box-shadow: 0 0 20px rgba(255, 45, 85, 0.2);
+}
+
+#not-found-screen .nf-video-label {
+  padding: 10px 14px;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-secondary);
+  text-align: left;
+  border-top: 1px solid var(--border-subtle);
 }
 
 #not-found-screen .nf-retry {
-  margin-top: 12px;
-  padding: 10px 28px;
-  background: rgba(255, 45, 85, 0.08);
-  border: 1px solid rgba(255, 45, 85, 0.2);
-  border-radius: 8px;
+  margin-top: 8px;
+  padding: 12px 36px;
+  background: rgba(255, 45, 85, 0.1);
+  border: 1px solid rgba(255, 45, 85, 0.25);
+  border-radius: 10px;
   color: var(--accent-primary);
   font-size: 13px;
-  font-family: 'JetBrains Mono', monospace;
+  font-weight: 700;
+  font-family: 'Inter', sans-serif;
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
   cursor: pointer;
   transition: all 0.2s;
-  letter-spacing: 0.5px;
 }
 
 #not-found-screen .nf-retry:hover {
-  background: rgba(255, 45, 85, 0.15);
-  box-shadow: 0 0 20px rgba(255, 45, 85, 0.15);
+  background: rgba(255, 45, 85, 0.18);
+  box-shadow: 0 0 24px rgba(255, 45, 85, 0.15);
+  transform: translateY(-1px);
 }
 
-/* USER BAR */
 #user-bar {
   display: none;
   position: fixed;
@@ -182,6 +265,7 @@ body {
   width: 300px;
   background: var(--bg-glass);
   backdrop-filter: blur(24px) saturate(1.4);
+  -webkit-backdrop-filter: blur(24px) saturate(1.4);
   border-right: 1px solid var(--border-glass);
   position: fixed;
   top: 0; left: 0;
@@ -203,6 +287,7 @@ body {
   top: 0;
   background: var(--bg-glass);
   backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
   z-index: 10;
 }
 
@@ -292,6 +377,25 @@ body {
 .nav-item.active { color: var(--accent-primary); background: rgba(255, 45, 85, 0.08); }
 .nav-item.active::before { background: var(--accent-primary); box-shadow: 0 0 6px var(--accent-glow); }
 
+.nav-item.special {
+  color: var(--accent-primary);
+  background: rgba(255, 45, 85, 0.06);
+  border-left: 2px solid var(--accent-primary);
+  animation: special-pulse 2.5s ease-in-out infinite;
+}
+
+.nav-item.special::before {
+  background: var(--accent-primary);
+  box-shadow: 0 0 8px var(--accent-glow);
+  width: 5px;
+  height: 5px;
+}
+
+@keyframes special-pulse {
+  0%, 100% { box-shadow: inset 3px 0 0 rgba(255,45,85,0.15); }
+  50% { box-shadow: inset 3px 0 12px rgba(255,45,85,0.35); }
+}
+
 .main-content {
   flex: 1; margin-left: 300px;
   min-height: 100vh; display: flex; flex-direction: column;
@@ -301,6 +405,7 @@ body {
   height: 64px;
   background: var(--bg-glass);
   backdrop-filter: blur(24px) saturate(1.4);
+  -webkit-backdrop-filter: blur(24px) saturate(1.4);
   border-bottom: 1px solid var(--border-glass);
   display: flex; align-items: center;
   justify-content: space-between;
@@ -355,6 +460,7 @@ body {
 .method-card {
   background: var(--bg-glass);
   backdrop-filter: blur(20px) saturate(1.3);
+  -webkit-backdrop-filter: blur(20px) saturate(1.3);
   border: 1px solid var(--border-glass);
   border-radius: var(--radius-lg);
   margin-bottom: 20px; overflow: hidden;
@@ -446,7 +552,7 @@ body {
 .returns-box .returns-type { font-family: 'JetBrains Mono', monospace; color: var(--success); font-size: 13px; font-weight: 600; margin-bottom: 6px; }
 .returns-box .returns-desc { font-size: 13px; color: var(--text-secondary); line-height: 1.6; }
 
-.overlay { display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.6); backdrop-filter: blur(4px); z-index: 99; }
+.overlay { display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.6); z-index: 99; }
 
 @media (max-width: 1024px) {
   .sidebar { transform: translateX(-100%); }
@@ -466,6 +572,7 @@ body {
   .page-header h1 { font-size: 24px; }
   .params-table { font-size: 12px; }
   .params-table th, .params-table td { padding: 8px 10px; }
+  #not-found-screen .nf-title { font-size: 26px; }
 }
 
 .fade-in { animation: fadeIn 0.5s ease forwards; opacity: 0; }
@@ -486,7 +593,6 @@ body {
 </head>
 <body>
 
-<!-- AUTO AUTH OVERLAY -->
 <div id="auth-overlay">
   <div style="text-align:center;">
     <div class="brand-text-big">PUTINKA</div>
@@ -495,15 +601,21 @@ body {
   <div class="spinner"></div>
 </div>
 
-<!-- USER NOT FOUND SCREEN -->
 <div id="not-found-screen">
-  <div class="nf-code">access denied</div>
-  <div class="nf-title">USER NOT FOUND</div>
-  <div class="nf-sub">Your account is not registered in the database.</div>
-  <button class="nf-retry" onclick="retryAuth()">Try again</button>
+  <div class="nf-lock">&#128274;</div>
+  <div class="nf-title">NO ACCESS!</div>
+  <div class="nf-sub">You don't use PUTINKA.</div>
+  <div class="nf-divider"></div>
+  <div class="nf-fix-title">How to fix it:</div>
+  <a href="https://youtu.be/7U7Jdn9qZA8" class="nf-video" target="_blank">
+    <div class="nf-video-thumb">
+      <div class="nf-play">&#9654;</div>
+    </div>
+    <div class="nf-video-label">Watch tutorial</div>
+  </a>
+  <button class="nf-retry" onclick="retryAuth()">Retry</button>
 </div>
 
-<!-- USER BAR -->
 <div id="user-bar">
   <span style="color:var(--accent-primary); font-weight:600;" id="user-name"></span>
   <button onclick="logout()" style="background:rgba(255,45,85,0.1); border:1px solid rgba(255,45,85,0.2); color:var(--accent-primary); padding:4px 10px; border-radius:6px; cursor:pointer; font-size:12px;">Logout</button>
@@ -530,7 +642,7 @@ body {
       <div class="nav-section">
         <div class="nav-section-header"><span>Methods</span></div>
         <div class="nav-section-body">
-          <a class="nav-item" href="#loadstring" data-target="loadstring">loadstring</a>
+          <a class="nav-item special" href="#loadstring" data-target="loadstring">loadstring</a>
           <a class="nav-item" href="#decompile" data-target="decompile">decompile</a>
           <a class="nav-item" href="#WorldToScreen" data-target="WorldToScreen">WorldToScreen</a>
           <a class="nav-item" href="#notify" data-target="notify">notify</a>
