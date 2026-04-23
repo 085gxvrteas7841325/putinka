@@ -912,7 +912,6 @@
       0%,
       100% {
         transform: translateX(0);
-        box-shadow: 0 0 0 transparent;
       }
 
       10%,
@@ -921,8 +920,6 @@
       70%,
       90% {
         transform: translateX(-5px);
-        box-shadow: 0 0 20px var(--accent-primary);
-        border-color: var(--accent-primary);
       }
 
       20%,
@@ -998,7 +995,7 @@
         <div class="nav-section">
           <div class="nav-section-header"><span>Methods</span></div>
           <div class="nav-section-body">
-            <a class="nav-item special" href="#m1" data-target="m1" style="display: flex; justify-content: space-between; align-items: center;">1 <span style="font-size: 9px; color: #ffd700; border: 1px solid #ffd700; padding: 2px 6px; border-radius: 4px; letter-spacing: 0.5px; font-weight: bold;">BEST</span></a>
+            <a class="nav-item special" href="#m1" data-target="m1" style="display: flex; justify-content: space-between; align-items: center;">1 <span style="font-size: 9px; color: #ff2d55; border: 1px solid #ff2d55; padding: 2px 6px; border-radius: 4px; letter-spacing: 0.5px; font-weight: bold;">BEST</span></a>
             <a class="nav-item" href="#m2" data-target="m2">2</a>
             <a class="nav-item" href="#m3" data-target="m3">3</a>
             <a class="nav-item" href="#m4" data-target="m4">4</a>
@@ -1035,7 +1032,7 @@
             <div class="method-title-area" style="display: flex; align-items: center; justify-content: space-between; width: 100%;">
               <div class="method-name"><span class="fn">1</span></div>
               <div class="method-tag"
-                style="margin: 0; padding: 4px 10px; font-weight: 800; letter-spacing: 1px; color: #ffd700; border-color: #ffd700; box-shadow: 0 0 10px rgba(255,215,0,0.3);">
+                style="margin: 0; padding: 4px 10px; font-weight: 800; letter-spacing: 1px; color: #ff2d55; border-color: #ff2d55; box-shadow: 0 0 10px rgba(255,45,85,0.3);">
                 BEST</div>
             </div>
           </div>
@@ -1290,7 +1287,7 @@
         const canvas = document.getElementById('particles-canvas');
         const ctx = canvas.getContext('2d');
         let width, height, particles = [];
-        const PARTICLE_COUNT = 30, CONNECTION_DIST = 90, MOUSE_DIST = 150;
+        const PARTICLE_COUNT = 15, CONNECTION_DIST = 80, MOUSE_DIST = 120;
         let mouse = { x: null, y: null };
 
         function resize() { width = canvas.width = window.innerWidth; height = canvas.height = window.innerHeight; }
@@ -1350,7 +1347,7 @@
           document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active'));
           item.classList.add('active');
           const target = document.getElementById(item.getAttribute('data-target'));
-          if (target) window.scrollTo({ top: target.getBoundingClientRect().top + window.pageYOffset - 120, behavior: 'smooth' });
+          if (target) window.scrollTo({ top: target.getBoundingClientRect().top + window.pageYOffset - 88, behavior: 'smooth' });
           if (window.innerWidth <= 1024) { sidebar.classList.remove('open'); overlay.classList.remove('active'); }
         });
       });
