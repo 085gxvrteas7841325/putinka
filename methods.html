@@ -1,1046 +1,1662 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PUTINKA | Methods</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
-    <style>
-        :root {
-            --bg-primary: #000000;
-            --bg-secondary: #050505;
-            --bg-tertiary: #0a0a0a;
-            --bg-card: rgba(10, 10, 10, 0.8);
-            --accent-red: #ef4444;
-            --accent-red-light: #f87171;
-            --accent-red-dark: #dc2626;
-            --text-primary: #fafafa;
-            --text-secondary: #a3a3a3;
-            --text-tertiary: #525252;
-            --border-subtle: rgba(255, 255, 255, 0.04);
-            --border-hover: rgba(239, 68, 68, 0.3);
-            --glow-red: rgba(239, 68, 68, 0.15);
-            --discord: #5865F2;
-        }
-
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        body {
-            font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
-            background: var(--bg-primary);
-            color: var(--text-primary);
-            min-height: 100vh;
-            overflow-x: hidden;
-            line-height: 1.6;
-            position: relative;
-        }
-
-        /* Noise overlay */
-        .noise-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            pointer-events: none;
-            z-index: 9999;
-            opacity: 0.025;
-            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
-        }
-
-        /* Ambient background */
-        .ambient-bg {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            pointer-events: none;
-            z-index: 0;
-            overflow: hidden;
-        }
-
-        .ambient-orb {
-            position: absolute;
-            border-radius: 50%;
-            filter: blur(150px);
-            opacity: 0.1;
-            animation: orbFloat 25s ease-in-out infinite;
-        }
-
-        .ambient-orb:nth-child(1) {
-            width: 600px;
-            height: 600px;
-            background: var(--accent-red);
-            top: -200px;
-            right: -200px;
-        }
-
-        .ambient-orb:nth-child(2) {
-            width: 500px;
-            height: 500px;
-            background: var(--accent-red-dark);
-            bottom: -200px;
-            left: -200px;
-            animation-delay: -12s;
-        }
-
-        @keyframes orbFloat {
-            0%, 100% { transform: translate(0, 0) scale(1); }
-            50% { transform: translate(40px, -40px) scale(1.08); }
-        }
-
-        .container {
-            max-width: 800px;
-            margin: 0 auto;
-            padding: 3rem 2rem;
-            position: relative;
-            z-index: 10;
-            opacity: 0;
-            transform: translateY(48px) scale(0.92);
-        }
-
-        /* Back link */
-        .back-link {
-            display: inline-flex;
-            align-items: center;
-            gap: 0.5rem;
-            padding: 0.625rem 1rem;
-            background: rgba(255, 255, 255, 0.02);
-            border: 1px solid var(--border-subtle);
-            border-radius: 10px;
-            color: var(--text-secondary);
-            font-size: 0.85rem;
-            font-weight: 500;
-            text-decoration: none;
-            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
-            margin-bottom: 2rem;
-        }
-
-        .back-link:hover {
-            color: var(--text-primary);
-            background: rgba(255, 255, 255, 0.04);
-            border-color: rgba(255, 255, 255, 0.1);
-            transform: translateX(-3px);
-        }
-
-        .back-link svg {
-            width: 16px;
-            height: 16px;
-            stroke: currentColor;
-            stroke-width: 2;
-            fill: none;
-        }
-
-        /* Header */
-        .header {
-            text-align: center;
-            margin-bottom: 3rem;
-        }
-
-        .badge {
-            display: inline-flex;
-            align-items: center;
-            gap: 0.5rem;
-            padding: 0.5rem 1rem;
-            background: rgba(239, 68, 68, 0.08);
-            border: 1px solid rgba(239, 68, 68, 0.15);
-            border-radius: 100px;
-            margin-bottom: 1.25rem;
-        }
-
-        .badge-text {
-            font-family: 'JetBrains Mono', monospace;
-            font-size: 0.7rem;
-            font-weight: 500;
-            color: var(--accent-red);
-            text-transform: uppercase;
-            letter-spacing: 0.15em;
-        }
-
-        .title {
-            font-size: clamp(2.5rem, 5vw, 3.5rem);
-            font-weight: 800;
-            letter-spacing: -0.02em;
-            margin-bottom: 0.75rem;
-        }
-
-        .title-gradient {
-            background: linear-gradient(135deg, #fff 0%, #a3a3a3 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-        }
-
-        .subtitle {
-            font-size: 1rem;
-            color: var(--text-secondary);
-            max-width: 450px;
-            margin: 0 auto;
-        }
-
-        @keyframes slideUp {
-            from {
-                opacity: 0;
-                transform: translateY(20px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        @keyframes fadeIn {
-            to { opacity: 1; }
-        }
-
-        /* Search */
-        .search-container {
-            margin-bottom: 2.5rem;
-        }
-
-        .search-wrapper {
-            position: relative;
-            max-width: 480px;
-            margin: 0 auto;
-        }
-
-        .search-icon {
-            position: absolute;
-            left: 1.25rem;
-            top: 50%;
-            transform: translateY(-50%);
-            width: 18px;
-            height: 18px;
-            stroke: var(--text-tertiary);
-            stroke-width: 2;
-            fill: none;
-            pointer-events: none;
-            transition: stroke 0.3s ease;
-        }
-
-        .search-input {
-            width: 100%;
-            padding: 1rem 1.25rem 1rem 3.25rem;
-            background: rgba(255, 255, 255, 0.02);
-            border: 1px solid var(--border-subtle);
-            border-radius: 14px;
-            color: var(--text-primary);
-            font-size: 0.95rem;
-            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
-            outline: none;
-        }
-
-        .search-input::placeholder {
-            color: var(--text-tertiary);
-        }
-
-        .search-input:focus {
-            border-color: rgba(239, 68, 68, 0.3);
-            box-shadow: 0 0 0 4px rgba(239, 68, 68, 0.06);
-            background: rgba(255, 255, 255, 0.03);
-        }
-
-        .search-input:focus + .search-icon {
-            stroke: var(--accent-red);
-        }
-
-        /* Section */
-        .section {
-            margin-bottom: 2.5rem;
-        }
-
-        .section-header {
-            display: flex;
-            align-items: center;
-            gap: 0.75rem;
-            margin-bottom: 1rem;
-            padding-left: 0.5rem;
-        }
-
-        .section-dot {
-            width: 6px;
-            height: 6px;
-            background: var(--accent-red);
-            border-radius: 50%;
-        }
-
-        .section-title {
-            font-size: 0.8rem;
-            font-weight: 600;
-            color: var(--text-secondary);
-            text-transform: uppercase;
-            letter-spacing: 0.1em;
-        }
-
-        /* Method cards */
-        .methods-list {
-            display: flex;
-            flex-direction: column;
-            gap: 0.625rem;
-        }
-
-        .method-card {
-            background: var(--bg-card);
-            border: 1px solid var(--border-subtle);
-            border-radius: 16px;
-            overflow: hidden;
-            cursor: pointer;
-            transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
-            backdrop-filter: blur(10px);
-        }
-
-        .method-card:hover {
-            border-color: rgba(255, 255, 255, 0.08);
-            transform: translateX(4px);
-        }
-
-        .method-card.active {
-            border-color: var(--border-hover);
-            box-shadow: 0 0 40px var(--glow-red);
-        }
-
-        .method-card.featured {
-            border-left: 3px solid var(--accent-red);
-        }
-
-        .method-header {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 1.125rem 1.5rem;
-        }
-
-        .method-title-wrapper {
-            display: flex;
-            align-items: center;
-            gap: 0.875rem;
-        }
-
-        .method-icon {
-            font-size: 1.25rem;
-            line-height: 1;
-        }
-
-        .method-title {
-            font-size: 0.95rem;
-            font-weight: 600;
-            color: var(--text-primary);
-            letter-spacing: -0.01em;
-        }
-
-        .method-chevron {
-            width: 20px;
-            height: 20px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
-        }
-
-        .method-chevron svg {
-            width: 14px;
-            height: 14px;
-            stroke: var(--text-tertiary);
-            stroke-width: 2.5;
-            fill: none;
-            transition: stroke 0.3s ease;
-        }
-
-        .method-card:hover .method-chevron svg {
-            stroke: var(--text-secondary);
-        }
-
-        .method-card.active .method-chevron {
-            transform: rotate(180deg);
-        }
-
-        .method-card.active .method-chevron svg {
-            stroke: var(--accent-red);
-        }
-
-        /* Method content */
-        .method-content {
-            max-height: 0;
-            overflow: hidden;
-            transition: max-height 0.5s cubic-bezier(0.16, 1, 0.3, 1),
-                        padding 0.5s cubic-bezier(0.16, 1, 0.3, 1);
-            padding: 0 1.5rem;
-        }
-
-        .method-card.active .method-content {
-            max-height: 3000px;
-            padding: 0 1.5rem 1.5rem;
-        }
-
-        .method-content-inner {
-            color: var(--text-secondary);
-            font-size: 0.9rem;
-            line-height: 1.7;
-        }
-
-        .method-content-inner h4 {
-            font-family: 'JetBrains Mono', monospace;
-            font-size: 0.7rem;
-            font-weight: 500;
-            color: var(--accent-red);
-            text-transform: uppercase;
-            letter-spacing: 0.1em;
-            margin: 1.5rem 0 0.75rem;
-        }
-
-        .method-content-inner h4:first-child {
-            margin-top: 0;
-        }
-
-        .method-content-inner p {
-            margin-bottom: 0.75rem;
-        }
-
-        .method-content-inner ul,
-        .method-content-inner ol {
-            padding-left: 1.25rem;
-            margin-bottom: 0.75rem;
-        }
-
-        .method-content-inner li {
-            margin-bottom: 0.375rem;
-        }
-
-        .method-content-inner code {
-            font-family: 'JetBrains Mono', monospace;
-            font-size: 0.85rem;
-            background: rgba(0, 0, 0, 0.4);
-            color: var(--accent-red-light);
-            padding: 0.2rem 0.5rem;
-            border-radius: 6px;
-            border: 1px solid rgba(239, 68, 68, 0.15);
-        }
-
-        .method-content-inner pre {
-            font-family: 'JetBrains Mono', monospace;
-            font-size: 0.8rem;
-            background: rgba(0, 0, 0, 0.5);
-            padding: 1rem;
-            border-radius: 10px;
-            border: 1px solid var(--border-subtle);
-            overflow-x: auto;
-            margin: 0.75rem 0;
-            color: var(--text-secondary);
-            line-height: 1.6;
-        }
-
-        .method-content-inner a {
-            color: var(--accent-red-light);
-            text-decoration: none;
-            transition: opacity 0.2s ease;
-        }
-
-        .method-content-inner a:hover {
-            opacity: 0.8;
-            text-decoration: underline;
-        }
-
-        .method-content-inner .warning {
-            background: rgba(239, 68, 68, 0.06);
-            border: 1px solid rgba(239, 68, 68, 0.12);
-            border-radius: 10px;
-            padding: 1rem;
-            margin: 1rem 0;
-            color: var(--accent-red-light);
-        }
-
-        .download-button {
-            display: inline-flex;
-            align-items: center;
-            gap: 0.5rem;
-            padding: 0.625rem 1rem;
-            background: rgba(239, 68, 68, 0.08);
-            border: 1px solid rgba(239, 68, 68, 0.15);
-            border-radius: 8px;
-            color: var(--accent-red);
-            font-size: 0.85rem;
-            font-weight: 500;
-            text-decoration: none;
-            transition: all 0.3s ease;
-            margin-top: 0.5rem;
-        }
-
-        .download-button:hover {
-            background: rgba(239, 68, 68, 0.12);
-            border-color: rgba(239, 68, 68, 0.25);
-            transform: translateY(-1px);
-        }
-
-        /* Discord card */
-        .discord-card {
-            background: linear-gradient(135deg, rgba(88, 101, 242, 0.1), rgba(88, 101, 242, 0.02));
-            border: 1px solid rgba(88, 101, 242, 0.2);
-            border-radius: 20px;
-            padding: 2.5rem;
-            text-align: center;
-            margin-top: 3rem;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .discord-card::before {
-            content: '';
-            position: absolute;
-            inset: 0;
-            border-radius: 20px;
-            padding: 1px;
-            background: linear-gradient(135deg, rgba(88, 101, 242, 0.3), transparent 50%);
-            -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
-            mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
-            -webkit-mask-composite: xor;
-            mask-composite: exclude;
-            pointer-events: none;
-        }
-
-        .discord-icon {
-            width: 56px;
-            height: 56px;
-            margin: 0 auto 1.25rem;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            background: rgba(88, 101, 242, 0.15);
-            border: 1px solid rgba(88, 101, 242, 0.25);
-            border-radius: 16px;
-        }
-
-        .discord-icon svg {
-            width: 28px;
-            height: 28px;
-            fill: #fff;
-        }
-
-        .discord-title {
-            font-size: 1.25rem;
-            font-weight: 700;
-            margin-bottom: 0.5rem;
-            color: #fff;
-        }
-
-        .discord-desc {
-            font-size: 0.95rem;
-            color: rgba(255, 255, 255, 0.6);
-            margin-bottom: 1.5rem;
-        }
-
-        .discord-btn {
-            display: inline-flex;
-            align-items: center;
-            gap: 0.5rem;
-            padding: 0.875rem 2rem;
-            background: #fff;
-            color: var(--discord);
-            font-size: 0.9rem;
-            font-weight: 600;
-            text-decoration: none;
-            border-radius: 12px;
-            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
-        }
-
-        .discord-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 10px 30px rgba(88, 101, 242, 0.25);
-        }
-
-        /* No results */
-        .no-results {
-            text-align: center;
-            padding: 3rem 1rem;
-            color: var(--text-tertiary);
-            font-size: 0.95rem;
-            display: none;
-        }
-
-        .no-results.show {
-            display: block;
-        }
-
-        /* Scrollbar */
-        ::-webkit-scrollbar {
-            width: 8px;
-        }
-
-        ::-webkit-scrollbar-track {
-            background: var(--bg-primary);
-        }
-
-        ::-webkit-scrollbar-thumb {
-            background: var(--bg-tertiary);
-            border-radius: 4px;
-        }
-
-        ::-webkit-scrollbar-thumb:hover {
-            background: var(--text-tertiary);
-        }
-
-        /* Responsive */
-        @media (max-width: 640px) {
-            .container {
-                padding: 1.5rem;
-            }
-
-            .method-header {
-                padding: 1rem 1.25rem;
-            }
-
-            .method-card.active .method-content {
-                padding: 0 1.25rem 1.25rem;
-            }
-
-            .discord-card {
-                padding: 1.75rem;
-            }
-        }
-
-        /* Hide for search */
-        .hide {
-            display: none !important;
-        }
-
-        /* Reduced motion */
-        @media (prefers-reduced-motion: reduce) {
-            *, *::before, *::after {
-                animation-duration: 0.01ms !important;
-                animation-iteration-count: 1 !important;
-                transition-duration: 0.01ms !important;
-            }
-            .container {
-                transition-duration: 0.4s !important;
-            }
-        }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Methods | PUTINKA</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg-primary: #050508;
+  --bg-secondary: #0a0a0f;
+  --bg-tertiary: #111118;
+  --bg-glass: rgba(15, 15, 25, 0.65);
+  --border-glass: rgba(255, 45, 85, 0.12);
+  --border-subtle: rgba(255, 255, 255, 0.06);
+  --text-primary: #f0f0f5;
+  --text-secondary: #8a8a9a;
+  --text-muted: #5a5a6a;
+  --accent-primary: #ff2d55;
+  --accent-secondary: #ff375f;
+  --accent-glow: rgba(255, 45, 85, 0.35);
+  --accent-gradient: linear-gradient(135deg, #ff2d55, #ff6b35);
+  --code-bg: #0d0d14;
+  --code-border: rgba(255, 45, 85, 0.15);
+  --success: #30d158;
+  --warning: #ff9f0a;
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-lg: 16px;
+  --shadow-glow: 0 0 40px rgba(255, 45, 85, 0.08);
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  background: var(--bg-primary);
+  color: var(--text-primary);
+  line-height: 1.6;
+  overflow-x: hidden;
+  min-height: 100vh;
+}
+
+#particles-canvas {
+  position: fixed;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  z-index: 0;
+  pointer-events: none;
+}
+
+/* AUTH SCREENS */
+#auth-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  background: #050508;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 24px;
+  font-family: 'Inter', sans-serif;
+}
+
+#auth-overlay .brand-text-big {
+  font-size: 42px;
+  font-weight: 800;
+  letter-spacing: 4px;
+  color: #ff1a1a;
+  text-shadow: 0 0 40px rgba(255, 26, 26, 0.5);
+  text-transform: uppercase;
+  margin-bottom: 8px;
+}
+
+#auth-overlay .auth-status {
+  font-size: 13px;
+  color: var(--text-muted);
+  letter-spacing: 1px;
+  text-transform: uppercase;
+}
+
+.spinner {
+  width: 32px;
+  height: 32px;
+  border: 2px solid rgba(255, 45, 85, 0.15);
+  border-top-color: var(--accent-primary);
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin { to { transform: rotate(360deg); } }
+
+#not-found-screen {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  background: #050508;
+  display: none;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 20px;
+  font-family: 'Inter', sans-serif;
+}
+
+#not-found-screen .nf-code {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 3px;
+  color: var(--accent-primary);
+  text-transform: uppercase;
+  opacity: 0.6;
+}
+
+#not-found-screen .nf-title {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 52px;
+  font-weight: 600;
+  color: var(--accent-primary);
+  text-shadow: 0 0 60px rgba(255, 45, 85, 0.4);
+  letter-spacing: -1px;
+  line-height: 1;
+}
+
+#not-found-screen .nf-sub {
+  font-size: 13px;
+  color: var(--text-muted);
+  letter-spacing: 1px;
+}
+
+#not-found-screen .nf-retry {
+  margin-top: 12px;
+  padding: 10px 28px;
+  background: rgba(255, 45, 85, 0.08);
+  border: 1px solid rgba(255, 45, 85, 0.2);
+  border-radius: 8px;
+  color: var(--accent-primary);
+  font-size: 13px;
+  font-family: 'JetBrains Mono', monospace;
+  cursor: pointer;
+  transition: all 0.2s;
+  letter-spacing: 0.5px;
+}
+
+#not-found-screen .nf-retry:hover {
+  background: rgba(255, 45, 85, 0.15);
+  box-shadow: 0 0 20px rgba(255, 45, 85, 0.15);
+}
+
+/* USER BAR */
+#user-bar {
+  display: none;
+  position: fixed;
+  top: 64px;
+  right: 0;
+  z-index: 90;
+  background: var(--bg-glass);
+  backdrop-filter: blur(20px);
+  border-left: 1px solid var(--border-glass);
+  border-bottom: 1px solid var(--border-glass);
+  padding: 10px 20px;
+  border-radius: 0 0 0 12px;
+  font-size: 13px;
+  color: var(--text-secondary);
+  align-items: center;
+  gap: 10px;
+}
+
+.app-container {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  min-height: 100vh;
+}
+
+.sidebar {
+  width: 300px;
+  background: var(--bg-glass);
+  backdrop-filter: blur(24px) saturate(1.4);
+  border-right: 1px solid var(--border-glass);
+  position: fixed;
+  top: 0; left: 0;
+  height: 100vh;
+  overflow-y: auto;
+  overflow-x: hidden;
+  z-index: 100;
+  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.sidebar::-webkit-scrollbar { width: 4px; }
+.sidebar::-webkit-scrollbar-track { background: transparent; }
+.sidebar::-webkit-scrollbar-thumb { background: var(--accent-primary); border-radius: 4px; }
+
+.sidebar-header {
+  padding: 24px;
+  border-bottom: 1px solid var(--border-subtle);
+  position: sticky;
+  top: 0;
+  background: var(--bg-glass);
+  backdrop-filter: blur(24px);
+  z-index: 10;
+}
+
+.brand { display: flex; align-items: center; gap: 12px; }
+
+.brand-icon {
+  width: 40px; height: 40px;
+  border-radius: 10px; overflow: hidden;
+  flex-shrink: 0;
+  box-shadow: 0 4px 20px var(--accent-glow);
+}
+
+.brand-icon img { width: 100%; height: 100%; object-fit: cover; }
+
+.brand-text {
+  font-size: 20px; font-weight: 800;
+  letter-spacing: 1px; color: #ff1a1a;
+  text-transform: uppercase;
+  text-shadow: 0 0 20px rgba(255, 26, 26, 0.4);
+}
+
+.search-box { margin-top: 16px; position: relative; }
+
+.search-box input {
+  width: 100%;
+  padding: 10px 14px 10px 38px;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-sm);
+  color: var(--text-primary);
+  font-size: 13px;
+  font-family: inherit;
+  outline: none;
+  transition: all 0.2s ease;
+}
+
+.search-box input:focus {
+  border-color: var(--accent-primary);
+  box-shadow: 0 0 0 3px rgba(255, 45, 85, 0.1);
+}
+
+.search-box input::placeholder { color: var(--text-muted); }
+
+.search-icon {
+  position: absolute; left: 12px; top: 50%;
+  transform: translateY(-50%);
+  color: var(--text-muted); font-size: 14px;
+}
+
+.sidebar-nav { padding: 12px 0; }
+
+.nav-section { margin-bottom: 4px; }
+
+.nav-section-header {
+  display: flex; align-items: center; gap: 10px;
+  padding: 10px 24px;
+  font-size: 12px; font-weight: 700;
+  text-transform: uppercase; letter-spacing: 1px;
+  color: var(--text-muted); user-select: none;
+}
+
+.nav-item {
+  display: flex; align-items: center; gap: 10px;
+  padding: 8px 24px 8px 36px;
+  margin: 1px 0;
+  color: var(--text-secondary);
+  font-size: 13px; font-weight: 500;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  text-decoration: none;
+  position: relative;
+  font-family: 'JetBrains Mono', monospace;
+}
+
+.nav-item::before {
+  content: '';
+  position: absolute; left: 24px; top: 50%;
+  transform: translateY(-50%);
+  width: 4px; height: 4px;
+  border-radius: 50%;
+  background: var(--text-muted);
+  transition: all 0.2s;
+}
+
+.nav-item:hover { color: var(--text-primary); background: rgba(255, 45, 85, 0.05); }
+.nav-item:hover::before { background: var(--accent-primary); }
+.nav-item.active { color: var(--accent-primary); background: rgba(255, 45, 85, 0.08); }
+.nav-item.active::before { background: var(--accent-primary); box-shadow: 0 0 6px var(--accent-glow); }
+
+.main-content {
+  flex: 1; margin-left: 300px;
+  min-height: 100vh; display: flex; flex-direction: column;
+}
+
+.topbar {
+  height: 64px;
+  background: var(--bg-glass);
+  backdrop-filter: blur(24px) saturate(1.4);
+  border-bottom: 1px solid var(--border-glass);
+  display: flex; align-items: center;
+  justify-content: space-between;
+  padding: 0 32px;
+  position: sticky; top: 0; z-index: 50;
+}
+
+.topbar-title { font-size: 16px; font-weight: 600; color: var(--text-primary); letter-spacing: -0.3px; }
+
+.topbar-actions { display: flex; align-items: center; gap: 12px; }
+
+.btn-icon {
+  width: 36px; height: 36px;
+  border-radius: var(--radius-sm);
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid var(--border-subtle);
+  color: var(--text-secondary);
+  display: flex; align-items: center; justify-content: center;
+  cursor: pointer; transition: all 0.2s; font-size: 16px;
+}
+
+.btn-icon:hover {
+  background: rgba(255, 45, 85, 0.1);
+  border-color: var(--border-glass);
+  color: var(--accent-primary);
+}
+
+.mobile-menu-toggle {
+  display: none; background: none; border: none;
+  color: var(--text-primary); font-size: 20px; cursor: pointer;
+}
+
+.content-area {
+  flex: 1; padding: 40px 48px;
+  max-width: 900px; width: 100%; margin: 0 auto;
+}
+
+.page-header {
+  margin-bottom: 40px; padding-bottom: 32px;
+  border-bottom: 1px solid var(--border-subtle);
+}
+
+.page-header h1 {
+  font-size: 36px; font-weight: 700;
+  letter-spacing: -1px; margin-bottom: 12px;
+  background: linear-gradient(135deg, #fff 0%, #ff8fa3 100%);
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+}
+
+.page-header p { font-size: 16px; color: var(--text-secondary); line-height: 1.7; max-width: 600px; }
+
+.method-card {
+  background: var(--bg-glass);
+  backdrop-filter: blur(20px) saturate(1.3);
+  border: 1px solid var(--border-glass);
+  border-radius: var(--radius-lg);
+  margin-bottom: 20px; overflow: hidden;
+  transition: all 0.3s ease;
+  position: relative; scroll-margin-top: 80px;
+}
+
+.method-card::after {
+  content: '';
+  position: absolute; top: 0; left: 0; right: 0; height: 1px;
+  background: linear-gradient(90deg, transparent, var(--accent-primary), transparent);
+  opacity: 0.3;
+}
+
+.method-card:hover {
+  border-color: rgba(255, 45, 85, 0.25);
+  box-shadow: var(--shadow-glow), 0 8px 32px rgba(0,0,0,0.4);
+  transform: translateY(-2px);
+}
+
+.method-header {
+  padding: 22px 28px;
+  display: flex; align-items: flex-start; justify-content: space-between;
+  gap: 16px; cursor: pointer; user-select: none;
+}
+
+.method-title-area { flex: 1; }
+
+.method-tag {
+  display: inline-flex; align-items: center; gap: 6px;
+  padding: 4px 10px;
+  background: rgba(255, 45, 85, 0.1);
+  border: 1px solid rgba(255, 45, 85, 0.2);
+  border-radius: 6px;
+  font-size: 11px; font-weight: 600;
+  text-transform: uppercase; letter-spacing: 0.8px;
+  color: var(--accent-primary); margin-bottom: 10px;
+}
+
+.method-name { font-family: 'JetBrains Mono', monospace; font-size: 19px; font-weight: 600; color: var(--text-primary); letter-spacing: -0.3px; }
+.method-name .fn { color: var(--accent-primary); }
+.method-name .params { color: var(--text-secondary); font-weight: 400; }
+
+.method-toggle {
+  width: 32px; height: 32px; border-radius: 8px;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid var(--border-subtle);
+  color: var(--text-secondary);
+  display: flex; align-items: center; justify-content: center;
+  cursor: pointer; transition: all 0.2s;
+  flex-shrink: 0; font-size: 12px;
+}
+
+.method-toggle:hover { background: rgba(255, 45, 85, 0.1); color: var(--accent-primary); }
+.method-toggle.active { transform: rotate(180deg); }
+
+.method-body {
+  max-height: 0; overflow: hidden;
+  transition: max-height 0.4s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.3s ease;
+  opacity: 0;
+}
+
+.method-body.open { max-height: 2000px; opacity: 1; }
+
+.method-content { padding: 0 28px 28px; }
+
+.method-description { font-size: 14px; color: var(--text-secondary); line-height: 1.7; margin-bottom: 24px; }
+
+.section-label {
+  font-size: 11px; font-weight: 600; text-transform: uppercase;
+  letter-spacing: 1.2px; color: var(--text-muted);
+  margin-bottom: 12px;
+  display: flex; align-items: center; gap: 8px;
+}
+
+.section-label::after { content: ''; flex: 1; height: 1px; background: var(--border-subtle); }
+
+.params-table { width: 100%; border-collapse: collapse; margin-bottom: 20px; font-size: 13px; }
+.params-table th { text-align: left; padding: 10px 16px; color: var(--text-muted); font-weight: 600; font-size: 11px; text-transform: uppercase; letter-spacing: 0.8px; border-bottom: 1px solid var(--border-subtle); }
+.params-table td { padding: 12px 16px; border-bottom: 1px solid var(--border-subtle); color: var(--text-secondary); vertical-align: top; }
+.params-table tr:last-child td { border-bottom: none; }
+.params-table .param-name { font-family: 'JetBrains Mono', monospace; color: var(--text-primary); font-weight: 500; }
+.params-table .param-type { font-family: 'JetBrains Mono', monospace; color: var(--accent-primary); font-size: 12px; background: rgba(255, 45, 85, 0.08); padding: 2px 6px; border-radius: 4px; }
+.params-table .param-req { font-size: 10px; font-weight: 600; text-transform: uppercase; padding: 2px 6px; border-radius: 4px; }
+.params-table .param-req.required { color: var(--accent-primary); background: rgba(255, 45, 85, 0.1); }
+.params-table .param-req.optional { color: var(--warning); background: rgba(255, 159, 10, 0.1); }
+
+.returns-box { background: rgba(48, 209, 88, 0.05); border: 1px solid rgba(48, 209, 88, 0.15); border-radius: var(--radius-md); padding: 16px 20px; margin-bottom: 20px; }
+.returns-box .returns-type { font-family: 'JetBrains Mono', monospace; color: var(--success); font-size: 13px; font-weight: 600; margin-bottom: 6px; }
+.returns-box .returns-desc { font-size: 13px; color: var(--text-secondary); line-height: 1.6; }
+
+.overlay { display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.6); backdrop-filter: blur(4px); z-index: 99; }
+
+@media (max-width: 1024px) {
+  .sidebar { transform: translateX(-100%); }
+  .sidebar.open { transform: translateX(0); }
+  .main-content { margin-left: 0; }
+  .mobile-menu-toggle { display: flex; }
+  .overlay.active { display: block; }
+  .content-area { padding: 24px; }
+  .page-header h1 { font-size: 28px; }
+}
+
+@media (max-width: 640px) {
+  .content-area { padding: 16px; }
+  .topbar { padding: 0 16px; }
+  .method-header { padding: 20px; }
+  .method-content { padding: 0 20px 20px; }
+  .page-header h1 { font-size: 24px; }
+  .params-table { font-size: 12px; }
+  .params-table th, .params-table td { padding: 8px 10px; }
+}
+
+.fade-in { animation: fadeIn 0.5s ease forwards; opacity: 0; }
+@keyframes fadeIn { to { opacity: 1; } }
+.stagger-1 { animation-delay: 0.05s; }
+.stagger-2 { animation-delay: 0.1s; }
+.stagger-3 { animation-delay: 0.15s; }
+.stagger-4 { animation-delay: 0.2s; }
+.stagger-5 { animation-delay: 0.25s; }
+
+::-webkit-scrollbar { width: 8px; height: 8px; }
+::-webkit-scrollbar-track { background: var(--bg-primary); }
+::-webkit-scrollbar-thumb { background: #2a2a3a; border-radius: 4px; }
+::-webkit-scrollbar-thumb:hover { background: var(--accent-primary); }
+::selection { background: rgba(255, 45, 85, 0.3); color: var(--text-primary); }
+</style>
+<base target="_blank">
 </head>
 <body>
-    <div class="noise-overlay"></div>
-    
-    <div class="ambient-bg">
-        <div class="ambient-orb"></div>
-        <div class="ambient-orb"></div>
+
+<!-- AUTO AUTH OVERLAY -->
+<div id="auth-overlay">
+  <div style="text-align:center;">
+    <div class="brand-text-big">PUTINKA</div>
+    <div class="auth-status" id="auth-status-text">Verifying access...</div>
+  </div>
+  <div class="spinner"></div>
+</div>
+
+<!-- USER NOT FOUND SCREEN -->
+<div id="not-found-screen">
+  <div class="nf-code">access denied</div>
+  <div class="nf-title">USER NOT FOUND</div>
+  <div class="nf-sub">Your account is not registered in the database.</div>
+  <button class="nf-retry" onclick="retryAuth()">Try again</button>
+</div>
+
+<!-- USER BAR -->
+<div id="user-bar">
+  <span style="color:var(--accent-primary); font-weight:600;" id="user-name"></span>
+  <button onclick="logout()" style="background:rgba(255,45,85,0.1); border:1px solid rgba(255,45,85,0.2); color:var(--accent-primary); padding:4px 10px; border-radius:6px; cursor:pointer; font-size:12px;">Logout</button>
+</div>
+
+<canvas id="particles-canvas"></canvas>
+<div class="overlay" id="overlay"></div>
+
+<div class="app-container">
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-header">
+      <div class="brand">
+        <div class="brand-icon">
+          <img src="https://cdn.discordapp.com/attachments/1464652178139648184/1496656483901898772/channels4_profile.png?ex=69eaad78&is=69e95bf8&hm=1a3547f837ad1c54c2c973a11038a10e8cf1c22c59b64ae7d8b23a21b4be8d65&" alt="PUTINKA">
+        </div>
+        <div class="brand-text">PUTINKA</div>
+      </div>
+      <div class="search-box">
+        <span class="search-icon">&#9906;</span>
+        <input type="text" placeholder="Search methods..." id="searchInput">
+      </div>
     </div>
-
-    <div class="container">
-        <a href="index.html" class="back-link">
-            <svg viewBox="0 0 24 24"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
-            Back
-        </a>
-
-        <header class="header">
-            <div class="badge">
-                <span class="badge-text">Resource Library</span>
-            </div>
-            <h1 class="title"><span class="title-gradient">Methods</span></h1>
-            <p class="subtitle"></p>
-        </header>
-
-        <div class="search-container">
-            <div class="search-wrapper">
-                <svg class="search-icon" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
-                <input type="text" id="methodSearch" class="search-input" placeholder="Search methods..." autocomplete="off">
-            </div>
+    <nav class="sidebar-nav" id="sidebarNav">
+      <div class="nav-section">
+        <div class="nav-section-header"><span>Methods</span></div>
+        <div class="nav-section-body">
+          <a class="nav-item" href="#loadstring" data-target="loadstring">loadstring</a>
+          <a class="nav-item" href="#decompile" data-target="decompile">decompile</a>
+          <a class="nav-item" href="#WorldToScreen" data-target="WorldToScreen">WorldToScreen</a>
+          <a class="nav-item" href="#notify" data-target="notify">notify</a>
+          <a class="nav-item" href="#identifyexecutor" data-target="identifyexecutor">identifyexecutor</a>
+          <a class="nav-item" href="#getscripthash" data-target="getscripthash">getscripthash</a>
+          <a class="nav-item" href="#getgetname" data-target="getgetname">getgetname</a>
+          <a class="nav-item" href="#getscripts" data-target="getscripts">getscripts</a>
+          <a class="nav-item" href="#getscriptbytecode" data-target="getscriptbytecode">getscriptbytecode</a>
+          <a class="nav-item" href="#base64encode" data-target="base64encode">base64encode</a>
+          <a class="nav-item" href="#base64decode" data-target="base64decode">base64decode</a>
+          <a class="nav-item" href="#print" data-target="print">print</a>
+          <a class="nav-item" href="#warn" data-target="warn">warn</a>
+          <a class="nav-item" href="#error" data-target="error">error</a>
+          <a class="nav-item" href="#setrobloxinput" data-target="setrobloxinput">setrobloxinput</a>
+          <a class="nav-item" href="#isrbxactive" data-target="isrbxactive">isrbxactive</a>
+          <a class="nav-item" href="#setclipboard" data-target="setclipboard">setclipboard</a>
+          <a class="nav-item" href="#keyrelease" data-target="keyrelease">keyrelease</a>
+          <a class="nav-item" href="#keypress" data-target="keypress">keypress</a>
+          <a class="nav-item" href="#iskeypressed" data-target="iskeypressed">iskeypressed</a>
+          <a class="nav-item" href="#ismouse1pressed" data-target="ismouse1pressed">ismouse1pressed</a>
+          <a class="nav-item" href="#ismouse2pressed" data-target="ismouse2pressed">ismouse2pressed</a>
+          <a class="nav-item" href="#mouse1press" data-target="mouse1press">mouse1press</a>
+          <a class="nav-item" href="#mouse1release" data-target="mouse1release">mouse1release</a>
+          <a class="nav-item" href="#mouse1click" data-target="mouse1click">mouse1click</a>
+          <a class="nav-item" href="#mouse2press" data-target="mouse2press">mouse2press</a>
+          <a class="nav-item" href="#mouse2release" data-target="mouse2release">mouse2release</a>
+          <a class="nav-item" href="#mouse2click" data-target="mouse2click">mouse2click</a>
+          <a class="nav-item" href="#mousemoveabs" data-target="mousemoveabs">mousemoveabs</a>
+          <a class="nav-item" href="#mousemoverel" data-target="mousemoverel">mousemoverel</a>
+          <a class="nav-item" href="#mousescroll" data-target="mousescroll">mousescroll</a>
+          <a class="nav-item" href="#run_secure" data-target="run_secure">run_secure</a>
+          <a class="nav-item" href="#setfflag" data-target="setfflag">setfflag</a>
+          <a class="nav-item" href="#getfflag" data-target="getfflag">getfflag</a>
+          <a class="nav-item" href="#require" data-target="require">require</a>
+          <a class="nav-item" href="#wait" data-target="wait">wait</a>
+          <a class="nav-item" href="#spawn" data-target="spawn">spawn</a>
+          <a class="nav-item" href="#task_spawn" data-target="task_spawn">task.spawn</a>
+          <a class="nav-item" href="#task_wait" data-target="task_wait">task.wait</a>
         </div>
+      </div>
+    </nav>
+  </aside>
 
-        <div class="section">
-            <div class="section-header">
-                <div class="section-dot"></div>
-                <span class="section-title">Featured Methods</span>
-            </div>
-            <div class="methods-list" id="featuredMethods"></div>
-        </div>
+  <main class="main-content">
+    <header class="topbar">
+      <button class="mobile-menu-toggle" id="menuToggle">&#9776;</button>
+      <div class="topbar-title">Methods</div>
+      <div class="topbar-actions">
+        <button class="btn-icon" title="Copy link">&#128279;</button>
+        <button class="btn-icon" title="GitHub">&#10094;&#10095;</button>
+      </div>
+    </header>
 
-        <div class="section">
-            <div class="section-header">
-                <div class="section-dot"></div>
-                <span class="section-title">All Methods</span>
-            </div>
-            <div class="methods-list" id="methodsList"></div>
-            <div class="no-results" id="noResults">No methods found matching your search</div>
-        </div>
+    <div class="content-area">
+      <div class="page-header">
+        <h1>Methods</h1>
+        <p>Built-in environment functions for the runtime. These methods provide low-level access to execution, reflection, input, and system interaction capabilities.</p>
+      </div>
 
-        <div class="section">
-            <div class="section-header">
-                <div class="section-dot"></div>
-                <span class="section-title">Tips</span>
-            </div>
-            <div class="methods-list" id="tipsList"></div>
+      <div class="method-card fade-in stagger-1" id="loadstring" data-search="loadstring loads chunk as a lua function and returns it if compilation is successful. otherwise, if an error has occurred during compilation, nil followed by the error message will be returned.">
+        <div class="method-header" onclick="toggleMethod(this)">
+          <div class="method-title-area">
+            <div class="method-tag">Function</div>
+            <div class="method-name"><span class="fn">loadstring</span><span class="params">(chunk: string, chunkname: string)</span></div>
+          </div>
+          <div class="method-toggle">&#9662;</div>
         </div>
+        <div class="method-body">
+          <div class="method-content">
+            <p class="method-description">Loads chunk as a Lua function and returns it if compilation is successful. Otherwise, if an error has occurred during compilation, nil followed by the error message will be returned.</p>
+            <div class="section-label">Parameters</div>
+            <table class="params-table">
+              <thead><tr><th>Name</th><th>Type</th><th>Req</th><th>Description</th></tr></thead>
+              <tbody>
+                <tr><td><span class="param-name">chunk</span></td><td><span class="param-type">string</span></td><td><span class="param-req required">req</span></td><td>The source code string to compile and load.</td></tr>
+                <tr><td><span class="param-name">chunkname</span></td><td><span class="param-type">string</span></td><td><span class="param-req required">req</span></td><td>Optional chunk name for debugging and stack traces.</td></tr>
+              </tbody>
+            </table>
+            <div class="section-label">Returns</div>
+            <div class="returns-box">
+              <div class="returns-type">function | nil, string?</div>
+              <div class="returns-desc">On success, returns the compiled function. On failure, returns nil and an error string.</div>
+            </div>
+          </div>
+        </div>
+      </div>
 
-        <div class="discord-card">
-            <div class="discord-icon">
-                <svg viewBox="0 0 24 24"><path d="M20.317 4.3698a19.7913 19.7913 0 00-4.8851-1.5152.0741.0741 0 00-.0785.0371c-.211.3753-.4447.8648-.6083 1.2495-1.8447-.2762-3.68-.2762-5.4868 0-.1636-.3933-.4058-.8742-.6177-1.2495a.077.077 0 00-.0785-.037 19.7363 19.7363 0 00-4.8852 1.515.0699.0699 0 00-.0321.0277C.5334 9.0458-.319 13.5799.0992 18.0578a.0824.0824 0 00.0312.0561c2.0528 1.5076 4.0413 2.4228 5.9929 3.0294a.0777.0777 0 00.0842-.0276c.4616-.6304.8731-1.2952 1.226-1.9942a.076.076 0 00-.0416-.1057c-.6528-.2476-1.2743-.5495-1.8722-.8923a.077.077 0 01-.0076-.1277c.1258-.0943.2517-.1923.3718-.2914a.0743.0743 0 01.0776-.0105c3.9278 1.7933 8.18 1.7933 12.0614 0a.0739.0739 0 01.0785.0095c.1202.099.246.1981.3728.2924a.077.077 0 01-.0066.1276 12.2986 12.2986 0 01-1.8732.8914.0766.0766 0 00-.0407.1067c.3604.698.7719 1.3628 1.225 1.9932a.076.076 0 00.0842.0286c1.961-.6067 3.9495-1.5219 6.0023-3.0294a.077.077 0 00.0313-.0552c.5004-5.177-.8382-9.6739-3.5485-13.6604a.061.061 0 00-.0312-.0286zM8.02 15.3312c-1.1835 0-2.1569-1.0857-2.1569-2.419 0-1.3332.9555-2.4189 2.157-2.4189 1.2108 0 2.1757 1.0952 2.1568 2.419 0 1.3332-.9555 2.4189-2.1569 2.4189zm7.9748 0c-1.1835 0-2.1569-1.0857-2.1569-2.419 0-1.3332.9554-2.4189 2.1569-2.4189 1.2108 0 2.1757 1.0952 2.1568 2.419 0 1.3332-.946 2.4189-2.1568 2.4189z"/></svg>
-            </div>
-            <div class="discord-title">Join Our Discord</div>
-            <div class="discord-desc">Connect with the community and get real-time support</div>
-            <a href="https://discord.gg/YKGPyHtDny" target="_blank" class="discord-btn">Join Now</a>
+      <div class="method-card fade-in stagger-2" id="decompile" data-search="decompile decompiles script and returns the decompiled script.">
+        <div class="method-header" onclick="toggleMethod(this)">
+          <div class="method-title-area">
+            <div class="method-tag">Function</div>
+            <div class="method-name"><span class="fn">decompile</span><span class="params">(script: Instance)</span></div>
+          </div>
+          <div class="method-toggle">&#9662;</div>
         </div>
+        <div class="method-body">
+          <div class="method-content">
+            <p class="method-description">Decompiles Script and returns the decompiled script. If the decompilation fails, then notify an error message.</p>
+            <div class="section-label">Parameters</div>
+            <table class="params-table">
+              <thead><tr><th>Name</th><th>Type</th><th>Req</th><th>Description</th></tr></thead>
+              <tbody><tr><td><span class="param-name">script</span></td><td><span class="param-type">Instance</span></td><td><span class="param-req required">req</span></td><td>The script instance to decompile.</td></tr></tbody>
+            </table>
+            <div class="section-label">Returns</div>
+            <div class="returns-box">
+              <div class="returns-type">string</div>
+              <div class="returns-desc">The decompiled source code of the script.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="method-card fade-in stagger-3" id="WorldToScreen" data-search="worldtoscreen converts a 3d world position to a 2d screen position.">
+        <div class="method-header" onclick="toggleMethod(this)">
+          <div class="method-title-area">
+            <div class="method-tag">Function</div>
+            <div class="method-name"><span class="fn">WorldToScreen</span><span class="params">(position: Vector3)</span></div>
+          </div>
+          <div class="method-toggle">&#9662;</div>
+        </div>
+        <div class="method-body">
+          <div class="method-content">
+            <p class="method-description">Converts a 3D world position to a 2D screen position. Returns the screen coordinates and a boolean indicating if the point is on screen.</p>
+            <div class="section-label">Parameters</div>
+            <table class="params-table">
+              <thead><tr><th>Name</th><th>Type</th><th>Req</th><th>Description</th></tr></thead>
+              <tbody><tr><td><span class="param-name">position</span></td><td><span class="param-type">Vector3</span></td><td><span class="param-req required">req</span></td><td>The world-space position to convert.</td></tr></tbody>
+            </table>
+            <div class="section-label">Returns</div>
+            <div class="returns-box">
+              <div class="returns-type">(Vector2, boolean)</div>
+              <div class="returns-desc">Screen-space coordinates and visibility flag.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="method-card fade-in stagger-4" id="notify" data-search="notify sends a matcha notification with a message, title, and duration in seconds.">
+        <div class="method-header" onclick="toggleMethod(this)">
+          <div class="method-title-area">
+            <div class="method-tag">Function</div>
+            <div class="method-name"><span class="fn">notify</span><span class="params">(message: string, title: string, duration: number)</span></div>
+          </div>
+          <div class="method-toggle">&#9662;</div>
+        </div>
+        <div class="method-body">
+          <div class="method-content">
+            <p class="method-description">Sends a Matcha notification with a message, title, and duration in seconds.</p>
+            <div class="section-label">Parameters</div>
+            <table class="params-table">
+              <thead><tr><th>Name</th><th>Type</th><th>Req</th><th>Description</th></tr></thead>
+              <tbody>
+                <tr><td><span class="param-name">message</span></td><td><span class="param-type">string</span></td><td><span class="param-req required">req</span></td><td>The body text of the notification.</td></tr>
+                <tr><td><span class="param-name">title</span></td><td><span class="param-type">string</span></td><td><span class="param-req required">req</span></td><td>The title of the notification.</td></tr>
+                <tr><td><span class="param-name">duration</span></td><td><span class="param-type">number</span></td><td><span class="param-req required">req</span></td><td>How long the notification stays visible in seconds.</td></tr>
+              </tbody>
+            </table>
+            <div class="section-label">Returns</div>
+            <div class="returns-box"><div class="returns-type">void</div><div class="returns-desc">No return value.</div></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="method-card fade-in stagger-5" id="identifyexecutor" data-search="identifyexecutor returns the name and version of the current executor.">
+        <div class="method-header" onclick="toggleMethod(this)">
+          <div class="method-title-area">
+            <div class="method-tag">Function</div>
+            <div class="method-name"><span class="fn">identifyexecutor</span><span class="params">()</span></div>
+          </div>
+          <div class="method-toggle">&#9662;</div>
+        </div>
+        <div class="method-body">
+          <div class="method-content">
+            <p class="method-description">Returns the name and version of the current executor.</p>
+            <div class="section-label">Parameters</div>
+            <table class="params-table">
+              <thead><tr><th>Name</th><th>Type</th><th>Req</th><th>Description</th></tr></thead>
+              <tbody><tr><td colspan="4" style="text-align:center;color:var(--text-muted)">No parameters</td></tr></tbody>
+            </table>
+            <div class="section-label">Returns</div>
+            <div class="returns-box"><div class="returns-type">string</div><div class="returns-desc">The executor name and version (e.g., "Matcha 1.0").</div></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="method-card fade-in stagger-1" id="getscripthash" data-search="getscripthash returns fnv-1a 64-bit hash of bytecode for the given script.">
+        <div class="method-header" onclick="toggleMethod(this)">
+          <div class="method-title-area">
+            <div class="method-tag">Function</div>
+            <div class="method-name"><span class="fn">getscripthash</span><span class="params">(script: Instance)</span></div>
+          </div>
+          <div class="method-toggle">&#9662;</div>
+        </div>
+        <div class="method-body">
+          <div class="method-content">
+            <p class="method-description">Returns FNV-1a 64-bit hash of bytecode for the given script.</p>
+            <div class="section-label">Parameters</div>
+            <table class="params-table">
+              <thead><tr><th>Name</th><th>Type</th><th>Req</th><th>Description</th></tr></thead>
+              <tbody><tr><td><span class="param-name">script</span></td><td><span class="param-type">Instance</span></td><td><span class="param-req required">req</span></td><td>The script instance to hash.</td></tr></tbody>
+            </table>
+            <div class="section-label">Returns</div>
+            <div class="returns-box"><div class="returns-type">string</div><div class="returns-desc">The 64-bit FNV-1a hash string.</div></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="method-card fade-in stagger-2" id="getgetname" data-search="getgetname returns the name of the current game.">
+        <div class="method-header" onclick="toggleMethod(this)">
+          <div class="method-title-area">
+            <div class="method-tag">Function</div>
+            <div class="method-name"><span class="fn">getgetname</span><span class="params">()</span></div>
+          </div>
+          <div class="method-toggle">&#9662;</div>
+        </div>
+        <div class="method-body">
+          <div class="method-content">
+            <p class="method-description">Returns the name of the current game.</p>
+            <div class="section-label">Parameters</div>
+            <table class="params-table">
+              <thead><tr><th>Name</th><th>Type</th><th>Req</th><th>Description</th></tr></thead>
+              <tbody><tr><td colspan="4" style="text-align:center;color:var(--text-muted)">No parameters</td></tr></tbody>
+            </table>
+            <div class="section-label">Returns</div>
+            <div class="returns-box"><div class="returns-type">string</div><div class="returns-desc">The current game name.</div></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="method-card fade-in stagger-3" id="getscripts" data-search="getscripts returns all script instances currently loaded in the game.">
+        <div class="method-header" onclick="toggleMethod(this)">
+          <div class="method-title-area">
+            <div class="method-tag">Function</div>
+            <div class="method-name"><span class="fn">getscripts</span><span class="params">()</span></div>
+          </div>
+          <div class="method-toggle">&#9662;</div>
+        </div>
+        <div class="method-body">
+          <div class="method-content">
+            <p class="method-description">Returns all script instances currently loaded in the game.</p>
+            <div class="section-label">Parameters</div>
+            <table class="params-table">
+              <thead><tr><th>Name</th><th>Type</th><th>Req</th><th>Description</th></tr></thead>
+              <tbody><tr><td colspan="4" style="text-align:center;color:var(--text-muted)">No parameters</td></tr></tbody>
+            </table>
+            <div class="section-label">Returns</div>
+            <div class="returns-box"><div class="returns-type">{ Instance }</div><div class="returns-desc">An array of all script instances.</div></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="method-card fade-in stagger-4" id="getscriptbytecode" data-search="getscriptbytecode returns the raw bytecode of a script.">
+        <div class="method-header" onclick="toggleMethod(this)">
+          <div class="method-title-area">
+            <div class="method-tag">Function</div>
+            <div class="method-name"><span class="fn">getscriptbytecode</span><span class="params">(script: Instance)</span></div>
+          </div>
+          <div class="method-toggle">&#9662;</div>
+        </div>
+        <div class="method-body">
+          <div class="method-content">
+            <p class="method-description">Returns the raw bytecode of a script.</p>
+            <div class="section-label">Parameters</div>
+            <table class="params-table">
+              <thead><tr><th>Name</th><th>Type</th><th>Req</th><th>Description</th></tr></thead>
+              <tbody><tr><td><span class="param-name">script</span></td><td><span class="param-type">Instance</span></td><td><span class="param-req required">req</span></td><td>The script instance to read bytecode from.</td></tr></tbody>
+            </table>
+            <div class="section-label">Returns</div>
+            <div class="returns-box"><div class="returns-type">string</div><div class="returns-desc">The raw bytecode string.</div></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="method-card fade-in stagger-5" id="base64encode" data-search="base64encode encodes a string to base64 format.">
+        <div class="method-header" onclick="toggleMethod(this)">
+          <div class="method-title-area">
+            <div class="method-tag">Function</div>
+            <div class="method-name"><span class="fn">base64encode</span><span class="params">(data: string)</span></div>
+          </div>
+          <div class="method-toggle">&#9662;</div>
+        </div>
+        <div class="method-body">
+          <div class="method-content">
+            <p class="method-description">Encodes a string to Base64 format.</p>
+            <div class="section-label">Parameters</div>
+            <table class="params-table">
+              <thead><tr><th>Name</th><th>Type</th><th>Req</th><th>Description</th></tr></thead>
+              <tbody><tr><td><span class="param-name">data</span></td><td><span class="param-type">string</span></td><td><span class="param-req required">req</span></td><td>The raw string to encode.</td></tr></tbody>
+            </table>
+            <div class="section-label">Returns</div>
+            <div class="returns-box"><div class="returns-type">string</div><div class="returns-desc">The Base64-encoded string.</div></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="method-card fade-in stagger-1" id="base64decode" data-search="base64decode decodes a base64 string back to normal string.">
+        <div class="method-header" onclick="toggleMethod(this)">
+          <div class="method-title-area">
+            <div class="method-tag">Function</div>
+            <div class="method-name"><span class="fn">base64decode</span><span class="params">(data: string)</span></div>
+          </div>
+          <div class="method-toggle">&#9662;</div>
+        </div>
+        <div class="method-body">
+          <div class="method-content">
+            <p class="method-description">Decodes a Base64 string back to normal string.</p>
+            <div class="section-label">Parameters</div>
+            <table class="params-table">
+              <thead><tr><th>Name</th><th>Type</th><th>Req</th><th>Description</th></tr></thead>
+              <tbody><tr><td><span class="param-name">data</span></td><td><span class="param-type">string</span></td><td><span class="param-req required">req</span></td><td>The Base64 string to decode.</td></tr></tbody>
+            </table>
+            <div class="section-label">Returns</div>
+            <div class="returns-box"><div class="returns-type">string</div><div class="returns-desc">The decoded raw string.</div></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="method-card fade-in stagger-2" id="print" data-search="print outputs a message to the console.">
+        <div class="method-header" onclick="toggleMethod(this)">
+          <div class="method-title-area">
+            <div class="method-tag">Function</div>
+            <div class="method-name"><span class="fn">print</span><span class="params">(message: string)</span></div>
+          </div>
+          <div class="method-toggle">&#9662;</div>
+        </div>
+        <div class="method-body">
+          <div class="method-content">
+            <p class="method-description">Outputs a message to the console.</p>
+            <div class="section-label">Parameters</div>
+            <table class="params-table">
+              <thead><tr><th>Name</th><th>Type</th><th>Req</th><th>Description</th></tr></thead>
+              <tbody><tr><td><span class="param-name">message</span></td><td><span class="param-type">string</span></td><td><span class="param-req required">req</span></td><td>The message to print.</td></tr></tbody>
+            </table>
+            <div class="section-label">Returns</div>
+            <div class="returns-box"><div class="returns-type">void</div><div class="returns-desc">No return value.</div></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="method-card fade-in stagger-3" id="warn" data-search="warn outputs a warning message to the console.">
+        <div class="method-header" onclick="toggleMethod(this)">
+          <div class="method-title-area">
+            <div class="method-tag">Function</div>
+            <div class="method-name"><span class="fn">warn</span><span class="params">(message: string)</span></div>
+          </div>
+          <div class="method-toggle">&#9662;</div>
+        </div>
+        <div class="method-body">
+          <div class="method-content">
+            <p class="method-description">Outputs a warning message to the console.</p>
+            <div class="section-label">Parameters</div>
+            <table class="params-table">
+              <thead><tr><th>Name</th><th>Type</th><th>Req</th><th>Description</th></tr></thead>
+              <tbody><tr><td><span class="param-name">message</span></td><td><span class="param-type">string</span></td><td><span class="param-req required">req</span></td><td>The warning message.</td></tr></tbody>
+            </table>
+            <div class="section-label">Returns</div>
+            <div class="returns-box"><div class="returns-type">void</div><div class="returns-desc">No return value.</div></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="method-card fade-in stagger-4" id="error" data-search="error outputs an error message to the console.">
+        <div class="method-header" onclick="toggleMethod(this)">
+          <div class="method-title-area">
+            <div class="method-tag">Function</div>
+            <div class="method-name"><span class="fn">error</span><span class="params">(message: string)</span></div>
+          </div>
+          <div class="method-toggle">&#9662;</div>
+        </div>
+        <div class="method-body">
+          <div class="method-content">
+            <p class="method-description">Outputs an error message to the console.</p>
+            <div class="section-label">Parameters</div>
+            <table class="params-table">
+              <thead><tr><th>Name</th><th>Type</th><th>Req</th><th>Description</th></tr></thead>
+              <tbody><tr><td><span class="param-name">message</span></td><td><span class="param-type">string</span></td><td><span class="param-req required">req</span></td><td>The error message.</td></tr></tbody>
+            </table>
+            <div class="section-label">Returns</div>
+            <div class="returns-box"><div class="returns-type">void</div><div class="returns-desc">No return value.</div></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="method-card fade-in stagger-5" id="setrobloxinput" data-search="setrobloxinput toggles sending inputs to the game.">
+        <div class="method-header" onclick="toggleMethod(this)">
+          <div class="method-title-area">
+            <div class="method-tag">Function</div>
+            <div class="method-name"><span class="fn">setrobloxinput</span><span class="params">(state: boolean)</span></div>
+          </div>
+          <div class="method-toggle">&#9662;</div>
+        </div>
+        <div class="method-body">
+          <div class="method-content">
+            <p class="method-description">Toggles sending inputs to the game. When disabled, input functions will not affect the Roblox window.</p>
+            <div class="section-label">Parameters</div>
+            <table class="params-table">
+              <thead><tr><th>Name</th><th>Type</th><th>Req</th><th>Description</th></tr></thead>
+              <tbody><tr><td><span class="param-name">state</span></td><td><span class="param-type">boolean</span></td><td><span class="param-req required">req</span></td><td>True to enable input, false to disable.</td></tr></tbody>
+            </table>
+            <div class="section-label">Returns</div>
+            <div class="returns-box"><div class="returns-type">nil</div><div class="returns-desc">No return value.</div></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="method-card fade-in stagger-1" id="isrbxactive" data-search="isrbxactive returns whether the roblox window is currently focused and active.">
+        <div class="method-header" onclick="toggleMethod(this)">
+          <div class="method-title-area">
+            <div class="method-tag">Function</div>
+            <div class="method-name"><span class="fn">isrbxactive</span><span class="params">()</span></div>
+          </div>
+          <div class="method-toggle">&#9662;</div>
+        </div>
+        <div class="method-body">
+          <div class="method-content">
+            <p class="method-description">Returns whether the Roblox window is currently focused and active.</p>
+            <div class="section-label">Parameters</div>
+            <table class="params-table">
+              <thead><tr><th>Name</th><th>Type</th><th>Req</th><th>Description</th></tr></thead>
+              <tbody><tr><td colspan="4" style="text-align:center;color:var(--text-muted)">No parameters</td></tr></tbody>
+            </table>
+            <div class="section-label">Returns</div>
+            <div class="returns-box"><div class="returns-type">boolean</div><div class="returns-desc">True if Roblox is the active window.</div></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="method-card fade-in stagger-2" id="setclipboard" data-search="setclipboard copies the given string to the system clipboard.">
+        <div class="method-header" onclick="toggleMethod(this)">
+          <div class="method-title-area">
+            <div class="method-tag">Function</div>
+            <div class="method-name"><span class="fn">setclipboard</span><span class="params">(value: string)</span></div>
+          </div>
+          <div class="method-toggle">&#9662;</div>
+        </div>
+        <div class="method-body">
+          <div class="method-content">
+            <p class="method-description">Copies the given string to the system clipboard.</p>
+            <div class="section-label">Parameters</div>
+            <table class="params-table">
+              <thead><tr><th>Name</th><th>Type</th><th>Req</th><th>Description</th></tr></thead>
+              <tbody><tr><td><span class="param-name">value</span></td><td><span class="param-type">string</span></td><td><span class="param-req required">req</span></td><td>The text to copy.</td></tr></tbody>
+            </table>
+            <div class="section-label">Returns</div>
+            <div class="returns-box"><div class="returns-type">nil</div><div class="returns-desc">No return value.</div></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="method-card fade-in stagger-3" id="keyrelease" data-search="keyrelease releases a previously pressed key.">
+        <div class="method-header" onclick="toggleMethod(this)">
+          <div class="method-title-area">
+            <div class="method-tag">Function</div>
+            <div class="method-name"><span class="fn">keyrelease</span><span class="params">(keycode: int)</span></div>
+          </div>
+          <div class="method-toggle">&#9662;</div>
+        </div>
+        <div class="method-body">
+          <div class="method-content">
+            <p class="method-description">Releases a previously pressed key.</p>
+            <div class="section-label">Parameters</div>
+            <table class="params-table">
+              <thead><tr><th>Name</th><th>Type</th><th>Req</th><th>Description</th></tr></thead>
+              <tbody><tr><td><span class="param-name">keycode</span></td><td><span class="param-type">int</span></td><td><span class="param-req required">req</span></td><td>The virtual key code to release.</td></tr></tbody>
+            </table>
+            <div class="section-label">Returns</div>
+            <div class="returns-box"><div class="returns-type">nil</div><div class="returns-desc">No return value.</div></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="method-card fade-in stagger-4" id="keypress" data-search="keypress simulates a key press. the key remains held until keyrelease is called.">
+        <div class="method-header" onclick="toggleMethod(this)">
+          <div class="method-title-area">
+            <div class="method-tag">Function</div>
+            <div class="method-name"><span class="fn">keypress</span><span class="params">(keycode: int)</span></div>
+          </div>
+          <div class="method-toggle">&#9662;</div>
+        </div>
+        <div class="method-body">
+          <div class="method-content">
+            <p class="method-description">Simulates a key press. The key remains held until keyrelease is called.</p>
+            <div class="section-label">Parameters</div>
+            <table class="params-table">
+              <thead><tr><th>Name</th><th>Type</th><th>Req</th><th>Description</th></tr></thead>
+              <tbody><tr><td><span class="param-name">keycode</span></td><td><span class="param-type">int</span></td><td><span class="param-req required">req</span></td><td>The virtual key code to press.</td></tr></tbody>
+            </table>
+            <div class="section-label">Returns</div>
+            <div class="returns-box"><div class="returns-type">nil</div><div class="returns-desc">No return value.</div></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="method-card fade-in stagger-5" id="iskeypressed" data-search="iskeypressed checks whether a specific key is currently being held down.">
+        <div class="method-header" onclick="toggleMethod(this)">
+          <div class="method-title-area">
+            <div class="method-tag">Function</div>
+            <div class="method-name"><span class="fn">iskeypressed</span><span class="params">(keycode: int)</span></div>
+          </div>
+          <div class="method-toggle">&#9662;</div>
+        </div>
+        <div class="method-body">
+          <div class="method-content">
+            <p class="method-description">Checks whether a specific key is currently being held down.</p>
+            <div class="section-label">Parameters</div>
+            <table class="params-table">
+              <thead><tr><th>Name</th><th>Type</th><th>Req</th><th>Description</th></tr></thead>
+              <tbody><tr><td><span class="param-name">keycode</span></td><td><span class="param-type">int</span></td><td><span class="param-req required">req</span></td><td>The virtual key code to check.</td></tr></tbody>
+            </table>
+            <div class="section-label">Returns</div>
+            <div class="returns-box"><div class="returns-type">boolean</div><div class="returns-desc">True if the key is pressed.</div></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="method-card fade-in stagger-1" id="ismouse1pressed" data-search="ismouse1pressed checks whether the left mouse button is currently held down.">
+        <div class="method-header" onclick="toggleMethod(this)">
+          <div class="method-title-area">
+            <div class="method-tag">Function</div>
+            <div class="method-name"><span class="fn">ismouse1pressed</span><span class="params">()</span></div>
+          </div>
+          <div class="method-toggle">&#9662;</div>
+        </div>
+        <div class="method-body">
+          <div class="method-content">
+            <p class="method-description">Checks whether the left mouse button is currently held down.</p>
+            <div class="section-label">Parameters</div>
+            <table class="params-table">
+              <thead><tr><th>Name</th><th>Type</th><th>Req</th><th>Description</th></tr></thead>
+              <tbody><tr><td colspan="4" style="text-align:center;color:var(--text-muted)">No parameters</td></tr></tbody>
+            </table>
+            <div class="section-label">Returns</div>
+            <div class="returns-box"><div class="returns-type">boolean</div><div class="returns-desc">True if left mouse button is pressed.</div></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="method-card fade-in stagger-2" id="ismouse2pressed" data-search="ismouse2pressed checks whether the right mouse button is currently held down.">
+        <div class="method-header" onclick="toggleMethod(this)">
+          <div class="method-title-area">
+            <div class="method-tag">Function</div>
+            <div class="method-name"><span class="fn">ismouse2pressed</span><span class="params">()</span></div>
+          </div>
+          <div class="method-toggle">&#9662;</div>
+        </div>
+        <div class="method-body">
+          <div class="method-content">
+            <p class="method-description">Checks whether the right mouse button is currently held down.</p>
+            <div class="section-label">Parameters</div>
+            <table class="params-table">
+              <thead><tr><th>Name</th><th>Type</th><th>Req</th><th>Description</th></tr></thead>
+              <tbody><tr><td colspan="4" style="text-align:center;color:var(--text-muted)">No parameters</td></tr></tbody>
+            </table>
+            <div class="section-label">Returns</div>
+            <div class="returns-box"><div class="returns-type">boolean</div><div class="returns-desc">True if right mouse button is pressed.</div></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="method-card fade-in stagger-3" id="mouse1press" data-search="mouse1press simulates pressing the left mouse button.">
+        <div class="method-header" onclick="toggleMethod(this)">
+          <div class="method-title-area">
+            <div class="method-tag">Function</div>
+            <div class="method-name"><span class="fn">mouse1press</span><span class="params">()</span></div>
+          </div>
+          <div class="method-toggle">&#9662;</div>
+        </div>
+        <div class="method-body">
+          <div class="method-content">
+            <p class="method-description">Simulates pressing the left mouse button.</p>
+            <div class="section-label">Parameters</div>
+            <table class="params-table">
+              <thead><tr><th>Name</th><th>Type</th><th>Req</th><th>Description</th></tr></thead>
+              <tbody><tr><td colspan="4" style="text-align:center;color:var(--text-muted)">No parameters</td></tr></tbody>
+            </table>
+            <div class="section-label">Returns</div>
+            <div class="returns-box"><div class="returns-type">nil</div><div class="returns-desc">No return value.</div></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="method-card fade-in stagger-4" id="mouse1release" data-search="mouse1release simulates releasing the left mouse button.">
+        <div class="method-header" onclick="toggleMethod(this)">
+          <div class="method-title-area">
+            <div class="method-tag">Function</div>
+            <div class="method-name"><span class="fn">mouse1release</span><span class="params">()</span></div>
+          </div>
+          <div class="method-toggle">&#9662;</div>
+        </div>
+        <div class="method-body">
+          <div class="method-content">
+            <p class="method-description">Simulates releasing the left mouse button.</p>
+            <div class="section-label">Parameters</div>
+            <table class="params-table">
+              <thead><tr><th>Name</th><th>Type</th><th>Req</th><th>Description</th></tr></thead>
+              <tbody><tr><td colspan="4" style="text-align:center;color:var(--text-muted)">No parameters</td></tr></tbody>
+            </table>
+            <div class="section-label">Returns</div>
+            <div class="returns-box"><div class="returns-type">nil</div><div class="returns-desc">No return value.</div></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="method-card fade-in stagger-5" id="mouse1click" data-search="mouse1click simulates a full left mouse button click (press and release).">
+        <div class="method-header" onclick="toggleMethod(this)">
+          <div class="method-title-area">
+            <div class="method-tag">Function</div>
+            <div class="method-name"><span class="fn">mouse1click</span><span class="params">()</span></div>
+          </div>
+          <div class="method-toggle">&#9662;</div>
+        </div>
+        <div class="method-body">
+          <div class="method-content">
+            <p class="method-description">Simulates a full left mouse button click (press and release).</p>
+            <div class="section-label">Parameters</div>
+            <table class="params-table">
+              <thead><tr><th>Name</th><th>Type</th><th>Req</th><th>Description</th></tr></thead>
+              <tbody><tr><td colspan="4" style="text-align:center;color:var(--text-muted)">No parameters</td></tr></tbody>
+            </table>
+            <div class="section-label">Returns</div>
+            <div class="returns-box"><div class="returns-type">nil</div><div class="returns-desc">No return value.</div></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="method-card fade-in stagger-1" id="mouse2press" data-search="mouse2press simulates pressing the right mouse button.">
+        <div class="method-header" onclick="toggleMethod(this)">
+          <div class="method-title-area">
+            <div class="method-tag">Function</div>
+            <div class="method-name"><span class="fn">mouse2press</span><span class="params">()</span></div>
+          </div>
+          <div class="method-toggle">&#9662;</div>
+        </div>
+        <div class="method-body">
+          <div class="method-content">
+            <p class="method-description">Simulates pressing the right mouse button.</p>
+            <div class="section-label">Parameters</div>
+            <table class="params-table">
+              <thead><tr><th>Name</th><th>Type</th><th>Req</th><th>Description</th></tr></thead>
+              <tbody><tr><td colspan="4" style="text-align:center;color:var(--text-muted)">No parameters</td></tr></tbody>
+            </table>
+            <div class="section-label">Returns</div>
+            <div class="returns-box"><div class="returns-type">nil</div><div class="returns-desc">No return value.</div></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="method-card fade-in stagger-2" id="mouse2release" data-search="mouse2release simulates releasing the right mouse button.">
+        <div class="method-header" onclick="toggleMethod(this)">
+          <div class="method-title-area">
+            <div class="method-tag">Function</div>
+            <div class="method-name"><span class="fn">mouse2release</span><span class="params">()</span></div>
+          </div>
+          <div class="method-toggle">&#9662;</div>
+        </div>
+        <div class="method-body">
+          <div class="method-content">
+            <p class="method-description">Simulates releasing the right mouse button.</p>
+            <div class="section-label">Parameters</div>
+            <table class="params-table">
+              <thead><tr><th>Name</th><th>Type</th><th>Req</th><th>Description</th></tr></thead>
+              <tbody><tr><td colspan="4" style="text-align:center;color:var(--text-muted)">No parameters</td></tr></tbody>
+            </table>
+            <div class="section-label">Returns</div>
+            <div class="returns-box"><div class="returns-type">nil</div><div class="returns-desc">No return value.</div></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="method-card fade-in stagger-3" id="mouse2click" data-search="mouse2click simulates a full right mouse button click (press and release).">
+        <div class="method-header" onclick="toggleMethod(this)">
+          <div class="method-title-area">
+            <div class="method-tag">Function</div>
+            <div class="method-name"><span class="fn">mouse2click</span><span class="params">()</span></div>
+          </div>
+          <div class="method-toggle">&#9662;</div>
+        </div>
+        <div class="method-body">
+          <div class="method-content">
+            <p class="method-description">Simulates a full right mouse button click (press and release).</p>
+            <div class="section-label">Parameters</div>
+            <table class="params-table">
+              <thead><tr><th>Name</th><th>Type</th><th>Req</th><th>Description</th></tr></thead>
+              <tbody><tr><td colspan="4" style="text-align:center;color:var(--text-muted)">No parameters</td></tr></tbody>
+            </table>
+            <div class="section-label">Returns</div>
+            <div class="returns-box"><div class="returns-type">nil</div><div class="returns-desc">No return value.</div></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="method-card fade-in stagger-4" id="mousemoveabs" data-search="mousemoveabs moves the mouse cursor to absolute screen coordinates.">
+        <div class="method-header" onclick="toggleMethod(this)">
+          <div class="method-title-area">
+            <div class="method-tag">Function</div>
+            <div class="method-name"><span class="fn">mousemoveabs</span><span class="params">(x: int, y: int)</span></div>
+          </div>
+          <div class="method-toggle">&#9662;</div>
+        </div>
+        <div class="method-body">
+          <div class="method-content">
+            <p class="method-description">Moves the mouse cursor to absolute screen coordinates.</p>
+            <div class="section-label">Parameters</div>
+            <table class="params-table">
+              <thead><tr><th>Name</th><th>Type</th><th>Req</th><th>Description</th></tr></thead>
+              <tbody>
+                <tr><td><span class="param-name">x</span></td><td><span class="param-type">int</span></td><td><span class="param-req required">req</span></td><td>Absolute X coordinate.</td></tr>
+                <tr><td><span class="param-name">y</span></td><td><span class="param-type">int</span></td><td><span class="param-req required">req</span></td><td>Absolute Y coordinate.</td></tr>
+              </tbody>
+            </table>
+            <div class="section-label">Returns</div>
+            <div class="returns-box"><div class="returns-type">nil</div><div class="returns-desc">No return value.</div></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="method-card fade-in stagger-5" id="mousemoverel" data-search="mousemoverel moves the mouse cursor relative to its current position.">
+        <div class="method-header" onclick="toggleMethod(this)">
+          <div class="method-title-area">
+            <div class="method-tag">Function</div>
+            <div class="method-name"><span class="fn">mousemoverel</span><span class="params">(x: int, y: int)</span></div>
+          </div>
+          <div class="method-toggle">&#9662;</div>
+        </div>
+        <div class="method-body">
+          <div class="method-content">
+            <p class="method-description">Moves the mouse cursor relative to its current position.</p>
+            <div class="section-label">Parameters</div>
+            <table class="params-table">
+              <thead><tr><th>Name</th><th>Type</th><th>Req</th><th>Description</th></tr></thead>
+              <tbody>
+                <tr><td><span class="param-name">x</span></td><td><span class="param-type">int</span></td><td><span class="param-req required">req</span></td><td>Relative X offset.</td></tr>
+                <tr><td><span class="param-name">y</span></td><td><span class="param-type">int</span></td><td><span class="param-req required">req</span></td><td>Relative Y offset.</td></tr>
+              </tbody>
+            </table>
+            <div class="section-label">Returns</div>
+            <div class="returns-box"><div class="returns-type">nil</div><div class="returns-desc">No return value.</div></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="method-card fade-in stagger-1" id="mousescroll" data-search="mousescroll simulates scrolling the mouse wheel.">
+        <div class="method-header" onclick="toggleMethod(this)">
+          <div class="method-title-area">
+            <div class="method-tag">Function</div>
+            <div class="method-name"><span class="fn">mousescroll</span><span class="params">(amount: int)</span></div>
+          </div>
+          <div class="method-toggle">&#9662;</div>
+        </div>
+        <div class="method-body">
+          <div class="method-content">
+            <p class="method-description">Simulates scrolling the mouse wheel.</p>
+            <div class="section-label">Parameters</div>
+            <table class="params-table">
+              <thead><tr><th>Name</th><th>Type</th><th>Req</th><th>Description</th></tr></thead>
+              <tbody><tr><td><span class="param-name">amount</span></td><td><span class="param-type">int</span></td><td><span class="param-req required">req</span></td><td>Scroll amount. Positive for up, negative for down.</td></tr></tbody>
+            </table>
+            <div class="section-label">Returns</div>
+            <div class="returns-box"><div class="returns-type">nil</div><div class="returns-desc">No return value.</div></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="method-card fade-in stagger-2" id="run_secure" data-search="run_secure run protected code.">
+        <div class="method-header" onclick="toggleMethod(this)">
+          <div class="method-title-area">
+            <div class="method-tag">Function</div>
+            <div class="method-name"><span class="fn">run.secure</span><span class="params">(text: string)</span></div>
+          </div>
+          <div class="method-toggle">&#9662;</div>
+        </div>
+        <div class="method-body">
+          <div class="method-content">
+            <p class="method-description">Run protected code. Code protection is not available to the public.</p>
+            <div class="section-label">Parameters</div>
+            <table class="params-table">
+              <thead><tr><th>Name</th><th>Type</th><th>Req</th><th>Description</th></tr></thead>
+              <tbody><tr><td><span class="param-name">text</span></td><td><span class="param-type">string</span></td><td><span class="param-req required">req</span></td><td>The protected code to execute.</td></tr></tbody>
+            </table>
+            <div class="section-label">Returns</div>
+            <div class="returns-box"><div class="returns-type">void</div><div class="returns-desc">No return value.</div></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="method-card fade-in stagger-3" id="setfflag" data-search="setfflag sets fflag with value.">
+        <div class="method-header" onclick="toggleMethod(this)">
+          <div class="method-title-area">
+            <div class="method-tag">Function</div>
+            <div class="method-name"><span class="fn">setfflag</span><span class="params">(FFlag: string, value: string)</span></div>
+          </div>
+          <div class="method-toggle">&#9662;</div>
+        </div>
+        <div class="method-body">
+          <div class="method-content">
+            <p class="method-description">Sets FFlag with Value. This function is not complete.</p>
+            <div class="section-label">Parameters</div>
+            <table class="params-table">
+              <thead><tr><th>Name</th><th>Type</th><th>Req</th><th>Description</th></tr></thead>
+              <tbody>
+                <tr><td><span class="param-name">FFlag</span></td><td><span class="param-type">string</span></td><td><span class="param-req required">req</span></td><td>The fast flag name.</td></tr>
+                <tr><td><span class="param-name">value</span></td><td><span class="param-type">string</span></td><td><span class="param-req required">req</span></td><td>The value to set.</td></tr>
+              </tbody>
+            </table>
+            <div class="section-label">Returns</div>
+            <div class="returns-box"><div class="returns-type">void</div><div class="returns-desc">No return value.</div></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="method-card fade-in stagger-4" id="getfflag" data-search="getfflag gets the value of an fflag.">
+        <div class="method-header" onclick="toggleMethod(this)">
+          <div class="method-title-area">
+            <div class="method-tag">Function</div>
+            <div class="method-name"><span class="fn">getfflag</span><span class="params">(FFlag: string)</span></div>
+          </div>
+          <div class="method-toggle">&#9662;</div>
+        </div>
+        <div class="method-body">
+          <div class="method-content">
+            <p class="method-description">Gets the value of an FFlag. This function is not complete.</p>
+            <div class="section-label">Parameters</div>
+            <table class="params-table">
+              <thead><tr><th>Name</th><th>Type</th><th>Req</th><th>Description</th></tr></thead>
+              <tbody><tr><td><span class="param-name">FFlag</span></td><td><span class="param-type">string</span></td><td><span class="param-req required">req</span></td><td>The fast flag name.</td></tr></tbody>
+            </table>
+            <div class="section-label">Returns</div>
+            <div class="returns-box"><div class="returns-type">string</div><div class="returns-desc">The current value of the fast flag.</div></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="method-card fade-in stagger-5" id="require" data-search="require loads and executes a module script.">
+        <div class="method-header" onclick="toggleMethod(this)">
+          <div class="method-title-area">
+            <div class="method-tag">Function</div>
+            <div class="method-name"><span class="fn">require</span><span class="params">(path: string)</span></div>
+          </div>
+          <div class="method-toggle">&#9662;</div>
+        </div>
+        <div class="method-body">
+          <div class="method-content">
+            <p class="method-description">Loads and executes a module script. Require only accepts files ending with .lua and .luau.</p>
+            <div class="section-label">Parameters</div>
+            <table class="params-table">
+              <thead><tr><th>Name</th><th>Type</th><th>Req</th><th>Description</th></tr></thead>
+              <tbody><tr><td><span class="param-name">path</span></td><td><span class="param-type">string</span></td><td><span class="param-req required">req</span></td><td>The file path to the module.</td></tr></tbody>
+            </table>
+            <div class="section-label">Returns</div>
+            <div class="returns-box"><div class="returns-type">table</div><div class="returns-desc">The exported table from the module.</div></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="method-card fade-in stagger-1" id="wait" data-search="wait yields the current thread for the specified duration in seconds.">
+        <div class="method-header" onclick="toggleMethod(this)">
+          <div class="method-title-area">
+            <div class="method-tag">Function</div>
+            <div class="method-name"><span class="fn">wait</span><span class="params">(time: number)</span></div>
+          </div>
+          <div class="method-toggle">&#9662;</div>
+        </div>
+        <div class="method-body">
+          <div class="method-content">
+            <p class="method-description">Yields the current thread for the specified duration in seconds.</p>
+            <div class="section-label">Parameters</div>
+            <table class="params-table">
+              <thead><tr><th>Name</th><th>Type</th><th>Req</th><th>Description</th></tr></thead>
+              <tbody><tr><td><span class="param-name">time</span></td><td><span class="param-type">number</span></td><td><span class="param-req required">req</span></td><td>Duration to wait in seconds.</td></tr></tbody>
+            </table>
+            <div class="section-label">Returns</div>
+            <div class="returns-box"><div class="returns-type">void</div><div class="returns-desc">No return value.</div></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="method-card fade-in stagger-2" id="spawn" data-search="spawn schedules a function to run on the next frame.">
+        <div class="method-header" onclick="toggleMethod(this)">
+          <div class="method-title-area">
+            <div class="method-tag">Function</div>
+            <div class="method-name"><span class="fn">spawn</span><span class="params">(target: function)</span></div>
+          </div>
+          <div class="method-toggle">&#9662;</div>
+        </div>
+        <div class="method-body">
+          <div class="method-content">
+            <p class="method-description">Schedules a function to run on the next frame.</p>
+            <div class="section-label">Parameters</div>
+            <table class="params-table">
+              <thead><tr><th>Name</th><th>Type</th><th>Req</th><th>Description</th></tr></thead>
+              <tbody><tr><td><span class="param-name">target</span></td><td><span class="param-type">function</span></td><td><span class="param-req required">req</span></td><td>The function to spawn.</td></tr></tbody>
+            </table>
+            <div class="section-label">Returns</div>
+            <div class="returns-box"><div class="returns-type">nil</div><div class="returns-desc">No return value.</div></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="method-card fade-in stagger-3" id="task_spawn" data-search="task.spawn spawns a new thread that runs the given function.">
+        <div class="method-header" onclick="toggleMethod(this)">
+          <div class="method-title-area">
+            <div class="method-tag">Function</div>
+            <div class="method-name"><span class="fn">task.spawn</span><span class="params">(target: function)</span></div>
+          </div>
+          <div class="method-toggle">&#9662;</div>
+        </div>
+        <div class="method-body">
+          <div class="method-content">
+            <p class="method-description">Spawns a new thread that runs the given function.</p>
+            <div class="section-label">Parameters</div>
+            <table class="params-table">
+              <thead><tr><th>Name</th><th>Type</th><th>Req</th><th>Description</th></tr></thead>
+              <tbody><tr><td><span class="param-name">target</span></td><td><span class="param-type">function</span></td><td><span class="param-req required">req</span></td><td>The function to run.</td></tr></tbody>
+            </table>
+            <div class="section-label">Returns</div>
+            <div class="returns-box"><div class="returns-type">nil</div><div class="returns-desc">No return value.</div></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="method-card fade-in stagger-4" id="task_wait" data-search="task.wait yields the current thread for the specified duration using the task scheduler.">
+        <div class="method-header" onclick="toggleMethod(this)">
+          <div class="method-title-area">
+            <div class="method-tag">Function</div>
+            <div class="method-name"><span class="fn">task.wait</span><span class="params">(time: number)</span></div>
+          </div>
+          <div class="method-toggle">&#9662;</div>
+        </div>
+        <div class="method-body">
+          <div class="method-content">
+            <p class="method-description">Yields the current thread for the specified duration using the task scheduler.</p>
+            <div class="section-label">Parameters</div>
+            <table class="params-table">
+              <thead><tr><th>Name</th><th>Type</th><th>Req</th><th>Description</th></tr></thead>
+              <tbody><tr><td><span class="param-name">time</span></td><td><span class="param-type">number</span></td><td><span class="param-req required">req</span></td><td>Duration to wait in seconds.</td></tr></tbody>
+            </table>
+            <div class="section-label">Returns</div>
+            <div class="returns-box"><div class="returns-type">void</div><div class="returns-desc">No return value.</div></div>
+          </div>
+        </div>
+      </div>
+
+      <div style="height: 80px;"></div>
     </div>
+  </main>
+</div>
 
-    <script>
-        (function() {
-            var wrapper = document.querySelector('.container');
-            var duration = '1s';
-            var curve = 'cubic-bezier(0.22, 1, 0.36, 1)';
+<script>
+const API_BASE = 'https://methodsapi.vercel.app';
 
-            function showContent() {
-                if (wrapper) {
-                    wrapper.style.transition = 'opacity ' + duration + ' ' + curve + ', transform ' + duration + ' ' + curve;
-                    wrapper.offsetHeight;
-                    wrapper.style.opacity = '1';
-                    wrapper.style.transform = 'translateY(0) scale(1)';
-                }
-            }
+function showNotFound() {
+  document.getElementById('auth-overlay').style.display = 'none';
+  document.getElementById('not-found-screen').style.display = 'flex';
+}
 
-            function runAfterLoad() {
-                requestAnimationFrame(function() {
-                    requestAnimationFrame(showContent);
-                });
-            }
-            if (document.readyState === 'complete') {
-                runAfterLoad();
-            } else {
-                window.addEventListener('load', runAfterLoad);
-            }
-        })();
+function retryAuth() {
+  localStorage.removeItem('putinka_token');
+  window.location.href = API_BASE + '/auth/discord';
+}
 
-        const featuredMethods = [
-            {
-                icon: '⭐',
-                title: 'BEST TikTok Method',
-                content: `<p>This method involves streaming pre-recorded content on TikTok to gather engagement and increase your beam count. Follow these steps to set it up:</p>
-<h4>Step 1: Prepare Your Video</h4>
-<p>You will need a pre-recorded video that you plan to stream. This video will be at the bottom of this thread, so ensure it's ready to go!</p>
-<h4>Step 2: Add Your Private Server/Profile Link</h4>
-<p>Once your video is ready, go to your TikTok profile. In your TikTok bio, you must add either your private server link or your profile link (whichever you prefer).</p>
-<p>If you have at least 1,000 followers, you can add a clickable website link to your bio. If you don't have 1k followers, you can't add a clickable link.</p>
-<p><strong>Note:</strong> You can also use bio.link or Linktree to share multiple links in your TikTok bio. These services allow you to create a single link that leads to multiple destinations, such as your private server, profile, or any other relevant links.</p>
-<h4>Step 3: Start the Live Stream Using an External Device</h4>
-<p>Use a separate device to initiate the stream.</p>
-<ul>
-  <li>On your device, press the <strong>+</strong> button to go live.</li>
-  <li>Select "Mobile Gaming" as the category for your stream.</li>
-  <li>Once your stream begins, let it sit all day long — you're essentially streaming your pre-recorded content as a "live" video.</li>
-</ul>
-<p><strong>Note:</strong> The stream will look like a real live video, but it's actually pre-recorded.</p>
-<h4>What Is a Pre-Recorded Stream on TikTok?</h4>
-<p>A pre-recorded stream is when you play a video as if it's live, even though it was recorded earlier. This technique allows you to keep your stream running without having to do anything in real time. It works well for gaining engagement, as viewers think they are watching a live event.</p>
-<p><strong>Tip:</strong> Be prepared for 50-100 beams every day by maintaining this setup and finding more pre-recorded videos to keep the stream going.</p>
-<h4>Final Tips:</h4>
-<ul>
-  <li>This method can help you grow your follower count and engagement without actively streaming in real-time.</li>
-  <li>Keep an eye on your TikTok account to make sure the stream remains live and that your links in the bio are working.</li>
-</ul>
-<h4>Download Pre-Recorded Files:</h4>
-<p>Links to download various pre-recorded stream files are provided below for you to use in your TikTok lives.</p>
-<a href="https://mega.nz/file/CA9ghQIS#90bzZZcgd7zr2Ac0EEetepz0e26WnFhJ34x3YPZuo58" target="_blank" class="download-button">Download Video Pack 1</a>`
-            },
+function logout() {
+  localStorage.removeItem('putinka_token');
+  window.location.href = API_BASE + '/auth/discord';
+}
 
-            {
-                icon: '🛡️',
-                title: 'Fake Bloxlink Verify Method',
-                content: `<h4>How Does It Work?</h4>
-<p>You create a new Discord server and set up a single "Verify" channel that looks completely legitimate. In that channel, you place a fake Bloxlink verification button/link. The link is designed to look very real and professional.</p>
-<p>When someone clicks "Verify", it redirects them to a fake login page (beaming link). Once they log in, you receive all their information — just like a normal beam.</p>
+function grantAccess(username) {
+  document.getElementById('auth-overlay').style.display = 'none';
+  document.getElementById('not-found-screen').style.display = 'none';
+  document.getElementById('user-bar').style.display = 'flex';
+  document.getElementById('user-name').textContent = username;
+  initApp();
+}
 
-<h4>How to Get Members?</h4>
-<p>There are many effective ways to grow your server quickly:</p>
-<ul>
-  <li>Post the server on X.com (Twitter) as a "Roblox Condo Server" or "18+ Roblox Server"</li>
-  <li>Upload videos on YouTube promoting "Free Roblox Exploits Server" or "Best Roblox Server 2026"</li>
-  <li>List the server on Disboard and bump it every 2 hours</li>
-  <li>Share it on TikTok, Reddit, or other Roblox-related communities</li>
-</ul>
+(function init() {
+  const params = new URLSearchParams(window.location.search);
+  const tokenFromUrl = params.get('token');
+  const errorFromUrl = params.get('error');
 
-<h4>How to Get People to Fall for It?</h4>
-<p>The most effective method is targeted DMs:</p>
-<ol>
-  <li>Go to TikTok and search for "avatar rating" videos.</li>
-  <li>Look through the comments for people with rich/limited avatars.</li>
-  <li>Send them a friendly DM like this:</li>
-</ol>
-<code>"Heyy! I'm currently hosting a Roblox avatar contest and your outfits look really cool! If you're interested, feel free to join my server: [invite]"</code>
-<p>You can also create your own avatar rating or avatar contest videos to attract even more people.</p>
+  if (tokenFromUrl) {
+    localStorage.setItem('putinka_token', tokenFromUrl);
+    window.history.replaceState({}, document.title, window.location.pathname);
+  }
 
-<h4>Important Tips for Success</h4>
-<ul>
-  <li><strong>Make the server look clean and professional:</strong> Use a nice server icon and name, create good channel styling, and hide all other channels — only show the "Verify" channel.</li>
-  <li>The fake Bloxlink message should look as authentic as possible.</li>
-  <li><strong>Important:</strong> The beaming URL must NOT contain any () parentheses (it breaks the disguise).</li>
-</ul>
+  if (errorFromUrl === 'unauthorized') {
+    showNotFound();
+    return;
+  }
 
-<p class='warning'>⚠️ <strong>Final Reminder:</strong> This is not a real verification system. It only looks real to trick people into clicking the beaming link. Once they log in on the fake page, you get their info. Nothing else happens on the Discord side. Don’t forget to hide all other channels so new members only see the verification message.</p>
+  if (errorFromUrl === 'server') {
+    document.getElementById('auth-status-text').textContent = 'Server error. Retrying...';
+    setTimeout(() => { window.location.href = API_BASE + '/auth/discord'; }, 2000);
+    return;
+  }
 
-<h4>Resources & Assets</h4>
-<p>Use these assets to set up your server and webhooks quickly:</p>
-<ul>
-  <li><a href="https://imgur.com/a/8cstzQ6" target="_blank">Profile Picture Asset</a></li>
-  <li><a href="https://discohook.app/?data=eyJ2ZXJzaW9uIjoiZDIiLCJtZXNzYWdlcyI6W3siX2lkIjoibTM3a3czbFhtayIsImRhdGEiOnsiY29udGVudCI6IlRvIHZlcmlmeSB3aXRoIEJsb3hsaW5rLCBjbGljayB0aGUgbGluayBiZWxvdy4iLCJlbWJlZHMiOlt7InRpdGxlIjoiQ2xpY2sgSGVyZSIsImNvbG9yIjoyMTA1Mzc2LCJhdXRob3IiOnsibmFtZSI6IlZlcmlmeSB3aXRoIEJsb3hsaW5rIn0sInVybCI6Imh0dHBzOi8vaXMuZ2QvUEpoVzhLIn1dLCJhdHRhY2htZW50cyI6W10sImNvbXBvbmVudHMiOltdfX1dfQ" target="_blank">Discohook Embed Data</a></li>
-</ul>
-<a href="https://www.youtube.com/watch?v=8eS598w-PWA" target="_blank" class="download-button">Watch Video Tutorial</a>`
-            },
-            
-            {
-                icon: '🌱',
-                title: 'Grow a Garden Method',
-                content: `<p><strong>Grow a Garden Method:</strong> Use this method to attract tons of new targets from popular "Grow a Garden" Discord servers!</p>
-<h4>Step 1: Join Discord Servers</h4>
-<ul>
-  <li><a href="https://discord.gg/growgardens" target="_blank">growgardens</a></li>
-  <li><a href="https://discord.gg/growagardenstore" target="_blank">growagardenstore</a></li>
-  <li><a href="https://discord.gg/gaghub" target="_blank">gaghub</a></li>
-  <li><a href="https://discord.gg/growagarden" target="_blank">growagarden</a></li>
-  <li><a href="https://discord.gg/growagardens" target="_blank">growagardens</a></li>
-  <li><a href="https://discord.gg/growanotifier" target="_blank">growanotifier</a></li>
-</ul>
-<h4>Step 2: Start Trading</h4>
-<ol>
-  <li>Post messages like: <code>trading racoon dm me</code> in each server.</li>
-  <li>When someone DMs you, chat and negotiate a trade that seems very favorable to them.</li>
-  <li>Once they're convinced, send them your fake private server link.</li>
-</ol>
-<p><strong>Tip:</strong> The more servers you join and the more active you are, the more targets you'll get!</p>`
-            },
-            {
-                icon: '🎥',
-                title: 'Condo Method V2',
-                content: `<p>This method leverages Xvideos to attract potential victims by uploading Roblox condo content and driving traffic to your Discord server.</p>
-<h4>Step 1: Create an Xvideos Account</h4>
-<p>Sign up for a free account on <a href='https://www.xvideos.com/' target='_blank'>Xvideos.com</a> using a disposable email if desired.</p>
-<h4>Step 2: Source Content</h4>
-<p>Download Roblox condo videos from Twitter, focusing on popular games like Da Hood. Look for content featuring popular avatars like "Ekitten" for better engagement.</p>
-<h4>Step 3: Upload to Xvideos</h4>
-<p>Upload the downloaded content to your Xvideos account. In the video title, include your Discord invite link to drive traffic to your server.</p>
-<h4>Step 4: Grow Your Discord Server</h4>
-<p>Create a channel called "#our-uploads" in your Discord server where you'll periodically post fake game links. This keeps users engaged and coming back.</p>
-<h4>Step 5: Scale Up</h4>
-<p>For best results, create multiple Xvideos accounts and upload different videos to each one. Cross-promote between your videos in the descriptions.</p>
-<p class='warning'>💡 <strong>Note:</strong> This method can generate 2,000-5,000+ views within 3 days, making it one of the most effective ways to gather potential targets with minimal effort.</p>
-<p class='warning'>⚠️ <strong>Warning:</strong> Be cautious about the content you upload and ensure it complies with platform guidelines to avoid account termination.</p>`
-            }
-        ];
+  const token = localStorage.getItem('putinka_token');
 
-        const allMethods = [
-            {
-                icon: '📺',
-                title: 'Youtube Method',
-                content: `<p>The Youtube Method allows you to auto-upload scam videos and maximize exposure with minimal effort. Works best with multiple accounts!</p>
-<ol>
-  <li>Create a video that tricks viewers into following your steps (e.g., for a fake giveaway or scam).</li>
-  <li>Upload the video to Youtube. Instead of uploading daily, use the <strong>Schedule</strong> option at the end of the upload process.</li>
-  <li>Schedule the same video to post every day for a month (or longer). You can set up 30+ scheduled posts in advance!</li>
-  <li>Let the automation work: your video will appear new every day, drawing in new viewers and potential targets.</li>
-</ol>
-<p><strong>Tip:</strong> The more accounts you use, the greater your reach. Some users have run this for a year and gotten many hits!</p>`
-            },
-            {
-                icon: '💬',
-                title: 'Discord Server Giveaway Method',
-                content: `<p>Use Discord servers and fake giveaways to attract and beam new victims.</p>
-<ol>
-  <li>Pick a popular game (e.g., Adopt Me) or just use Robux as the lure.</li>
-  <li>Create a Discord server for your fake giveaway (e.g., "Adopt Me Mega Giveaway").</li>
-  <li>Join as many related servers as possible and advertise your giveaway, inviting people to your server.</li>
-  <li>Set up a channel called "enter the giveaway" (optionally add a "proofs" channel with fake screenshots).</li>
-  <li>Instruct users to join your giveaway by following your link at the end of your message.</li>
-  <li>Disable sending messages/attachments for everyone except yourself to prevent spam or exposure.</li>
-</ol>
-<p><strong>Note:</strong> The more servers you advertise in, the more people will join your server and follow your phishing link.</p>`
-            },
-            {
-                icon: '🐾',
-                title: 'Adopt Me New Method',
-                content: `<ol>
-  <li>Find and join as many AdoptMe trading servers on Discord as possible (use <a href="https://discadia.com/" target="_blank">Discadia</a> or <a href="https://disboard.org/" target="_blank">Disboard</a>).</li>
-  <li>Create a convincing message (e.g., "Giving away MFR Legendaries because I'm quitting AdoptMe! DM me fast!"). Add details to appear as a pro player.</li>
-  <li>Paste your message everywhere in those servers and wait for DMs.</li>
-  <li>Be patient and friendly in DMs. Convince the victim you're legit and doing a real giveaway.</li>
-  <li>Send them your fake private server or profile phishing link when they're ready.</li>
-</ol>
-<p><strong>Tip:</strong> To attract richer players, offer trades like "Trading neon giraffe for a crow" (swap valuable for slightly less valuable to bait wealthier users).</p>`
-            },
-            {
-                icon: '👤',
-                title: 'Account Beam Method',
-                content: `<ol>
-  <li>You must be on an account you've already beamed.</li>
-  <li>If you see a rich friend in-game, join them or message people from their chat.</li>
-  <li>Tell them to add your new Discord (use creative ways to write "Discord" without the tag, e.g., ÐČ, Ðǐșćöřð, ćöřð, Ðïșćô).</li>
-  <li>Once they add you, say you wanted them to join your giveaway (find out what games they play and tailor your message).</li>
-  <li>Tell them you have a group of people already, then send the phishing link.</li>
-</ol>`
-            },
-            {
-                icon: '🤝',
-                title: 'Partner Method',
-                content: `<ol>
-  <li>Find servers to spam your message: <code>Hosting robux giveaway 1K robux msg me to join</code></li>
-  <li>When someone messages you, add your partner and the victim to a group chat.</li>
-  <li>Tell both you can't add them directly due to parental controls, then send your phishing link.</li>
-</ol>`
-            },
-            {
-                icon: '💸',
-                title: 'Da Hood Method v2 (Rich Autofarm)',
-                content: `<ol>
-  <li>Go into Da Hood and approach rich players (headless, korblox, limiteds, etc.).</li>
-  <li>Tell them you're dropping DHC on your alt for a YouTube video and need people.</li>
-  <li>Ask for their Discord and get them to add you.</li>
-  <li>Send them your VIP server phishing link (from a phishing generator site).</li>
-  <li>Repeat for a few hours to farm lots of beams. Example script:</li>
-</ol>
-<pre>I'm dropping 7 mil dhc for my yt
-And I need people for it
-And yes I'll drop you 7 mil
-But it's for free you down?
-Ok You got dis/co?
+  if (!token) {
+    document.getElementById('auth-status-text').textContent = 'Redirecting to Discord...';
+    setTimeout(() => { window.location.href = API_BASE + '/auth/discord'; }, 800);
+    return;
+  }
 
-Ok I dropped 7 mil
-sends pic
-Ok give me 5 mins and I'll be done
-wait 5 mins
+  document.getElementById('auth-status-text').textContent = 'Verifying session...';
 
-Ok I'm done
-You can join whenever
-Sends phishing</pre>`
-            },
-            {
-                icon: '🏠',
-                title: 'Condo Method',
-                content: `<h4>Requirements:</h4>
-<ul>
-  <li>A Brain</li>
-  <li>Patience</li>
-</ul>
-<h4>How to do this:</h4>
-<ol>
-  <li>Make a Discord server.</li>
-  <li>Make a YouTube channel (English speaking).</li>
-  <li>Post a Roblox condo video on the YouTube channel and link the Discord server in the description (doesn't have to be your condo, can be any).</li>
-  <li>Wait until you have 100 members in the server. Ensure nobody can talk in the server and DO NOT post anything until you have 100 members.</li>
-  <li>Make a channel called "upload" in the server, then put a beam link up for 3-hour intervals, and ping @everyone @here every 30 mins.</li>
-</ol>
-<h4>If you want more members/targets:</h4>
-<p>Post more videos - 1 time every week between each video.</p>`
-            },
-            {
-                icon: '💬',
-                title: 'Reply to TikTok Comment Method',
-                content: `<p>Use TikTok comments to drive traffic to your link by replying to many comments with a catchy sentence that points users to your bio.</p>
-<h4>Step 1: Create a Link</h4>
-<p>First of all, create a link. If you don't know how to create one, check the <a href="hyperlink.html">Tutorials</a> (Hyperlink page).</p>
-<h4>Step 2: Add Link to TikTok Bio</h4>
-<p>Add your link in your TikTok bio. Tutorial video: <a href="https://youtu.be/tueangwvT_w?si=-oYgQHEBQ6t-GaB-" target="_blank">How to add link in TikTok bio</a>.</p>
-<h4>Step 3: Reply to Comments</h4>
-<p>Reply to a lot of comments with something like:</p>
-<pre>IF YOU SEE THAT SENTENCE YOU CAN GET FREE PERM/GAME PASSES WITH THE LINK IN MY TIKTOK BIO</pre>
-<p>The exact sentence depends on the game you're targeting — adapt it (e.g. free perm, game passes, robux, etc.).</p>
-<h4>Tips</h4>
-<ul>
-  <li><strong>Link not available in your country?</strong> In some countries you can't add a clickable link in bio — try using a VPN.</li>
-  <li><strong>Account:</strong> Create your TikTok account with a temp mail, e.g. <a href="https://temp-mail.org/uk" target="_blank">temp-mail.org</a>.</li>
-  <li><strong>Alternative to direct link:</strong> Instead of putting your link directly in the bio, you can use a link hub like <a href="https://linktr.ee/" target="_blank">Linktree</a>. Example: <a href="https://linktr.ee/512f6" target="_blank">linktr.ee/512f6</a>. Create one at <a href="https://linktr.ee/" target="_blank">linktr.ee</a> and put that single link in your TikTok bio.</li>
-</ul>`
-            }
-        ];
+  fetch(API_BASE + '/api/me', {
+    headers: { 'Authorization': 'Bearer ' + token }
+  })
+  .then(r => {
+    if (!r.ok) throw new Error('invalid');
+    return r.json();
+  })
+  .then(user => {
+    grantAccess(user.username);
+  })
+  .catch(() => {
+    localStorage.removeItem('putinka_token');
+    document.getElementById('auth-status-text').textContent = 'Redirecting to Discord...';
+    setTimeout(() => { window.location.href = API_BASE + '/auth/discord'; }, 800);
+  });
+})();
 
-        const tips = [
-            {
-                icon: '🔄',
-                title: 'Reverse DM',
-                content: `<p>Always explain that you cannot add or be added by others because of parental controls, which is why you send a link.</p>
-<h4>Example (PS link):</h4>
-<pre>I want to add you, but my parental controls prevent me from interacting with others or being interacted with, so I can't add anyone or be added.
-I will provide the link to my private server here.</pre>
-<p><em>(fake PS link)</em></p>
-<h4>Example (user link):</h4>
-<pre>Sure, my dad has set up parental controls so I can't add friends or people, but feel free to join me here.</pre>
-<p><em>(fake user link)</em></p>`
-            }
-        ];
+function initApp() {
+  (function() {
+    const canvas = document.getElementById('particles-canvas');
+    const ctx = canvas.getContext('2d');
+    let width, height, particles = [];
+    const PARTICLE_COUNT = 80, CONNECTION_DIST = 120, MOUSE_DIST = 150;
+    let mouse = { x: null, y: null };
 
-        function renderMethods(list, containerId, isFeatured = false) {
-            const container = document.getElementById(containerId);
-            list.forEach((m, i) => {
-                const card = document.createElement('div');
-                card.className = `method-card${isFeatured ? ' featured' : ''}`;
-                card.innerHTML = `
-                    <div class="method-header">
-                        <div class="method-title-wrapper">
-                            <span class="method-icon">${m.icon}</span>
-                            <span class="method-title">${m.title}</span>
-                        </div>
-                        <div class="method-chevron">
-                            <svg viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg>
-                        </div>
-                    </div>
-                    <div class="method-content">
-                        <div class="method-content-inner">${m.content}</div>
-                    </div>
-                `;
-                
-                card.addEventListener('click', (e) => {
-                    if (e.target.closest('a') || e.target.closest('code')) return;
-                    
-                    const wasActive = card.classList.contains('active');
-                    document.querySelectorAll('.method-card.active').forEach(c => c.classList.remove('active'));
-                    
-                    if (!wasActive) {
-                        card.classList.add('active');
-                    }
-                });
-                
-                container.appendChild(card);
-            });
+    function resize() { width = canvas.width = window.innerWidth; height = canvas.height = window.innerHeight; }
+
+    function createParticles() {
+      particles = [];
+      for (let i = 0; i < PARTICLE_COUNT; i++) {
+        particles.push({ x: Math.random()*width, y: Math.random()*height, vx: (Math.random()-0.5)*0.4, vy: (Math.random()-0.5)*0.4, size: Math.random()*2+0.5, alpha: Math.random()*0.5+0.2 });
+      }
+    }
+
+    function draw() {
+      ctx.clearRect(0, 0, width, height);
+      for (let i = 0; i < particles.length; i++) {
+        let p = particles[i];
+        p.x += p.vx; p.y += p.vy;
+        if (p.x < 0 || p.x > width) p.vx *= -1;
+        if (p.y < 0 || p.y > height) p.vy *= -1;
+        ctx.beginPath(); ctx.arc(p.x, p.y, p.size, 0, Math.PI*2);
+        ctx.fillStyle = 'rgba(255,45,85,' + p.alpha + ')'; ctx.fill();
+        for (let j = i+1; j < particles.length; j++) {
+          let p2 = particles[j], dx = p.x-p2.x, dy = p.y-p2.y, dist = Math.sqrt(dx*dx+dy*dy);
+          if (dist < CONNECTION_DIST) {
+            ctx.beginPath(); ctx.moveTo(p.x,p.y); ctx.lineTo(p2.x,p2.y);
+            ctx.strokeStyle = 'rgba(255,45,85,' + (1-dist/CONNECTION_DIST)*0.12 + ')';
+            ctx.lineWidth = 0.8; ctx.stroke();
+          }
         }
+        if (mouse.x !== null) {
+          let dx = p.x-mouse.x, dy = p.y-mouse.y, dist = Math.sqrt(dx*dx+dy*dy);
+          if (dist < MOUSE_DIST) {
+            ctx.beginPath(); ctx.moveTo(p.x,p.y); ctx.lineTo(mouse.x,mouse.y);
+            ctx.strokeStyle = 'rgba(255,45,85,' + (1-dist/MOUSE_DIST)*0.2 + ')';
+            ctx.lineWidth = 0.6; ctx.stroke();
+          }
+        }
+      }
+      requestAnimationFrame(draw);
+    }
 
-        renderMethods(featuredMethods, 'featuredMethods', true);
-        renderMethods(allMethods, 'methodsList', false);
-        renderMethods(tips, 'tipsList', false);
+    window.addEventListener('resize', () => { resize(); createParticles(); });
+    window.addEventListener('mousemove', e => { mouse.x = e.clientX; mouse.y = e.clientY; });
+    window.addEventListener('mouseleave', () => { mouse.x = null; mouse.y = null; });
+    resize(); createParticles(); draw();
+  })();
 
-        const searchInput = document.getElementById('methodSearch');
-        const noResults = document.getElementById('noResults');
+  const sidebar = document.getElementById('sidebar');
+  const overlay = document.getElementById('overlay');
+  const menuToggle = document.getElementById('menuToggle');
 
-        searchInput.addEventListener('input', function() {
-            const query = this.value.trim().toLowerCase();
-            const allCards = document.querySelectorAll('.method-card');
-            let hasResults = false;
+  menuToggle.addEventListener('click', () => { sidebar.classList.toggle('open'); overlay.classList.toggle('active'); });
+  overlay.addEventListener('click', () => { sidebar.classList.remove('open'); overlay.classList.remove('active'); });
 
-            allCards.forEach(card => {
-                const title = card.querySelector('.method-title').textContent.toLowerCase();
-                const content = card.querySelector('.method-content-inner').textContent.toLowerCase();
-                const matches = title.includes(query) || content.includes(query);
-                
-                if (matches) {
-                    card.classList.remove('hide');
-                    hasResults = true;
-                } else {
-                    card.classList.add('hide');
-                }
-            });
+  document.querySelectorAll('.nav-item').forEach(item => {
+    item.addEventListener('click', e => {
+      e.preventDefault();
+      document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active'));
+      item.classList.add('active');
+      const target = document.getElementById(item.getAttribute('data-target'));
+      if (target) window.scrollTo({ top: target.getBoundingClientRect().top + window.pageYOffset - 80, behavior: 'smooth' });
+      if (window.innerWidth <= 1024) { sidebar.classList.remove('open'); overlay.classList.remove('active'); }
+    });
+  });
 
-            noResults.classList.toggle('show', !hasResults && query.length > 0);
+  document.getElementById('searchInput').addEventListener('input', e => {
+    const q = e.target.value.toLowerCase();
+    document.querySelectorAll('.method-card').forEach(card => {
+      const match = (card.getAttribute('data-search')||'').includes(q) || card.querySelector('.method-name').innerText.toLowerCase().includes(q);
+      card.style.display = (q === '' || match) ? '' : 'none';
+    });
+    document.querySelectorAll('.nav-item').forEach(item => {
+      const t = document.getElementById(item.getAttribute('data-target'));
+      if (t) item.style.display = (t.style.display === 'none') ? 'none' : '';
+    });
+  });
+
+  window.addEventListener('scroll', () => {
+    const pos = window.pageYOffset + 100;
+    document.querySelectorAll('.method-card').forEach(card => {
+      if (pos >= card.offsetTop && pos < card.offsetTop + card.offsetHeight) {
+        document.querySelectorAll('.nav-item').forEach(item => {
+          item.classList.toggle('active', item.getAttribute('data-target') === card.id);
         });
+      }
+    });
+  });
+}
 
-        document.addEventListener('mousemove', (e) => {
-            const orbs = document.querySelectorAll('.ambient-orb');
-            const x = (e.clientX / window.innerWidth - 0.5) * 2;
-            const y = (e.clientY / window.innerHeight - 0.5) * 2;
-            
-            orbs.forEach((orb, index) => {
-                const speed = (index + 1) * 20;
-                orb.style.transform = `translate(${x * speed}px, ${y * speed}px)`;
-            });
-        });
-    </script>
+window.toggleMethod = function(header) {
+  const card = header.closest('.method-card');
+  const body = card.querySelector('.method-body');
+  const toggle = header.querySelector('.method-toggle');
+  const isOpen = body.classList.contains('open');
+  document.querySelectorAll('.method-body.open').forEach(b => {
+    if (b !== body) { b.classList.remove('open'); b.closest('.method-card').querySelector('.method-toggle').classList.remove('active'); }
+  });
+  if (isOpen) { body.classList.remove('open'); toggle.classList.remove('active'); }
+  else { body.classList.add('open'); toggle.classList.add('active'); }
+};
+</script>
 </body>
 </html>
