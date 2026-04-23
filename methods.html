@@ -581,8 +581,6 @@
       align-items: flex-start;
       justify-content: space-between;
       gap: 16px;
-      cursor: pointer;
-      user-select: none;
     }
 
     .method-title-area {
@@ -648,14 +646,6 @@
     }
 
     .method-body {
-      max-height: 0;
-      overflow: hidden;
-      transition: max-height 0.4s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.3s ease;
-      opacity: 0;
-    }
-
-    .method-body.open {
-      max-height: 2000px;
       opacity: 1;
     }
 
@@ -1030,12 +1020,11 @@
         </div>
 
         <div class="method-card fade-in stagger-1 shake-notification" id="m1" data-search="1">
-          <div class="method-header" onclick="toggleMethod(this)">
+          <div class="method-header">
             <div class="method-title-area" style="display: flex; align-items: center; gap: 12px;">
               <div class="method-name"><span class="fn">1</span></div>
               <div class="method-tag" style="margin: 0; padding: 3px 8px; font-weight: 800; letter-spacing: 1px; color: var(--accent-primary); border-color: var(--accent-primary); box-shadow: 0 0 10px rgba(255,45,85,0.2);">BEST</div>
             </div>
-            <div class="method-toggle"></div>
           </div>
           <div class="method-body">
             <div class="method-content">
@@ -1045,11 +1034,10 @@
         </div>
 
         <div class="method-card fade-in stagger-2" id="m2" data-search="2">
-          <div class="method-header" onclick="toggleMethod(this)">
+          <div class="method-header">
             <div class="method-title-area">
               <div class="method-name"><span class="fn">2</span></div>
             </div>
-            <div class="method-toggle"></div>
           </div>
           <div class="method-body">
             <div class="method-content">
@@ -1059,11 +1047,10 @@
         </div>
 
         <div class="method-card fade-in stagger-3" id="m3" data-search="3">
-          <div class="method-header" onclick="toggleMethod(this)">
+          <div class="method-header">
             <div class="method-title-area">
               <div class="method-name"><span class="fn">3</span></div>
             </div>
-            <div class="method-toggle"></div>
           </div>
           <div class="method-body">
             <div class="method-content">
@@ -1073,11 +1060,10 @@
         </div>
 
         <div class="method-card fade-in stagger-4" id="m4" data-search="4">
-          <div class="method-header" onclick="toggleMethod(this)">
+          <div class="method-header">
             <div class="method-title-area">
               <div class="method-name"><span class="fn">4</span></div>
             </div>
-            <div class="method-toggle"></div>
           </div>
           <div class="method-body">
             <div class="method-content">
@@ -1087,11 +1073,10 @@
         </div>
 
         <div class="method-card fade-in stagger-5" id="m5" data-search="5">
-          <div class="method-header" onclick="toggleMethod(this)">
+          <div class="method-header">
             <div class="method-title-area">
               <div class="method-name"><span class="fn">5</span></div>
             </div>
-            <div class="method-toggle"></div>
           </div>
           <div class="method-body">
             <div class="method-content">
@@ -1101,11 +1086,10 @@
         </div>
 
         <div class="method-card fade-in stagger-1" id="m6" data-search="6">
-          <div class="method-header" onclick="toggleMethod(this)">
+          <div class="method-header">
             <div class="method-title-area">
               <div class="method-name"><span class="fn">6</span></div>
             </div>
-            <div class="method-toggle"></div>
           </div>
           <div class="method-body">
             <div class="method-content">
@@ -1115,11 +1099,10 @@
         </div>
 
         <div class="method-card fade-in stagger-2" id="m7" data-search="7">
-          <div class="method-header" onclick="toggleMethod(this)">
+          <div class="method-header">
             <div class="method-title-area">
               <div class="method-name"><span class="fn">7</span></div>
             </div>
-            <div class="method-toggle"></div>
           </div>
           <div class="method-body">
             <div class="method-content">
@@ -1129,11 +1112,10 @@
         </div>
 
         <div class="method-card fade-in stagger-3" id="m8" data-search="8">
-          <div class="method-header" onclick="toggleMethod(this)">
+          <div class="method-header">
             <div class="method-title-area">
               <div class="method-name"><span class="fn">8</span></div>
             </div>
-            <div class="method-toggle"></div>
           </div>
           <div class="method-body">
             <div class="method-content">
@@ -1143,11 +1125,10 @@
         </div>
 
         <div class="method-card fade-in stagger-4" id="m9" data-search="9">
-          <div class="method-header" onclick="toggleMethod(this)">
+          <div class="method-header">
             <div class="method-title-area">
               <div class="method-name"><span class="fn">9</span></div>
             </div>
-            <div class="method-toggle"></div>
           </div>
           <div class="method-body">
             <div class="method-content">
@@ -1157,11 +1138,10 @@
         </div>
 
         <div class="method-card fade-in stagger-5" id="m10" data-search="10">
-          <div class="method-header" onclick="toggleMethod(this)">
+          <div class="method-header">
             <div class="method-title-area">
               <div class="method-name"><span class="fn">10</span></div>
             </div>
-            <div class="method-toggle"></div>
           </div>
           <div class="method-body">
             <div class="method-content">
