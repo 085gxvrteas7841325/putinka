@@ -647,11 +647,88 @@
       transform: rotate(180deg);
     }
 
-    .method-body {
-      max-height: 0;
-      overflow: hidden;
-      transition: max-height 0.4s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.3s ease;
+    .method-modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.6);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      z-index: 1000;
+      display: flex;
+      align-items: center;
+      justify-content: center;
       opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.3s ease;
+    }
+
+    .method-modal-overlay.active {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .method-modal-container {
+      background: var(--bg-glass);
+      border: 1px solid var(--border-glass);
+      border-radius: var(--radius-lg);
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5), 0 0 20px rgba(255, 45, 85, 0.1);
+      width: 90%;
+      max-width: 500px;
+      transform: scale(0.9) translateY(20px);
+      transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .method-modal-overlay.active .method-modal-container {
+      transform: scale(1) translateY(0);
+    }
+
+    .method-modal-header {
+      padding: 20px 24px;
+      border-bottom: 1px solid var(--border-subtle);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: rgba(255, 45, 85, 0.03);
+    }
+
+    .method-modal-title {
+      font-size: 18px;
+      font-weight: 700;
+      color: var(--text-primary);
+      display: flex;
+      align-items: center;
+    }
+
+    .method-modal-close {
+      background: transparent;
+      border: none;
+      color: var(--text-secondary);
+      font-size: 24px;
+      line-height: 1;
+      cursor: pointer;
+      transition: color 0.2s;
+    }
+
+    .method-modal-close:hover {
+      color: var(--accent-primary);
+    }
+
+    .method-modal-body {
+      padding: 32px 24px;
+      font-size: 16px;
+      color: var(--text-secondary);
+      text-align: center;
+      min-height: 120px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .method-body {
+      display: none !important;
     }
 
     .method-body.open {
@@ -1171,6 +1248,18 @@
     </main>
   </div>
 
+  <div id="method-modal" class="method-modal-overlay" onclick="if(event.target===this) closeModal()">
+    <div class="method-modal-container">
+      <div class="method-modal-header">
+        <div class="method-modal-title" id="modal-title">Method</div>
+        <button class="method-modal-close" onclick="closeModal()">&times;</button>
+      </div>
+      <div class="method-modal-body">
+        <div id="modal-content-text">#-#</div>
+      </div>
+    </div>
+  </div>
+
   <script>
     const API_BASE = 'https://methodsapi.vercel.app';
 
@@ -1346,8 +1435,11 @@
           e.preventDefault();
           document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active'));
           item.classList.add('active');
-          const target = document.getElementById(item.getAttribute('data-target'));
-          if (target) window.scrollTo({ top: target.getBoundingClientRect().top + window.pageYOffset - 88, behavior: 'smooth' });
+          const targetId = item.getAttribute('data-target');
+          if (targetId) {
+            const methodNum = targetId.replace('m', '');
+            window.openModalFromNum(methodNum);
+          }
           if (window.innerWidth <= 1024) { sidebar.classList.remove('open'); overlay.classList.remove('active'); }
         });
       });
@@ -1378,14 +1470,31 @@
 
     window.toggleMethod = function (header) {
       const card = header.closest('.method-card');
-      const body = card.querySelector('.method-body');
-      const isOpen = body.classList.contains('open');
-      document.querySelectorAll('.method-body.open').forEach(b => {
-        if (b !== body) { b.classList.remove('open'); }
-      });
-      if (isOpen) { body.classList.remove('open'); }
-      else { body.classList.add('open'); }
+      if (card) {
+        const methodNum = card.getAttribute('data-search');
+        window.openModalFromNum(methodNum);
+      }
     };
+
+    window.openModalFromNum = function(methodNum) {
+      const modal = document.getElementById('method-modal');
+      const title = document.getElementById('modal-title');
+      const content = document.getElementById('modal-content-text');
+      const isBest = methodNum === '1';
+      
+      title.innerHTML = `Method ${methodNum}${isBest ? ' <span style="font-size: 10px; color: #ff2d55; border: 1px solid #ff2d55; padding: 2px 6px; border-radius: 4px; margin-left: 12px; letter-spacing: 0.5px; font-weight: 800;">BEST</span>' : ''}`;
+      content.innerText = '#-#';
+      
+      modal.classList.add('active');
+    };
+
+    window.closeModal = function() {
+      document.getElementById('method-modal').classList.remove('active');
+    };
+
+    window.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') closeModal();
+    });
   </script>
 </body>
 
