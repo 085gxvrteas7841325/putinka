@@ -1425,6 +1425,17 @@
         });
     })();
 
+    function throttle(fn, limit) {
+      let inThrottle;
+      return function(...args) {
+        if (!inThrottle) {
+          fn.apply(this, args);
+          inThrottle = true;
+          setTimeout(() => inThrottle = false, limit);
+        }
+      };
+    }
+
     function initApp() {
       (function () {
         const canvas = document.getElementById('particles-canvas');
@@ -1497,17 +1508,6 @@
           if (window.innerWidth <= 1024) { sidebar.classList.remove('open'); overlay.classList.remove('active'); }
         });
       });
-
-      function throttle(fn, limit) {
-        let inThrottle;
-        return function(...args) {
-          if (!inThrottle) {
-            fn.apply(this, args);
-            inThrottle = true;
-            setTimeout(() => inThrottle = false, limit);
-          }
-        };
-      }
 
       let searchTimeout;
       document.getElementById('searchInput').addEventListener('input', e => {
@@ -1631,11 +1631,11 @@
       const isBest = methodNum === '1';
       
       if (isBest) {
-        title.innerHTML = \`Condo Method BOT <span style="font-size: 10px; color: #ff2d55; border: 1px solid #ff2d55; padding: 2px 6px; border-radius: 4px; margin-left: 12px; letter-spacing: 0.5px; font-weight: 800;">BEST</span>\`;
+        title.innerHTML = 'Condo Method BOT <span style="font-size: 10px; color: #ff2d55; border: 1px solid #ff2d55; padding: 2px 6px; border-radius: 4px; margin-left: 12px; letter-spacing: 0.5px; font-weight: 800;">BEST</span>';
         content.innerHTML = CONDO_METHOD_HTML;
         content.style.textAlign = 'left';
       } else {
-        title.innerHTML = \`Method \${methodNum}\`;
+        title.innerHTML = 'Method ' + methodNum;
         content.innerHTML = '#-#';
         content.style.textAlign = 'center';
       }
