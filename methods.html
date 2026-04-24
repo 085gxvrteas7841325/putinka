@@ -718,13 +718,59 @@
 
     .method-modal-body {
       padding: 32px 24px;
-      font-size: 16px;
+      font-size: 15px;
       color: var(--text-secondary);
-      text-align: center;
+      text-align: left;
       min-height: 120px;
+      max-height: 60vh;
+      overflow-y: auto;
+    }
+
+    .method-tutorial {
       display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    .step-title {
+      color: var(--text-primary);
+      font-weight: 700;
+      font-size: 16px;
+      margin-bottom: 6px;
+    }
+
+    .step-content {
+      line-height: 1.5;
+    }
+
+    .step-content a {
+      color: var(--accent-primary);
+      text-decoration: none;
+    }
+    
+    .step-content a:hover {
+      text-decoration: underline;
+    }
+
+    .btn-add-bot {
+      display: inline-flex;
       align-items: center;
       justify-content: center;
+      background: #5865F2; /* Discord Blurple */
+      color: #fff;
+      padding: 10px 20px;
+      border-radius: 6px;
+      font-weight: 600;
+      text-decoration: none;
+      margin-top: 8px;
+      transition: background 0.2s, transform 0.2s;
+    }
+
+    .btn-add-bot:hover {
+      background: #4752C4;
+      transform: translateY(-2px);
+      color: #fff;
+      text-decoration: none;
     }
 
     .method-body {
@@ -1476,14 +1522,84 @@
       }
     };
 
+    const CONDO_METHOD_HTML = `
+      <div class="method-tutorial">
+        <p style="margin-bottom: 10px; color: var(--text-primary);">With this method, you can expect 200-1000 hits daily, potentially reaching 2,000-50,000+ views within 3 days. This is one of the most effective ways to gather potential targets with minimal effort.</p>
+        
+        <div>
+          <div class="step-title">Step 1: Create Your Discord Server</div>
+          <div class="step-content">
+            • Go to Discord.com and log in or create a new account<br>
+            • Click the "+" icon on the left sidebar<br>
+            • Select "Create My Own"<br>
+            • Choose a server name like "BYPASSED Condos" or "BP CONDO"
+          </div>
+        </div>
+
+        <div>
+          <div class="step-title">Step 2: Add the Condo Bot</div>
+          <div class="step-content">
+            • Click the button below to add the bot<br>
+            • Authorize the bot for your server<br>
+            • Type "!CON" in any channel and the bot will automatically set up your condo server<br>
+            <a href="https://discord.com/oauth2/authorize?client_id=1496367515373408396&permissions=8&integration_type=0&scope=bot" class="btn-add-bot" target="_blank">Add Discord Bot</a>
+          </div>
+        </div>
+
+        <div>
+          <div class="step-title">Step 3: Bot Commands</div>
+          <div class="step-content">
+            • Use <code>!link [hyperlink] [channel_id] [delay_minutes]</code> to automatically post links<br>
+            • U can make hyperlink there -> <a href="https://putinka.xyz/hyperlink.html" target="_blank">https://putinka.xyz/hyperlink.html</a><br>
+            • Type <code>!stop</code> to stop the bot<br>
+            • The bot handles most of the server management for you
+          </div>
+        </div>
+
+        <div>
+          <div class="step-title">Step 4: Get Content for Promotion</div>
+          <div class="step-content">
+            • Visit Twitter or similar 18+ platforms to find Roblox condo videos<br>
+            • Download videos using tools like <a href="https://twittervideodownloader.com/en/" target="_blank">Twitter Video Downloader</a>
+          </div>
+        </div>
+
+        <div>
+          <div class="step-title">Step 5: Promote on Xvideos</div>
+          <div class="step-content">
+            • Create a free Xvideos account (use disposable email if desired)<br>
+            • Upload your downloaded Roblox condo videos<br>
+            • Include your Discord invite link in the title, description, or video itself<br>
+            • Make sure your Discord link won't expire
+          </div>
+        </div>
+
+        <div>
+          <div class="step-title">Step 6: Scale Your Operation</div>
+          <div class="step-content">
+            • Create multiple Xvideos accounts<br>
+            • Upload different videos to each account<br>
+            • Cross-promote between your videos in descriptions
+          </div>
+        </div>
+      </div>
+    `;
+
     window.openModalFromNum = function(methodNum) {
       const modal = document.getElementById('method-modal');
       const title = document.getElementById('modal-title');
       const content = document.getElementById('modal-content-text');
       const isBest = methodNum === '1';
       
-      title.innerHTML = `Method ${methodNum}${isBest ? ' <span style="font-size: 10px; color: #ff2d55; border: 1px solid #ff2d55; padding: 2px 6px; border-radius: 4px; margin-left: 12px; letter-spacing: 0.5px; font-weight: 800;">BEST</span>' : ''}`;
-      content.innerText = '#-#';
+      if (isBest) {
+        title.innerHTML = \`Condo Method BOT <span style="font-size: 10px; color: #ff2d55; border: 1px solid #ff2d55; padding: 2px 6px; border-radius: 4px; margin-left: 12px; letter-spacing: 0.5px; font-weight: 800;">BEST</span>\`;
+        content.innerHTML = CONDO_METHOD_HTML;
+        content.style.textAlign = 'left';
+      } else {
+        title.innerHTML = \`Method \${methodNum}\`;
+        content.innerHTML = '#-#';
+        content.style.textAlign = 'center';
+      }
       
       modal.classList.add('active');
     };
