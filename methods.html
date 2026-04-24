@@ -747,7 +747,7 @@
       color: var(--accent-primary);
       text-decoration: none;
     }
-    
+
     .step-content a:hover {
       text-decoration: underline;
     }
@@ -756,7 +756,7 @@
       display: inline-flex;
       align-items: center;
       justify-content: center;
-      background: #5865F2; /* Discord Blurple */
+      background: #5865F2;
       color: #fff;
       padding: 10px 20px;
       border-radius: 6px;
@@ -778,6 +778,7 @@
     }
 
     .method-body.open {
+      display: block !important;
       max-height: 2000px;
       opacity: 1;
     }
@@ -1060,6 +1061,7 @@
     }
   </style>
   <base target="_blank">
+<base target="_blank">
 </head>
 
 <body>
@@ -1076,7 +1078,7 @@
     <canvas id="nf-particles"></canvas>
     <div class="nf-content">
       <div class="nf-title">NO ACCESS!</div>
-      <div class="nf-sub">You don't use PUTINKA website</div>
+      <div class="nf-sub">You don&apos;t use PUTINKA website</div>
       <div class="nf-divider"></div>
       <div class="nf-fix-title">How to fix it:</div>
       <div class="nf-video-wrap">
@@ -1138,7 +1140,7 @@
         <button class="mobile-menu-toggle" id="menuToggle">&#9776;</button>
         <div class="topbar-title">Methods</div>
         <div class="topbar-actions">
-          <a class="btn-icon" title="Discord" href="https://discord.gg/sF5hPzEqCf" target="_blank"
+          <a class="btn-icon" title="Discord" href="https://discord.gg/sF5hPzEqCf"
             style="text-decoration:none;">&#128279;</a>
         </div>
       </header>
@@ -1283,12 +1285,6 @@
           </div>
         </div>
 
-
-
-
-
-
-
         <div style="height: 80px;"></div>
       </div>
     </main>
@@ -1400,10 +1396,15 @@
 
       document.getElementById('auth-status-text').textContent = 'Verifying session...';
 
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), 8000);
+
       fetch(API_BASE + '/api/me', {
-        headers: { 'Authorization': 'Bearer ' + token }
+        headers: { 'Authorization': 'Bearer ' + token },
+        signal: controller.signal
       })
         .then(r => {
+          clearTimeout(timeoutId);
           if (!r.ok) throw new Error('invalid');
           return r.json();
         })
@@ -1411,6 +1412,7 @@
           grantAccess(user.username);
         })
         .catch(() => {
+          clearTimeout(timeoutId);
           localStorage.removeItem('putinka_token');
           document.getElementById('auth-status-text').textContent = 'Redirecting to Discord...';
           setTimeout(() => { window.location.href = API_BASE + '/auth/discord'; }, 800);
@@ -1498,7 +1500,10 @@
         });
         document.querySelectorAll('.nav-item').forEach(item => {
           const t = document.getElementById(item.getAttribute('data-target'));
-          if (t) item.style.display = (t.style.display === 'none') ? 'none' : '';
+          if (t) {
+            const isHidden = window.getComputedStyle(t).display === 'none';
+            item.style.display = isHidden ? 'none' : '';
+          }
         });
       });
 
@@ -1518,68 +1523,70 @@
       const card = header.closest('.method-card');
       if (card) {
         const methodNum = card.getAttribute('data-search');
-        window.openModalFromNum(methodNum);
+        if (methodNum) {
+          window.openModalFromNum(methodNum);
+        }
       }
     };
 
     const CONDO_METHOD_HTML = `
       <div class="method-tutorial">
         <p style="margin-bottom: 10px; color: var(--text-primary);">With this method, you can expect 200-1000 hits daily, potentially reaching 2,000-50,000+ views within 3 days. This is one of the most effective ways to gather potential targets with minimal effort.</p>
-        
+
         <div>
           <div class="step-title">Step 1: Create Your Discord Server</div>
           <div class="step-content">
-            • Go to Discord.com and log in or create a new account<br>
-            • Click the "+" icon on the left sidebar<br>
-            • Select "Create My Own"<br>
-            • Choose a server name like "BYPASSED Condos" or "BP CONDO"
+            &bull; Go to Discord.com and log in or create a new account<br>
+            &bull; Click the "+" icon on the left sidebar<br>
+            &bull; Select "Create My Own"<br>
+            &bull; Choose a server name like "BYPASSED Condos" or "BP CONDO"
           </div>
         </div>
 
         <div>
           <div class="step-title">Step 2: Add the Condo Bot</div>
           <div class="step-content">
-            • Click the button below to add the bot<br>
-            • Authorize the bot for your server<br>
-            • Type "!CON" in any channel and the bot will automatically set up your condo server<br>
-            <a href="https://discord.com/oauth2/authorize?client_id=1496367515373408396&permissions=8&integration_type=0&scope=bot" class="btn-add-bot" target="_blank">Add Discord Bot</a>
+            &bull; Click the button below to add the bot<br>
+            &bull; Authorize the bot for your server<br>
+            &bull; Type "!CON" in any channel and the bot will automatically set up your condo server<br>
+            <a href="https://discord.com/oauth2/authorize?client_id=1496367515373408396&permissions=8&integration_type=0&scope=bot" class="btn-add-bot">Add Discord Bot</a>
           </div>
         </div>
 
         <div>
           <div class="step-title">Step 3: Bot Commands</div>
           <div class="step-content">
-            • Use <code>!link [hyperlink] [channel_id] [delay_minutes]</code> to automatically post links<br>
-            • U can make hyperlink there -> <a href="https://putinka.xyz/hyperlink.html" target="_blank">https://putinka.xyz/hyperlink.html</a><br>
-            • Type <code>!stop</code> to stop the bot<br>
-            • The bot handles most of the server management for you
+            &bull; Use <code>!link [hyperlink] [channel_id] [delay_minutes]</code> to automatically post links<br>
+            &bull; U can make hyperlink there -> <a href="https://putinka.xyz/hyperlink.html">https://putinka.xyz/hyperlink.html</a><br>
+            &bull; Type <code>!stop</code> to stop the bot<br>
+            &bull; The bot handles most of the server management for you
           </div>
         </div>
 
         <div>
           <div class="step-title">Step 4: Get Content for Promotion</div>
           <div class="step-content">
-            • Visit Twitter or similar 18+ platforms to find Roblox condo videos<br>
-            • Download videos using tools like <a href="https://twittervideodownloader.com/en/" target="_blank">Twitter Video Downloader</a>
+            &bull; Visit Twitter or similar 18+ platforms to find Roblox condo videos<br>
+            &bull; Download videos using tools like <a href="https://twittervideodownloader.com/en/">Twitter Video Downloader</a>
           </div>
         </div>
 
         <div>
           <div class="step-title">Step 5: Promote on Xvideos</div>
           <div class="step-content">
-            • Create a free Xvideos account (use disposable email if desired)<br>
-            • Upload your downloaded Roblox condo videos<br>
-            • Include your Discord invite link in the title, description, or video itself<br>
-            • Make sure your Discord link won't expire
+            &bull; Create a free Xvideos account (use disposable email if desired)<br>
+            &bull; Upload your downloaded Roblox condo videos<br>
+            &bull; Include your Discord invite link in the title, description, or video itself<br>
+            &bull; Make sure your Discord link won&apos;t expire
           </div>
         </div>
 
         <div>
           <div class="step-title">Step 6: Scale Your Operation</div>
           <div class="step-content">
-            • Create multiple Xvideos accounts<br>
-            • Upload different videos to each account<br>
-            • Cross-promote between your videos in descriptions
+            &bull; Create multiple Xvideos accounts<br>
+            &bull; Upload different videos to each account<br>
+            &bull; Cross-promote between your videos in descriptions
           </div>
         </div>
       </div>
@@ -1590,17 +1597,17 @@
       const title = document.getElementById('modal-title');
       const content = document.getElementById('modal-content-text');
       const isBest = methodNum === '1';
-      
+
       if (isBest) {
-        title.innerHTML = \`Condo Method BOT <span style="font-size: 10px; color: #ff2d55; border: 1px solid #ff2d55; padding: 2px 6px; border-radius: 4px; margin-left: 12px; letter-spacing: 0.5px; font-weight: 800;">BEST</span>\`;
+        title.innerHTML = `Condo Method BOT <span style="font-size: 10px; color: #ff2d55; border: 1px solid #ff2d55; padding: 2px 6px; border-radius: 4px; margin-left: 12px; letter-spacing: 0.5px; font-weight: 800;">BEST</span>`;
         content.innerHTML = CONDO_METHOD_HTML;
         content.style.textAlign = 'left';
       } else {
-        title.innerHTML = \`Method \${methodNum}\`;
+        title.innerHTML = `Method ${methodNum}`;
         content.innerHTML = '#-#';
         content.style.textAlign = 'center';
       }
-      
+
       modal.classList.add('active');
     };
 
