@@ -209,28 +209,6 @@
 
 
 
-    .terminal-user {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      padding: 0.5rem 0;
-    }
-
-    .terminal-user img {
-      width: 32px; height: 32px;
-      border-radius: 50%;
-      object-fit: cover;
-      border: 2px solid var(--red);
-      box-shadow: 0 0 10px rgba(255,45,85,0.3);
-    }
-
-    .terminal-user span {
-      font-size: 0.8rem;
-      color: var(--text);
-      font-weight: 600;
-      letter-spacing: 0.02em;
-    }
-
     .tools-section { margin-bottom: 1.5rem; }
 
     .tools-grid {
@@ -251,12 +229,14 @@
       background: var(--surface);
       border: 1px solid var(--border);
       border-radius: 16px;
-      padding: 1.25rem;
+      padding: 1.75rem;
       text-decoration: none;
       color: var(--text);
       overflow: hidden;
       transition: background 0.3s, border-color 0.3s, transform 0.35s cubic-bezier(0.22,1,0.36,1), box-shadow 0.3s;
-      display: flex; flex-direction: column; gap: 0.85rem;
+      display: flex; flex-direction: column;
+      justify-content: space-between;
+      min-height: 160px;
     }
 
     .card::before {
@@ -552,6 +532,48 @@
       font-weight: 600;
     }
 
+
+    footer {
+      border-top: 1px solid var(--border);
+      padding: 2rem 0 2.5rem;
+      margin-top: 3rem;
+    }
+
+    .footer-inner {
+      max-width: 1160px;
+      margin: 0 auto;
+      padding: 0 2.5rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .footer-links {
+      display: flex;
+      gap: 2rem;
+    }
+
+    .footer-links a {
+      font-size: 0.68rem;
+      font-weight: 500;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--muted);
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+
+    .footer-links a:hover {
+      color: var(--sub);
+    }
+
+    .footer-copy {
+      font-size: 0.68rem;
+      color: var(--muted);
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
 @media (max-width: 900px) {
       .wrapper { padding: 0 1.25rem; }
       .hero-section { grid-template-columns: 1fr auto; }
@@ -626,10 +648,7 @@
       </div>
 
       <div class="hero-right">
-        <div class="terminal-user" id="terminal-user" style="display:none;">
-          <img id="terminal-avatar" src="" alt="">
-          <span id="terminal-username"></span>
-        </div>
+        
 
         <div class="discord-banner" id="server-banner" onclick="window.open('https://discord.gg/YKGPyHtDny','_blank')">
           <img id="discord-banner-icon" src="https://cdn.discordapp.com/embed/avatars/0.png" alt="Server Icon">
@@ -722,14 +741,16 @@
     </footer>
 
   </div>
-    <footer>
-      <ul class="footer-links">
-        <li><a href="methods" target="_self">Methods</a></li>
-        <li><a href="hyperlink" target="_self">Hyperlink</a></li>
-        <li><a href="https://discord.gg/YKGPyHtDny">Discord</a></li>
-      </ul>
-      <span class="footer-copy">&copy; 2026 Putinka Hub.</span>
-    </footer>
+    
+
+  </div>
+    
+
+  </div>
+    
+
+  </div>
+    
 
   </div>
 
@@ -816,11 +837,30 @@
       window.location.reload();
     }
 
+            async function loadServer() {
+      try {
+        const res = await fetch('https://discord.com/api/v10/invites/YKGPyHtDny?with_counts=true');
+        if (!res.ok) return;
+        const data = await res.json();
+        if (data.guild) {
+          const icon = data.guild.icon 
+            ? 'https://cdn.discordapp.com/icons/' + data.guild.id + '/' + data.guild.icon + '.png?size=128'
+            : 'https://cdn.discordapp.com/embed/avatars/0.png';
+          const serverIcon = document.getElementById('server-icon');
+          const serverName = document.getElementById('server-name');
+          const serverOnline = document.getElementById('server-online');
+          const serverMembers = document.getElementById('server-members');
+          if (serverIcon) serverIcon.src = icon;
+          if (serverName) serverName.textContent = data.guild.name;
+          if (serverOnline && data.approximate_presence_count !== undefined) serverOnline.textContent = data.approximate_presence_count;
+          if (serverMembers && data.approximate_member_count !== undefined) serverMembers.textContent = data.approximate_member_count;
+        }
+      } catch (e) { console.error('loadServer error:', e); }
+    }
+
     function updateAuthUI(user) {
       const authBtn = document.getElementById('auth-btn');
-      const terminalUser = document.getElementById('terminal-user');
-      const terminalAvatar = document.getElementById('terminal-avatar');
-      const terminalUsername = document.getElementById('terminal-username');
+      const navAvatar = document.getElementById('nav-avatar');
 
       if (user) {
         authBtn.textContent = user.username;
@@ -828,42 +868,20 @@
         authBtn.onclick = function(e) { e.preventDefault(); logout(); };
 
         if (user.avatar) {
-          terminalAvatar.src = 'https://cdn.discordapp.com/avatars/' + user.id + '/' + user.avatar + '.png?size=64';
+          navAvatar.src = 'https://cdn.discordapp.com/avatars/' + user.id + '/' + user.avatar + '.png?size=64';
         } else {
-          terminalAvatar.src = 'https://cdn.discordapp.com/embed/avatars/' + (parseInt(user.discriminator || '0') % 5) + '.png';
+          navAvatar.src = 'https://cdn.discordapp.com/embed/avatars/' + (parseInt(user.discriminator || '0') % 5) + '.png';
         }
-        terminalUsername.textContent = user.username;
-        terminalUser.style.display = 'flex';
+        navAvatar.style.display = 'block';
       } else {
         authBtn.textContent = 'Auth';
         authBtn.href = API_BASE + '/auth/discord';
         authBtn.onclick = null;
-        terminalUser.style.display = 'none';
+        navAvatar.style.display = 'none';
       }
     }
 
-        async function loadServer() {
-      try {
-        const res = await fetch('https://discord.com/api/v10/invites/p3gzvp7Ps6?with_counts=true');
-        if (!res.ok) return;
-        const data = await res.json();
-        if (data.guild) {
-          const icon = data.guild.icon 
-            ? 'https://cdn.discordapp.com/icons/' + data.guild.id + '/' + data.guild.icon + '.png?size=128'
-            : 'https://cdn.discordapp.com/embed/avatars/0.png';
-          document.getElementById('server-icon').src = icon;
-          document.getElementById('server-name').textContent = data.guild.name;
-        }
-        if (data.approximate_presence_count !== undefined) {
-          document.getElementById('server-online').textContent = data.approximate_presence_count;
-        }
-        if (data.approximate_member_count !== undefined) {
-          document.getElementById('server-members').textContent = data.approximate_member_count;
-        }
-      } catch (e) {}
-    }
-
-    (function initAuth() {
+(function initAuth() {
       const params = new URLSearchParams(window.location.search);
       const tokenFromUrl = params.get('token');
 
@@ -904,6 +922,17 @@
       });
     })();
   </script>
+
+  <footer>
+    <div class="footer-inner">
+      <div class="footer-links">
+        <a href="methods" target="_self">Methods</a>
+        <a href="hyperlink" target="_self">Hyperlink</a>
+        <a href="https://discord.gg/YKGPyHtDny">Discord</a>
+      </div>
+      <span class="footer-copy">&copy; 2026 Putinka Hub.</span>
+    </div>
+  </footer>
 
 </body>
 </html>
