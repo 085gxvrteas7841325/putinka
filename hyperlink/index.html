@@ -1,334 +1,637 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PUTINKA | Hyperlink</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
-    <style>
-        :root {
-            --bg-primary: #000000;
-            --bg-card: rgba(10, 10, 10, 0.8);
-            --accent-red: #ef4444;
-            --accent-red-dark: #dc2626;
-            --text-primary: #fafafa;
-            --text-secondary: #a3a3a3;
-            --text-tertiary: #525252;
-            --border-subtle: rgba(255, 255, 255, 0.04);
-            --success: #22c55e;
-            --error: #ef4444;
-        }
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PUTINKA | Hyperlink</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #0a0a10;
+      --surface: rgba(255,255,255,0.04);
+      --surface2: rgba(255,255,255,0.06);
+      --border: rgba(255,255,255,0.07);
+      --border-red: rgba(255,45,85,0.25);
+      --red: #ff2d55;
+      --red-soft: rgba(255,45,85,0.12);
+      --text: #f0f0f5;
+      --sub: #7a7a8e;
+      --muted: #44445a;
+      --success: #22c55e;
+    }
 
-        * { margin: 0; padding: 0; box-sizing: border-box; }
+    *, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
+    html { scroll-behavior:smooth; }
 
-        body {
-            font-family: 'Plus Jakarta Sans', sans-serif;
-            background: var(--bg-primary);
-            color: var(--text-primary);
-            min-height: 100vh;
-            overflow-x: hidden;
-            line-height: 1.6;
-        }
+    body {
+      font-family: 'Inter', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
 
-        .noise-overlay {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            pointer-events: none; z-index: 9999; opacity: 0.025;
-            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
-        }
+    #particles-canvas {
+      position: fixed; inset: 0;
+      z-index: 0; pointer-events: none;
+    }
 
-        .ambient-bg { position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 0; overflow: hidden; }
-        .ambient-orb { position: absolute; border-radius: 50%; filter: blur(150px); opacity: 0.1; animation: orbFloat 20s ease-in-out infinite; }
-        .ambient-orb:nth-child(1) { width: 500px; height: 500px; background: var(--accent-red); top: -150px; left: -150px; }
-        .ambient-orb:nth-child(2) { width: 400px; height: 400px; background: var(--accent-red-dark); bottom: -100px; right: -100px; animation-delay: -10s; }
-        @keyframes orbFloat { 0%, 100% { transform: translate(0,0) scale(1); } 50% { transform: translate(30px,-30px) scale(1.05); } }
+    .bg-glow {
+      position: fixed; inset: 0; z-index: 1; pointer-events: none;
+      background:
+        radial-gradient(ellipse 60% 50% at 15% 50%, rgba(255,45,85,0.06) 0%, transparent 70%),
+        radial-gradient(ellipse 35% 35% at 85% 80%, rgba(255,45,85,0.04) 0%, transparent 60%);
+    }
 
-        .container {
-            max-width: 520px; margin: 0 auto; padding: 2rem;
-            min-height: 100vh; display: flex; flex-direction: column; justify-content: center;
-            position: relative; z-index: 10; opacity: 0; transform: translateY(48px) scale(0.92);
-        }
+    .noise {
+      position: fixed; inset: 0; z-index: 3; pointer-events: none; opacity: 0.02;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+    }
 
-        .back-link {
-            position: absolute; top: 2rem; left: 2rem;
-            display: inline-flex; align-items: center; gap: 0.5rem;
-            padding: 0.625rem 1rem;
-            background: rgba(255,255,255,0.02); border: 1px solid var(--border-subtle);
-            border-radius: 10px; color: var(--text-secondary); font-size: 0.85rem;
-            font-weight: 500; text-decoration: none; transition: all 0.3s cubic-bezier(0.16,1,0.3,1);
-        }
-        .back-link:hover { color: var(--text-primary); background: rgba(255,255,255,0.04); border-color: rgba(255,255,255,0.1); transform: translateX(-3px); }
-        .back-link svg { width: 16px; height: 16px; stroke: currentColor; stroke-width: 2; fill: none; }
+    .wrapper {
+      position: relative; z-index: 10;
+      max-width: 1160px; margin: 0 auto; padding: 0 2.5rem;
+      opacity: 0; transform: translateY(20px);
+      transition: opacity 0.8s cubic-bezier(0.22,1,0.36,1), transform 0.8s cubic-bezier(0.22,1,0.36,1);
+    }
 
-        .header { text-align: center; margin-bottom: 2.5rem; }
-        .badge { display: inline-flex; align-items: center; gap: 0.5rem; padding: 0.5rem 1rem; background: rgba(239,68,68,0.08); border: 1px solid rgba(239,68,68,0.15); border-radius: 100px; margin-bottom: 1.25rem; }
-        .badge-text { font-family: 'JetBrains Mono', monospace; font-size: 0.7rem; font-weight: 500; color: var(--accent-red); text-transform: uppercase; letter-spacing: 0.15em; }
-        .title { font-size: clamp(2rem,5vw,2.75rem); font-weight: 800; letter-spacing: -0.02em; margin-bottom: 0.5rem; }
-        .title-gradient { background: linear-gradient(135deg,#fff 0%,#a3a3a3 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
-        .subtitle { font-size: 1rem; color: var(--text-secondary); }
+    .wrapper.visible { opacity:1; transform:translateY(0); }
 
-        .card {
-            background: var(--bg-card); border: 1px solid var(--border-subtle);
-            border-radius: 24px; padding: 2rem; backdrop-filter: blur(20px);
-            position: relative; overflow: hidden;
-        }
-        .card::before {
-            content: ''; position: absolute; inset: 0; border-radius: 24px; padding: 1px;
-            background: linear-gradient(135deg, rgba(239,68,68,0.2), transparent 50%);
-            -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
-            mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
-            -webkit-mask-composite: xor; mask-composite: exclude; pointer-events: none;
-        }
+    nav {
+      display: flex; align-items: center;
+      justify-content: space-between;
+      padding: 1.6rem 0;
+      border-bottom: 1px solid var(--border);
+      gap: 0.75rem;
+    }
 
-        .toggle-row {
-            display: flex; justify-content: space-between; align-items: center;
-            padding: 1rem 1.25rem;
-            background: rgba(255,255,255,0.02); border: 1px solid var(--border-subtle);
-            border-radius: 14px; margin-bottom: 1.25rem;
-        }
-        .toggle-label { font-size: 0.9rem; font-weight: 500; color: var(--text-primary); }
-        .toggle-wrapper { display: flex; align-items: center; gap: 0.75rem; }
-        .toggle { position: relative; width: 50px; height: 26px; background: rgba(255,255,255,0.06); border-radius: 13px; cursor: pointer; transition: all 0.3s cubic-bezier(0.16,1,0.3,1); }
-        .toggle.active { background: rgba(239,68,68,0.25); }
-        .toggle-thumb { position: absolute; top: 3px; left: 3px; width: 20px; height: 20px; background: var(--text-tertiary); border-radius: 50%; transition: all 0.3s cubic-bezier(0.16,1,0.3,1); }
-        .toggle.active .toggle-thumb { transform: translateX(24px); background: var(--accent-red); }
-        .toggle-status { font-family: 'JetBrains Mono', monospace; font-size: 0.75rem; font-weight: 500; color: var(--text-tertiary); min-width: 28px; transition: color 0.3s ease; }
-        .toggle.active + .toggle-status { color: var(--accent-red); }
+    .nav-logo {
+      font-family: 'Inter', sans-serif;
+      font-size: 1rem; font-weight: 700;
+      letter-spacing: 0.22em; text-transform: uppercase;
+      color: var(--red); text-decoration: none;
+    }
 
-        .input-wrapper { margin-bottom: 1rem; }
-        .input {
-            width: 100%; padding: 1rem 1.25rem;
-            background: rgba(0,0,0,0.3); border: 1px solid var(--border-subtle);
-            border-radius: 14px; color: var(--text-primary);
-            font-family: 'JetBrains Mono', monospace; font-size: 0.9rem;
-            transition: all 0.3s cubic-bezier(0.16,1,0.3,1); outline: none;
-        }
-        .input::placeholder { color: var(--text-tertiary); }
-        .input:focus { border-color: rgba(239,68,68,0.4); box-shadow: 0 0 0 4px rgba(239,68,68,0.08); }
+    .nav-center {
+      display: flex; gap: 0.25rem;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 10px; padding: 4px;
+    }
 
-        .btn {
-            width: 100%; padding: 1rem 1.5rem;
-            background: linear-gradient(135deg, var(--accent-red), var(--accent-red-dark));
-            border: none; border-radius: 14px; color: #fff;
-            font-family: 'Plus Jakarta Sans', sans-serif; font-size: 0.95rem; font-weight: 600;
-            cursor: pointer; transition: all 0.3s cubic-bezier(0.16,1,0.3,1);
-            position: relative; overflow: hidden;
-        }
-        .btn::before { content: ''; position: absolute; top: 0; left: -100%; width: 100%; height: 100%; background: linear-gradient(90deg,transparent,rgba(255,255,255,0.2),transparent); transition: left 0.6s ease; }
-        .btn:hover::before { left: 100%; }
-        .btn:hover { transform: translateY(-2px); box-shadow: 0 10px 30px rgba(239,68,68,0.3); }
-        .btn:active { transform: translateY(0); }
-        .btn:disabled { opacity: 0.6; cursor: not-allowed; transform: none; }
+    .nav-center a {
+      font-size: 0.75rem; font-weight: 500;
+      letter-spacing: 0.05em; text-transform: uppercase;
+      color: var(--sub); text-decoration: none;
+      padding: 6px 14px; border-radius: 7px;
+      transition: background 0.2s, color 0.2s;
+    }
 
-        .status { text-align: center; margin-top: 1rem; padding: 0.875rem 1rem; border-radius: 12px; font-size: 0.875rem; font-weight: 500; opacity: 0; transform: translateY(-10px); transition: all 0.3s cubic-bezier(0.16,1,0.3,1); }
-        .status.show { opacity: 1; transform: translateY(0); }
-        .status.success { background: rgba(34,197,94,0.08); color: var(--success); border: 1px solid rgba(34,197,94,0.15); }
-        .status.error { background: rgba(239,68,68,0.08); color: var(--error); border: 1px solid rgba(239,68,68,0.15); }
+    .nav-center a:hover, .nav-center a.active {
+      background: var(--surface2); color: var(--text);
+    }
 
-        .result { margin-top: 1rem; padding: 1.25rem; background: rgba(0,0,0,0.4); border: 1px solid var(--border-subtle); border-radius: 14px; opacity: 0; transform: translateY(10px); pointer-events: none; transition: all 0.4s cubic-bezier(0.16,1,0.3,1); }
-        .result.show { opacity: 1; transform: translateY(0); pointer-events: auto; }
-        .result-label { font-family: 'JetBrains Mono', monospace; font-size: 0.7rem; font-weight: 500; color: var(--text-tertiary); text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 0.5rem; }
-        .result-text { font-family: 'JetBrains Mono', monospace; font-size: 0.85rem; color: var(--text-secondary); word-break: break-all; line-height: 1.6; padding: 1rem; background: rgba(0,0,0,0.3); border: 1px solid var(--border-subtle); border-radius: 10px; margin-bottom: 1rem; }
-        .copy-btn { width: 100%; padding: 0.875rem; background: rgba(239,68,68,0.08); border: 1px solid rgba(239,68,68,0.2); border-radius: 10px; color: var(--accent-red); font-family: 'Plus Jakarta Sans', sans-serif; font-size: 0.875rem; font-weight: 600; cursor: pointer; transition: all 0.3s ease; }
-        .copy-btn:hover { background: rgba(239,68,68,0.15); border-color: rgba(239,68,68,0.35); }
-        .copy-btn.copied { background: rgba(34,197,94,0.08); border-color: rgba(34,197,94,0.2); color: var(--success); }
+    .nav-right { display: flex; align-items: center; gap: 0.75rem; flex-shrink: 0; }
 
-        @media (max-width: 640px) {
-            .container { padding: 1.5rem; padding-top: 5rem; }
-            .back-link { position: relative; top: auto; left: auto; margin-bottom: 1.5rem; align-self: flex-start; }
-            .card { padding: 1.5rem; }
-            .toggle-row { flex-direction: column; gap: 1rem; text-align: center; }
-        }
-    </style>
+    .btn-ghost {
+      font-size: 0.75rem; font-weight: 500;
+      letter-spacing: 0.06em; text-transform: uppercase;
+      color: var(--sub); text-decoration: none;
+      padding: 8px 16px; border-radius: 8px;
+      border: 1px solid var(--border);
+      transition: color 0.2s, border-color 0.2s;
+      white-space: nowrap;
+    }
+
+    .btn-ghost:hover { color: var(--text); border-color: rgba(255,255,255,0.15); }
+
+    .btn-nav-primary {
+      font-size: 0.75rem; font-weight: 600;
+      letter-spacing: 0.06em; text-transform: uppercase;
+      color: #fff; text-decoration: none;
+      padding: 8px 18px; border-radius: 8px;
+      background: var(--red);
+      box-shadow: 0 0 20px rgba(255,45,85,0.3);
+      transition: background 0.2s, box-shadow 0.2s;
+      white-space: nowrap;
+    }
+
+    .btn-nav-primary:hover {
+      background: #ff4468;
+      box-shadow: 0 0 28px rgba(255,45,85,0.45);
+    }
+
+    .page-content {
+      max-width: 560px;
+      margin: 3rem auto 0;
+      padding-bottom: 4rem;
+    }
+
+    .page-header {
+      margin-bottom: 2rem;
+    }
+
+    .page-tag {
+      display: inline-flex; align-items: center; gap: 0.5rem;
+      font-size: 0.6rem; font-weight: 600;
+      letter-spacing: 0.15em; text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 0.75rem;
+    }
+
+    .page-tag::before {
+      content: '';
+      width: 4px; height: 4px;
+      border-radius: 50%;
+      background: var(--red);
+      box-shadow: 0 0 6px rgba(255,45,85,0.8);
+    }
+
+    .page-title {
+      font-family: 'Inter', sans-serif;
+      font-size: clamp(1.8rem, 4vw, 2.5rem);
+      font-weight: 700; letter-spacing: -0.02em;
+      text-transform: uppercase; line-height: 1.1;
+      margin-bottom: 0.5rem;
+    }
+
+    .page-title span { color: var(--red); }
+
+    .page-desc {
+      font-size: 0.9rem; color: var(--sub); line-height: 1.6;
+    }
+
+    .card {
+      position: relative;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 2rem;
+      overflow: hidden;
+    }
+
+    .card::before {
+      content: '';
+      position: absolute; top: 0; left: 0; right: 0; height: 1px;
+      background: linear-gradient(90deg, transparent, rgba(255,45,85,0.3), transparent);
+    }
+
+    .toggle-row {
+      display: flex; justify-content: space-between; align-items: center;
+      padding: 0.875rem 1rem;
+      background: rgba(255,255,255,0.02);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      margin-bottom: 1rem;
+    }
+
+    .toggle-label {
+      font-size: 0.85rem; font-weight: 500; color: var(--text);
+    }
+
+    .toggle-wrapper { display: flex; align-items: center; gap: 0.75rem; }
+
+    .toggle {
+      position: relative; width: 46px; height: 24px;
+      background: rgba(255,255,255,0.06);
+      border: 1px solid var(--border);
+      border-radius: 12px; cursor: pointer;
+      transition: all 0.3s cubic-bezier(0.22,1,0.36,1);
+    }
+
+    .toggle.active {
+      background: var(--red-soft);
+      border-color: rgba(255,45,85,0.3);
+    }
+
+    .toggle-thumb {
+      position: absolute; top: 2px; left: 2px;
+      width: 18px; height: 18px;
+      background: var(--muted);
+      border-radius: 50%;
+      transition: all 0.3s cubic-bezier(0.22,1,0.36,1);
+    }
+
+    .toggle.active .toggle-thumb {
+      transform: translateX(22px);
+      background: var(--red);
+    }
+
+    .toggle-status {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.7rem; font-weight: 500;
+      color: var(--muted); min-width: 24px;
+      letter-spacing: 0.05em;
+      transition: color 0.3s;
+    }
+
+    .toggle.active ~ .toggle-status { color: var(--red); }
+
+    .input-wrap { margin-bottom: 1rem; }
+
+    .input {
+      width: 100%; padding: 0.875rem 1rem;
+      background: rgba(255,255,255,0.02);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      color: var(--text);
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.85rem;
+      outline: none;
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+
+    .input::placeholder { color: var(--muted); }
+
+    .input:focus {
+      border-color: rgba(255,45,85,0.35);
+      box-shadow: 0 0 0 3px rgba(255,45,85,0.08);
+    }
+
+    .btn-generate {
+      width: 100%; padding: 0.9rem 1.5rem;
+      background: var(--red);
+      border: none; border-radius: 12px;
+      color: #fff;
+      font-family: 'Inter', sans-serif;
+      font-size: 0.85rem; font-weight: 600;
+      letter-spacing: 0.06em; text-transform: uppercase;
+      cursor: pointer;
+      box-shadow: 0 0 20px rgba(255,45,85,0.25);
+      transition: background 0.2s, box-shadow 0.2s, transform 0.2s;
+      position: relative; overflow: hidden;
+    }
+
+    .btn-generate::before {
+      content: '';
+      position: absolute; top: 0; left: -100%; width: 100%; height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.12), transparent);
+      transition: left 0.5s ease;
+    }
+
+    .btn-generate:hover::before { left: 100%; }
+
+    .btn-generate:hover {
+      background: #ff4468;
+      box-shadow: 0 0 30px rgba(255,45,85,0.4);
+      transform: translateY(-1px);
+    }
+
+    .btn-generate:active { transform: translateY(0); }
+    .btn-generate:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
+
+    .status {
+      margin-top: 0.75rem; padding: 0.75rem 1rem;
+      border-radius: 10px; font-size: 0.8rem; font-weight: 500;
+      text-align: center;
+      opacity: 0; transform: translateY(-6px);
+      transition: all 0.3s cubic-bezier(0.22,1,0.36,1);
+      pointer-events: none;
+    }
+
+    .status.show { opacity: 1; transform: translateY(0); pointer-events: auto; }
+    .status.success { background: rgba(34,197,94,0.08); color: var(--success); border: 1px solid rgba(34,197,94,0.15); }
+    .status.error { background: var(--red-soft); color: var(--red); border: 1px solid rgba(255,45,85,0.2); }
+
+    .result {
+      margin-top: 1rem;
+      padding: 1.25rem;
+      background: rgba(255,255,255,0.02);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      opacity: 0; transform: translateY(8px);
+      pointer-events: none;
+      transition: all 0.4s cubic-bezier(0.22,1,0.36,1);
+    }
+
+    .result.show { opacity: 1; transform: translateY(0); pointer-events: auto; }
+
+    .result-label {
+      font-size: 0.6rem; font-weight: 600;
+      letter-spacing: 0.15em; text-transform: uppercase;
+      color: var(--muted); margin-bottom: 0.5rem;
+    }
+
+    .result-text {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.8rem; color: var(--sub);
+      word-break: break-all; line-height: 1.6;
+      padding: 0.875rem 1rem;
+      background: rgba(0,0,0,0.3);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      margin-bottom: 0.75rem;
+    }
+
+    .btn-copy {
+      width: 100%; padding: 0.75rem;
+      background: var(--red-soft);
+      border: 1px solid rgba(255,45,85,0.2);
+      border-radius: 10px;
+      color: var(--red);
+      font-family: 'Inter', sans-serif;
+      font-size: 0.8rem; font-weight: 600;
+      letter-spacing: 0.05em; text-transform: uppercase;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .btn-copy:hover { background: rgba(255,45,85,0.2); border-color: rgba(255,45,85,0.35); }
+    .btn-copy.copied { background: rgba(34,197,94,0.08); border-color: rgba(34,197,94,0.2); color: var(--success); }
+
+    footer {
+      border-top: 1px solid var(--border);
+      padding: 2rem 0 2.5rem;
+      margin-top: 2rem;
+    }
+
+    .footer-inner {
+      display: flex; align-items: center;
+      justify-content: space-between; gap: 1rem;
+    }
+
+    .footer-logo {
+      font-family: 'Inter', sans-serif;
+      font-size: 0.9rem; font-weight: 700;
+      letter-spacing: 0.2em; text-transform: uppercase;
+      color: var(--red); flex-shrink: 0;
+    }
+
+    .footer-links { display: flex; gap: 2rem; }
+
+    .footer-links a {
+      font-size: 0.68rem; font-weight: 500;
+      letter-spacing: -0.01em; text-transform: uppercase;
+      color: var(--muted); text-decoration: none;
+      transition: color 0.2s;
+    }
+
+    .footer-links a:hover { color: var(--sub); }
+
+    .footer-copy {
+      font-size: 0.68rem; color: var(--muted);
+      letter-spacing: 0.08em; text-transform: uppercase; flex-shrink: 0;
+    }
+
+    @media (max-width: 900px) {
+      .wrapper { padding: 0 1.25rem; }
+      .nav-center { display: none; }
+      .footer-links { display: none; }
+    }
+
+    @media (max-width: 640px) {
+      .wrapper { padding: 0 1rem; }
+      nav { padding: 1.2rem 0; }
+      .page-content { margin-top: 2rem; }
+      .card { padding: 1.5rem; }
+      .toggle-row { flex-direction: column; gap: 0.75rem; align-items: flex-start; }
+      .btn-ghost { display: none; }
+      .footer-copy { font-size: 0.6rem; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
+    }
+  </style>
 </head>
 <body>
-    <div class="noise-overlay"></div>
-    <div class="ambient-bg">
-        <div class="ambient-orb"></div>
-        <div class="ambient-orb"></div>
-    </div>
 
-    <div class="container">
-        <a href="index.html" class="back-link">
-            <svg viewBox="0 0 24 24"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
-            Back
-        </a>
+  <canvas id="particles-canvas"></canvas>
+  <div class="bg-glow"></div>
+  <div class="noise"></div>
 
-        <div class="header">
-            <div class="badge"><span class="badge-text">Discord Tool</span></div>
-            <h1 class="title"><span class="title-gradient">Hyperlink</span></h1>
-            <p class="subtitle">Create links that bypass Discord warnings</p>
+  <div class="wrapper" id="wrapper">
+
+    <nav>
+      <a href="https://putinka.xyz" class="nav-logo" target="_self">Putinka</a>
+      <div class="nav-center">
+        <a href="https://putinka.xyz" target="_self">Panel</a>
+        <a href="https://putinka.xyz/methods" target="_self">Methods</a>
+        <a href="https://putinka.xyz/hyperlink" target="_self" class="active">Hyperlink</a>
+        <a href="https://www.logged.tg/tools/refresher">Refresher</a>
+      </div>
+      <div class="nav-right">
+        <a href="https://discord.gg/YKGPyHtDny" class="btn-ghost">Join Discord</a>
+        <a href="https://putinka.xyz" target="_self" class="btn-nav-primary">← Back</a>
+      </div>
+    </nav>
+
+    <div class="page-content">
+      <div class="page-header">
+        <div class="page-tag">Bypass Tool</div>
+        <h1 class="page-title">Hyper<span>link</span></h1>
+        <p class="page-desc">Create links that bypass Discord's external link warning screen.</p>
+      </div>
+
+      <div class="card">
+        <div class="toggle-row">
+          <span class="toggle-label">Enable Link Shortening</span>
+          <div class="toggle-wrapper">
+            <div id="toggleSwitch" class="toggle active">
+              <div class="toggle-thumb"></div>
+            </div>
+            <span id="toggleStatus" class="toggle-status">ON</span>
+          </div>
         </div>
 
-        <div class="card">
-            <div class="toggle-row">
-                <span class="toggle-label">Enable Link Shortening</span>
-                <div class="toggle-wrapper">
-                    <div id="toggleSwitch" class="toggle active">
-                        <div class="toggle-thumb"></div>
-                    </div>
-                    <span id="toggleStatus" class="toggle-status">ON</span>
-                </div>
-            </div>
-
-            <div class="input-wrapper">
-                <input type="text" id="originalLink" class="input" placeholder="Paste your link here..." autocomplete="off">
-            </div>
-
-            <button id="bypassBtn" class="btn">Generate Hyperlink</button>
-            <div id="statusMsg" class="status"></div>
-
-            <div id="resultBox" class="result">
-                <div class="result-label">Generated Link</div>
-                <div id="resultText" class="result-text"></div>
-                <button id="copyBtn" class="copy-btn">Copy to Clipboard</button>
-            </div>
+        <div class="input-wrap">
+          <input type="text" id="originalLink" class="input" placeholder="Paste your link here..." autocomplete="off">
         </div>
+
+        <button id="bypassBtn" class="btn-generate">Generate Hyperlink</button>
+        <div id="statusMsg" class="status"></div>
+
+        <div id="resultBox" class="result">
+          <div class="result-label">Generated Link</div>
+          <div id="resultText" class="result-text"></div>
+          <button id="copyBtn" class="btn-copy">Copy to Clipboard</button>
+        </div>
+      </div>
     </div>
 
-    <script>
-        (function() {
-            var w = document.querySelector('.container');
-            function show() {
-                w.style.transition = 'opacity 1s cubic-bezier(0.22,1,0.36,1), transform 1s cubic-bezier(0.22,1,0.36,1)';
-                w.offsetHeight;
-                w.style.opacity = '1';
-                w.style.transform = 'translateY(0) scale(1)';
-            }
-            if (document.readyState === 'complete') requestAnimationFrame(() => requestAnimationFrame(show));
-            else window.addEventListener('load', () => requestAnimationFrame(() => requestAnimationFrame(show)));
-        })();
+    <footer>
+      <div class="footer-inner">
+        <div class="footer-logo">Putinka</div>
+        <div class="footer-links">
+          <a href="https://putinka.xyz/methods" target="_self">Methods</a>
+          <a href="https://putinka.xyz/hyperlink" target="_self">Hyperlink</a>
+          <a href="https://discord.gg/YKGPyHtDny">Discord</a>
+        </div>
+        <div class="footer-copy">&copy; 2026 Putinka Hub</div>
+      </div>
+    </footer>
 
-        const input        = document.getElementById('originalLink');
-        const button       = document.getElementById('bypassBtn');
-        const status       = document.getElementById('statusMsg');
-        const resultBox    = document.getElementById('resultBox');
-        const resultText   = document.getElementById('resultText');
-        const copyBtn      = document.getElementById('copyBtn');
-        const toggleSwitch = document.getElementById('toggleSwitch');
-        const toggleStatus = document.getElementById('toggleStatus');
+  </div>
 
-        let currentResult = '';
-        let shorteningEnabled = true;
-
-        toggleSwitch.addEventListener('click', () => {
-            shorteningEnabled = !shorteningEnabled;
-            toggleSwitch.classList.toggle('active');
-            toggleStatus.textContent = shorteningEnabled ? 'ON' : 'OFF';
-        });
-
-        async function shorten(link) {
-            const res = await fetch('https://yaso-proxy.vxvxvxvxvvxvxvx2.workers.dev', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ content: link })
-            });
-            if (!res.ok) throw new Error(`HTTP ${res.status}`);
-            const data = await res.json();
-            if (!data.shorturl) throw new Error(data.error || 'Brak shorturl');
-            return data.shorturl;
+  <script>
+  (function() {
+    const canvas = document.getElementById('particles-canvas');
+    const ctx = canvas.getContext('2d');
+    let width, height, particles = [];
+    const PARTICLE_COUNT = 15, CONNECTION_DIST = 80, MOUSE_DIST = 120;
+    let mouse = { x: null, y: null };
+    function resize() { width = canvas.width = window.innerWidth; height = canvas.height = window.innerHeight; }
+    function createParticles() {
+      particles = [];
+      for (let i = 0; i < PARTICLE_COUNT; i++)
+        particles.push({ x: Math.random()*width, y: Math.random()*height, vx: (Math.random()-0.5)*0.4, vy: (Math.random()-0.5)*0.4, size: Math.random()*2+0.5, alpha: Math.random()*0.5+0.2 });
+    }
+    function draw() {
+      ctx.clearRect(0, 0, width, height);
+      for (let i = 0; i < particles.length; i++) {
+        let p = particles[i];
+        p.x += p.vx; p.y += p.vy;
+        if (p.x < 0 || p.x > width) p.vx *= -1;
+        if (p.y < 0 || p.y > height) p.vy *= -1;
+        ctx.beginPath(); ctx.arc(p.x, p.y, p.size, 0, Math.PI*2);
+        ctx.fillStyle = 'rgba(255,45,85,'+p.alpha+')'; ctx.fill();
+        for (let j = i+1; j < particles.length; j++) {
+          let p2 = particles[j], dx = p.x-p2.x, dy = p.y-p2.y, dist = Math.sqrt(dx*dx+dy*dy);
+          if (dist < CONNECTION_DIST) {
+            ctx.beginPath(); ctx.moveTo(p.x,p.y); ctx.lineTo(p2.x,p2.y);
+            ctx.strokeStyle = 'rgba(255,45,85,'+(1-dist/CONNECTION_DIST)*0.12+')'; ctx.lineWidth=0.8; ctx.stroke();
+          }
         }
-
-        function format(type, link) {
-            switch (type) {
-                case 'users':  return `[https:](${link}\n)[//www.roblox.com/users/338428527/profile](${link})`;
-                case 'share':  return `[https:](${link}\n)[//www.roblox.com/share?code=116562041fd4d54681b915675dd54767&type=Server](${link})`;
-                case 'communities': return `[https:](${link}\n)[//www.roblox.com/communities/7809274722](${link})`;
-                case 'games':  return `[https:](${link}\n)[//www.roblox.com/share?code=626562041fd4d54681b915675dd54767&type=Server](${link})`;
-                default:
-                    try {
-                        const domain = new URL(link).hostname.replace('www.', '');
-                        return `[https:](${link}\n)[//${domain}](${link})`;
-                    } catch {
-                        return `[https:](${link}\n)[//click-here.com](${link})`;
-                    }
-            }
+        if (mouse.x !== null) {
+          let dx = p.x-mouse.x, dy = p.y-mouse.y, dist = Math.sqrt(dx*dx+dy*dy);
+          if (dist < MOUSE_DIST) {
+            ctx.beginPath(); ctx.moveTo(p.x,p.y); ctx.lineTo(mouse.x,mouse.y);
+            ctx.strokeStyle = 'rgba(255,45,85,'+(1-dist/MOUSE_DIST)*0.2+')'; ctx.lineWidth=0.6; ctx.stroke();
+          }
         }
+      }
+      requestAnimationFrame(draw);
+    }
+    window.addEventListener('resize', () => { resize(); createParticles(); });
+    window.addEventListener('mousemove', e => { mouse.x = e.clientX; mouse.y = e.clientY; });
+    window.addEventListener('mouseleave', () => { mouse.x = null; mouse.y = null; });
+    resize(); createParticles(); draw();
+  })();
+  </script>
 
-        function detectType(link) {
-            if (/\/users\//.test(link))  return 'users';
-            if (/\/share\?/.test(link))  return 'share';
-            if (/\/communities\//.test(link)) return 'communities';
-            if (/\/games\//.test(link))  return 'games';
-            return 'other';
+  <script>
+  (function() {
+    const w = document.getElementById('wrapper');
+    function show() { requestAnimationFrame(() => requestAnimationFrame(() => w.classList.add('visible'))); }
+    if (document.readyState === 'complete') show(); else window.addEventListener('load', show);
+  })();
+
+  const input        = document.getElementById('originalLink');
+  const button       = document.getElementById('bypassBtn');
+  const status       = document.getElementById('statusMsg');
+  const resultBox    = document.getElementById('resultBox');
+  const resultText   = document.getElementById('resultText');
+  const copyBtn      = document.getElementById('copyBtn');
+  const toggleSwitch = document.getElementById('toggleSwitch');
+  const toggleStatus = document.getElementById('toggleStatus');
+
+  let currentResult = '';
+  let shorteningEnabled = true;
+
+  toggleSwitch.addEventListener('click', () => {
+    shorteningEnabled = !shorteningEnabled;
+    toggleSwitch.classList.toggle('active');
+    toggleStatus.textContent = shorteningEnabled ? 'ON' : 'OFF';
+  });
+
+  async function shorten(link) {
+    const res = await fetch('https://yaso-proxy.vxvxvxvxvvxvxvx2.workers.dev', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ content: link })
+    });
+    if (!res.ok) throw new Error('HTTP ' + res.status);
+    const data = await res.json();
+    if (!data.shorturl) throw new Error(data.error || 'No shorturl');
+    return data.shorturl;
+  }
+
+  function format(type, link) {
+    switch (type) {
+      case 'users':       return '[https:](' + link + '\n)[//www.roblox.com/users/338428527/profile](' + link + ')';
+      case 'share':       return '[https:](' + link + '\n)[//www.roblox.com/share?code=116562041fd4d54681b915675dd54767&type=Server](' + link + ')';
+      case 'communities': return '[https:](' + link + '\n)[//www.roblox.com/communities/7809274722](' + link + ')';
+      case 'games':       return '[https:](' + link + '\n)[//www.roblox.com/share?code=626562041fd4d54681b915675dd54767&type=Server](' + link + ')';
+      default:
+        try {
+          const domain = new URL(link).hostname.replace('www.', '');
+          return '[https:](' + link + '\n)[//' + domain + '](' + link + ')';
+        } catch {
+          return '[https:](' + link + '\n)[//click-here.com](' + link + ')';
         }
+    }
+  }
 
-        function showMessage(msg, type = 'success') {
-            status.textContent = msg;
-            status.className = `status show ${type}`;
-            setTimeout(() => { status.className = 'status'; }, 4000);
-        }
+  function detectType(link) {
+    if (/\/users\//.test(link))       return 'users';
+    if (/\/share\?/.test(link))       return 'share';
+    if (/\/communities\//.test(link)) return 'communities';
+    if (/\/games\//.test(link))       return 'games';
+    return 'other';
+  }
 
-        async function copyToClipboard(text) {
-            try {
-                if (navigator.clipboard && window.isSecureContext) {
-                    await navigator.clipboard.writeText(text); return true;
-                }
-            } catch(e) {}
-            try {
-                const ta = document.createElement('textarea');
-                ta.value = text; ta.style.cssText = 'position:fixed;left:-999999px';
-                document.body.appendChild(ta); ta.focus(); ta.select();
-                const ok = document.execCommand('copy');
-                document.body.removeChild(ta); return ok;
-            } catch(e) { return false; }
-        }
+  function showMessage(msg, type) {
+    status.textContent = msg;
+    status.className = 'status show ' + (type || 'success');
+    setTimeout(() => { status.className = 'status'; }, 4000);
+  }
 
-        button.addEventListener('click', async () => {
-            const original = input.value.trim();
-            if (!original) { showMessage('Please paste a link first', 'error'); return; }
+  async function copyToClipboard(text) {
+    try {
+      if (navigator.clipboard && window.isSecureContext) {
+        await navigator.clipboard.writeText(text); return true;
+      }
+    } catch(e) {}
+    try {
+      const ta = document.createElement('textarea');
+      ta.value = text; ta.style.cssText = 'position:fixed;left:-999999px';
+      document.body.appendChild(ta); ta.focus(); ta.select();
+      const ok = document.execCommand('copy');
+      document.body.removeChild(ta); return ok;
+    } catch(e) { return false; }
+  }
 
-            button.textContent = 'Processing...';
-            button.disabled = true;
-            resultBox.classList.remove('show');
+  button.addEventListener('click', async () => {
+    const original = input.value.trim();
+    if (!original) { showMessage('Please paste a link first', 'error'); return; }
 
-            try {
-                let finalLink = original;
-                const type = detectType(original);
+    button.textContent = 'Processing...';
+    button.disabled = true;
+    resultBox.classList.remove('show');
 
-                if (shorteningEnabled) {
-                    try {
-                        finalLink = await shorten(original);
-                    } catch (err) {
-                        showMessage(`Shortening failed: ${err.message}`, 'error');
-                        finalLink = original;
-                    }
-                }
+    try {
+      let finalLink = original;
+      if (shorteningEnabled) {
+        try { finalLink = await shorten(original); }
+        catch (err) { showMessage('Shortening failed: ' + err.message, 'error'); finalLink = original; }
+      }
+      const formatted = format(detectType(original), finalLink);
+      currentResult = formatted;
+      resultText.textContent = formatted;
+      resultBox.classList.add('show');
+      showMessage('Hyperlink generated successfully', 'success');
+    } catch (err) {
+      showMessage('Failed to generate hyperlink', 'error');
+    } finally {
+      button.textContent = 'Generate Hyperlink';
+      button.disabled = false;
+    }
+  });
 
-                const formatted = format(type, finalLink);
-                currentResult = formatted;
-                resultText.textContent = formatted;
-                resultBox.classList.add('show');
-                showMessage('Hyperlink generated successfully', 'success');
+  copyBtn.addEventListener('click', async () => {
+    if (!currentResult) return;
+    const ok = await copyToClipboard(currentResult);
+    copyBtn.textContent = ok ? 'Copied!' : 'Copy Failed';
+    copyBtn.classList.toggle('copied', ok);
+    showMessage(ok ? 'Copied to clipboard' : 'Copy failed, please copy manually', ok ? 'success' : 'error');
+    setTimeout(() => { copyBtn.textContent = 'Copy to Clipboard'; copyBtn.classList.remove('copied'); }, 2000);
+  });
 
-            } catch (err) {
-                showMessage('Failed to generate hyperlink', 'error');
-            } finally {
-                button.textContent = 'Generate Hyperlink';
-                button.disabled = false;
-            }
-        });
+  input.addEventListener('keypress', e => { if (e.key === 'Enter') button.click(); });
+  input.addEventListener('input', () => { resultBox.classList.remove('show'); currentResult = ''; });
+  </script>
 
-        copyBtn.addEventListener('click', async () => {
-            if (!currentResult) return;
-            const ok = await copyToClipboard(currentResult);
-            copyBtn.textContent = ok ? 'Copied!' : 'Copy Failed';
-            copyBtn.classList.toggle('copied', ok);
-            showMessage(ok ? 'Copied to clipboard' : 'Copy failed, please copy manually', ok ? 'success' : 'error');
-            setTimeout(() => { copyBtn.textContent = 'Copy to Clipboard'; copyBtn.classList.remove('copied'); }, 2000);
-        });
-
-        input.addEventListener('keypress', e => { if (e.key === 'Enter') button.click(); });
-        input.addEventListener('input', () => { resultBox.classList.remove('show'); currentResult = ''; });
-
-        document.addEventListener('mousemove', e => {
-            const x = (e.clientX / window.innerWidth - 0.5) * 2;
-            const y = (e.clientY / window.innerHeight - 0.5) * 2;
-            document.querySelectorAll('.ambient-orb').forEach((orb, i) => {
-                orb.style.transform = `translate(${x*(i+1)*15}px,${y*(i+1)*15}px)`;
-            });
-        });
-    </script>
 </body>
 </html>
